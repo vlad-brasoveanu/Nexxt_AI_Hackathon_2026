@@ -23,7 +23,7 @@ def request_json(r):
 
 def decision_json(d):
     return {"id": d.id, "action": d.action, "status": d.status, "terms": d.terms, "conditions": d.conditions, "reason": d.reason,
-            "override": d.override, "level": d.level, "votes": d.votes, "human_seconds": d.human_seconds, "letter": d.letter,
+            "override": d.override, "demo_exception": d.demo_exception, "level": d.level, "votes": d.votes, "human_seconds": d.human_seconds, "letter": d.letter,
             "created_at": d.created_at}
 
 
@@ -82,6 +82,8 @@ def run_json(session, run, case, settings):
     recommendation = dict(run.recommendation, superseded=False) if run.recommendation else None
     return {
         "id": run.id, "case_id": run.case_id, "status": run.status, "case_revision": run.case_revision,
+        "review_complete": __import__("app.agents.review", fromlist=["complete"]).complete(run.board),
+        "reviewed_by": [session.get(User, uid).username for uid in run.board.get("reviewed_by", []) if session.get(User, uid)],
         "is_current": run.case_revision == case.revision, "mode_label": run.mode_label,
         "budget": {"used": run.budget_used, "limit": settings.agent_budget, "deadline_s": settings.agent_deadline_seconds,
                    "elapsed_s": round(max(0.0, (end - started).total_seconds()), 1)},

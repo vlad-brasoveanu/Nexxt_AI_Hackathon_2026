@@ -9,6 +9,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 
 from app.agents import board as B
+from app.api.mutations import claim_run, claim_case
 from app.agents.catalog import authorize
 from app.agents.specialists.policy import inputs_from_board
 from app.api.agent_views import facts_view, latest_run, run_json, step_json
@@ -107,6 +108,8 @@ def review(run_id: str, body: ReviewRequest, request: Request, identity: Auth, s
         raise HTTPException(409, "Agenții lucrează încă la dosar; revizia se face după ce se opresc")
     if run.case_revision != case.revision:
         raise HTTPException(409, "Dosarul s-a schimbat; reanalizați înainte de revizuire.")
+    claim_case(session, case)
+    claim_run(session, run)
     board = deepcopy(run.board)
     before = deepcopy(board["facts"])
     facts = board["facts"]

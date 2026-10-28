@@ -60,6 +60,7 @@ class DecisionRequest(Contract):
     conditions: list[str] | None = Field(default=None, max_length=20)
     reason: str | None = Field(default=None, max_length=2000)
     human_seconds: float | None = Field(default=None, ge=0, le=86_400)
+    demo_exception: bool = False
 
 
 class MarketPublish(Contract):

@@ -25,4 +25,5 @@ class Settings(BaseSettings):
     agent_deadline_seconds: float = 300
     agent_sync: bool = False               # run agents inline (tests) instead of in a background thread
     evaluation_date: str | None = None     # ISO date; defaults to today
+    demo_admin_override: bool = False     # explicit server opt-in, never enabled implicitly
     demo_simulations: bool = True          # simulated client portal answers and the guard test button

@@ -18,6 +18,7 @@ from app.agents.catalog import AGENTS, TASKS, authorize
 from app.agents.specialists import RUNNERS
 from app.agents.specialists.completeness import draft_message, request_items
 from app.core.audit import audit
+from app.core.policies import current as current_policy
 from app.db import AgentRun, AgentStep, Case, ClientRequest, Document, MarketSnapshot, User, now
 
 ROLE_FOR_LEVEL = {"L1": "credit_analyst", "L2": "risk_officer", "L3": "credit_committee"}
@@ -97,6 +98,11 @@ class Orchestrator:
     def start(self, case_id: str, user) -> str:
         with self.factory.begin() as session:
             case = session.get(Case, case_id)
+            from app.api.mutations import claim_case
+            claim_case(session, case)
+            current = session.scalar(select(AgentRun).where(AgentRun.case_id == case.id).order_by(AgentRun.created_at.desc()))
+            if current and (current.status == "RUNNING" or (current.case_revision == case.revision and current.status not in {"FAILED", "DECIDED"})):
+                return current.id
             board = B.new_board({"id": case.id}, self.evaluation_date())
             run = AgentRun(case_id=case.id, started_by=user.id, status="RUNNING", case_revision=case.revision,
                            mode_label=self.mode_label(), board=board, plan=[])
@@ -151,7 +157,7 @@ class Orchestrator:
                     B.bump(board, "documents")
                     B.bump(board, f"doc:{d.kind}")
         on = date.fromisoformat(board["evaluation_date"])
-        standards = self.sources.standards(on)
+        standards = current_policy(session, self.sources, on, case.team)
         market = self.market(session)
         seen = (market["value_pct"], market["as_of"], standards["version"])
         if board.get("market_seen") != list(seen):
@@ -246,6 +252,9 @@ class Orchestrator:
         with self.factory.begin() as session:
             run = session.get(AgentRun, run_id)
             case = session.get(Case, run.case_id)
+            if case.revision != env.case["revision"]:
+                self.step(session, run, "orchestrator", "event", "Documentele s-au schimbat în timpul analizei; rezultatul intermediar este ignorat.", "warning")
+                return
             run.budget_used += 1
             if failure:
                 board = deepcopy(run.board)

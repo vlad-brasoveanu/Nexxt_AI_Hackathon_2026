@@ -1,4 +1,6 @@
 from app.agents.review import complete, blockers
+from app.core.permissions import permissions, role, authority
+from app.api.mutations import claim_run, claim_case
 """Human credit decisions (Aprobă / Modifică / Respinge) on authority levels with four eyes, the work queue,
 and the demo metrics. Agents never call these endpoints."""
 from statistics import median
@@ -38,7 +40,7 @@ def letter(case, action, terms, conditions, reasons):
 @router.post("/cases/{case_id}/decision", status_code=201)
 def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth, session: DB):
     user = identity[0]
-    if user.role not in CREDIT_ROLES:
+    if not permissions(user)["decide"]:
         raise HTTPException(403, "Doar analiștii de credit, ofițerii de risc și comitetul pot decide")
     case = credit_case(session, user, case_id)
     run = latest_run(session, case_id)
@@ -51,10 +53,17 @@ def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth
     rec = run.recommendation
     if not rec or rec["decision"] == "NEEDS_INFORMATION":
         raise HTTPException(409, "Dosarul este incomplet: nu se poate decide")
+    claim_case(session, case)
+    claim_run(session, run)
     board = run.board
+    demo = body.demo_exception
+    if demo and not (role(user)=="admin" and request.app.state.settings.demo_simulations and request.app.state.settings.demo_admin_override):
+        raise HTTPException(403, "Excepția este disponibilă numai administratorului în demo configurat explicit.")
+    if demo and len((body.reason or "").strip()) < 10:
+        raise HTTPException(422, "Excepția demo necesită motiv explicit.")
     if not complete(board):
         raise HTTPException(409, "Revizia faptelor de către un analist este necesară înainte de decizie")
-    if user.id in {case.owner_id, run.started_by, *board.get("reviewed_by", [])}:
+    if not demo and user.id in {case.owner_id, run.started_by, *board.get("reviewed_by", [])}:
         raise HTTPException(403, "Regula celor patru ochi: cine a pregătit sau revizuit dosarul nu poate decide")
 
     if body.action != "REJECT" and blockers(board):
@@ -62,6 +71,8 @@ def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth
 
     orchestrator = request.app.state.orchestrator
     _, env, live_board = orchestrator.load(session, run)
+    if rec["policy_version"] != env.standards["version"] or rec["market"] != {k: env.market[k] for k in rec["market"]}:
+        raise HTTPException(409, "Politica sau dobânda s-a schimbat; reanalizați dosarul.")
     x = inputs_from_board(live_board, env)
     terms, conditions = None, list(rec.get("conditions", []))
     if body.action == "APPROVE":
@@ -84,12 +95,12 @@ def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth
     reason = (body.reason or "").strip()
     if (override or body.action == "MODIFY") and len(reason) < 10:
         raise HTTPException(422, "Motivul este obligatoriu (minimum 10 caractere) când decizia diferă de recomandare")
-    if RANK[engine.ROLE_LEVEL[user.role]] < RANK[level]:
+    if RANK.get(authority(user), 0) < RANK[level]:
         raise HTTPException(403, f"Decizia necesită nivelul {level} ({ROLE_FOR_LEVEL[level]}): {why}")
 
     vote = {"username": user.username, "role": user.role, "action": body.action, "at": str(env.evaluation_date)}
     pending = session.scalar(select(CreditDecision).where(CreditDecision.run_id == run.id, CreditDecision.status == "PENDING_SECOND_VOTE")) \
-        if level == "L3" else None
+        if level == "L3" and not demo else None
     if pending:
         if any(v["username"] == user.username for v in pending.votes):
             raise HTTPException(409, "Al doilea vot trebuie dat de alt membru al comitetului")
@@ -100,13 +111,15 @@ def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth
         pending.status = "FINAL"
         decision, final = pending, True
     else:
-        final = level != "L3"
+        final = level != "L3" or demo
         reasons = [r["text"] for r in rec.get("reasons", [])] or [LABEL[rec["decision"]]]
         decision = CreditDecision(case_id=case.id, run_id=run.id, action=body.action, status="FINAL" if final else "PENDING_SECOND_VOTE",
                                   terms=terms, conditions=conditions if body.action != "REJECT" else [], reason=reason or None,
-                                  override=override, level=level, votes=[vote], human_seconds=body.human_seconds,
+                                  override=override, demo_exception=demo, level=level, votes=[vote], human_seconds=body.human_seconds,
                                   letter=letter(case, body.action, terms, conditions, reasons), recommendation=rec, case_revision=case.revision)
         session.add(decision)
+    if demo:
+        decision.letter = "EXCEPȚIE DEMO — fără efect operațional\n" + (decision.letter or "")
     session.flush()
     title = (f"Decizie umană: {ACTION_LABEL[body.action]} · nivel {level} · {user.username}"
              + (f" · {fmt_ron(terms['amount'])}" if terms and body.action != "REJECT" else "")
@@ -119,7 +132,7 @@ def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth
         orchestrator.step(session, run, "human", "decision", f"Vot 1/2 în comitet: {ACTION_LABEL[body.action]} · {user.username}", "info",
                           thought=reason or None, detail={"action": body.action, "level": level})
     audit(session, user, "credit.decision" if final else "credit.vote", case.id, run_id=run.id, decision_action=body.action, level=level,
-          override=override, decision_id=decision.id)
+          override=override, demo_exception=demo, reason=body.reason, decision_id=decision.id)
     session.commit()
     return decision_json(decision)
 
@@ -137,7 +150,7 @@ def get_decision(case_id: str, identity: Auth, session: DB):
 def queue(identity: Auth, session: DB):
     user = identity[0]
     query = select(Case).where(Case.team == user.team, Case.kind == "credit")
-    if user.role == "manager":
+    if user.role == "manager" or user.own_cases_only:
         query = query.where(Case.owner_id == user.id)
     out = []
     for case in session.scalars(query.order_by(Case.created_at.desc()).limit(200)):
@@ -149,12 +162,16 @@ def queue(identity: Auth, session: DB):
             summary = {"id": run.id, "status": run.status, "level": run.level, "recommendation": rec.get("decision"),
                        "updated_at": run.updated_at, "last_step": last.title if last else None}
             pending_vote = session.scalar(select(CreditDecision).where(CreditDecision.run_id == run.id, CreditDecision.status == "PENDING_SECOND_VOTE"))
-            if run.status == "WAITING_CLIENT":
-                waiting, routing = "client", "Cerere consolidată trimisă; agenții reiau automat la răspuns."
+            if run.case_revision != case.revision:
+                waiting, routing = "case_officer", "Documente sau politică modificate; reanalizați dosarul."
+            elif run.status == "WAITING_CLIENT":
+                from app.db import ClientRequest
+                draft = session.scalar(select(ClientRequest).where(ClientRequest.run_id == run.id, ClientRequest.status == "DRAFT"))
+                waiting, routing = ("case_officer", "Verifică și trimite ciorna solicitării.") if draft else ("client", "Se așteaptă răspunsul clientului.")
             elif run.status == "AWAITING_DECISION" and not complete(run.board or {}):
-                waiting, routing = "analyst", "Faptele extrase așteaptă revizia analistului."
+                waiting, routing = "case_officer", "Faptele extrase așteaptă revizia analistului."
             elif run.status == "AWAITING_DECISION":
-                waiting = "credit_committee" if pending_vote else ROLE_FOR_LEVEL.get(run.level or "")
+                waiting = "risk_reviewer"
                 routing = rec.get("level_reason")
         out.append({"id": case.id, "title": case.title, "company": meta.get("company", case.title), "cui": meta.get("cui", ""),
                     "amount": meta.get("amount", 0), "term_months": meta.get("term_months", 0), "product": meta.get("product", ""),

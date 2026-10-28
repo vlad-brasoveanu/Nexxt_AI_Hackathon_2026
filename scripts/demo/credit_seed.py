@@ -55,7 +55,7 @@ def seed(url, username, password, start):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", default="http://127.0.0.1:8000")
-    parser.add_argument("--username", default="manager")
+    parser.add_argument("--username", default="officer")
     parser.add_argument("--password", default="12345")
     parser.add_argument("--start", action="store_true", help="start the agents on every case")
     args = parser.parse_args()

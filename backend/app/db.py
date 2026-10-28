@@ -24,6 +24,10 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(255))
     role: Mapped[str] = mapped_column(String(20))
     team: Mapped[str] = mapped_column(String(80))
+    active: Mapped[bool] = mapped_column(Boolean, default=True)
+    authority_level: Mapped[str | None] = mapped_column(String(4), nullable=True)
+    own_cases_only: Mapped[bool] = mapped_column(Boolean, default=False)
+    revision: Mapped[int] = mapped_column(Integer, default=1)
 
 
 class SessionToken(Base):
@@ -163,6 +167,7 @@ class CreditDecision(Base):
     terms: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     conditions: Mapped[list] = mapped_column(JSON, default=list)
     reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    demo_exception: Mapped[bool] = mapped_column(Boolean, default=False)
     override: Mapped[bool] = mapped_column(Boolean, default=False)
     level: Mapped[str] = mapped_column(String(4))
     votes: Mapped[list] = mapped_column(JSON, default=list)
@@ -213,3 +218,16 @@ class RiskReport(Base):
     actor_id: Mapped[str] = mapped_column(ForeignKey('users.id'))
     report: Mapped[dict] = mapped_column(JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+
+class PolicyVersion(Base):
+    __tablename__ = 'policy_versions'
+    __table_args__ = (UniqueConstraint('team','version'),UniqueConstraint('team','parent_version'))
+    id: Mapped[str] = mapped_column(String(36),primary_key=True,default=uid)
+    team: Mapped[str] = mapped_column(String(80))
+    version: Mapped[str] = mapped_column(String(80))
+    parent_version: Mapped[str] = mapped_column(String(80))
+    policy: Mapped[dict] = mapped_column(JSON)
+    published_by: Mapped[str] = mapped_column(ForeignKey('users.id'))
+    reason: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True),default=now)

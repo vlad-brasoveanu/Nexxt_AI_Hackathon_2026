@@ -31,7 +31,8 @@ def get_market(request: Request, identity: Auth, session: DB):
 @router.post("/snapshots", status_code=201)
 def publish(body: MarketPublish, request: Request, identity: Auth, session: DB):
     user = identity[0]
-    if user.role == "supervisor":
+    from app.core.permissions import role
+    if role(user) != "admin":
         raise HTTPException(403, "Read-only role")
     orchestrator = request.app.state.orchestrator
     as_of = (body.as_of or orchestrator.evaluation_date()).isoformat()

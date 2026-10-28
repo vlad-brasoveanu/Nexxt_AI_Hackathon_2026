@@ -8,6 +8,7 @@ from app.api.deps import Auth, DB
 from app.api.routes.agents import visible, credit_case
 from app.core.audit import audit
 from app.db import RiskReport
+from app.api.agent_views import latest_run
 from app.risk.planner import build
 
 router=APIRouter(prefix='/api/v1',tags=['risk-planner'])
@@ -43,5 +44,7 @@ def simulate(run_id: str, body: ScenarioRequest, request: Request, identity: Aut
 @router.get('/cases/{case_id}/risk-reports')
 def reports(case_id: str, identity: Auth,session: DB):
     case=credit_case(session,identity[0],case_id)
-    return [{'id':r.id,'created_at':r.created_at,'is_current':r.report['case_revision']==case.revision,**r.report}
+    latest=latest_run(session,case_id)
+    return [{'id':r.id,'created_at':r.created_at,**r.report,
+             'is_current':bool(latest and latest.id==r.run_id and latest.updated_at.isoformat()==r.report.get('run_updated_at') and r.report['case_revision']==case.revision)}
             for r in session.scalars(select(RiskReport).where(RiskReport.case_id==case_id).order_by(RiskReport.created_at.desc()).limit(20))]

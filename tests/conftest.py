@@ -18,10 +18,10 @@ def app(tmp_path):
     Base.metadata.create_all(app.state.engine)
     hashed = passwords.hash("test-password-only-123")
     with app.state.session_factory.begin() as db:
-        for name, role, team in [("manager", "manager", "demo"), ("other", "manager", "demo"), ("analyst", "analyst", "demo"), ("supervisor", "supervisor", "demo"),
+        for name, role, team in [("admin", "admin", "demo"), ("manager", "manager", "demo"), ("other", "manager", "demo"), ("analyst", "analyst", "demo"), ("supervisor", "supervisor", "demo"),
                                  ("outsider", "analyst", "other"), ("credit_analyst", "credit_analyst", "demo"), ("risk_officer", "risk_officer", "demo"),
                                  ("committee_a", "credit_committee", "demo"), ("committee_b", "credit_committee", "demo")]:
-            db.add(User(username=name, password_hash=hashed, role=role, team=team))
+            db.add(User(username=name, password_hash=hashed, role=role, team=team, authority_level="L3" if role=="admin" else None))
     yield app
     app.state.engine.dispose()
 

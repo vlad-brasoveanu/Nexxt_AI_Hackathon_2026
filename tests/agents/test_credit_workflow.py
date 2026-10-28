@@ -146,6 +146,7 @@ def test_four_eyes_blocks_reviewer_from_deciding(client, app):
 
 def test_new_reference_rate_reprices_waiting_case(client):
     cid, run = ready_codeforge(client)
+    as_user(client,"admin")
     published = client.post("/api/v1/market/snapshots", json={"value_pct": 6.05})
     assert published.status_code == 201 and published.json()["reevaluated"] == 1
     after = client.get(f"/api/v1/agent-runs/{run['id']}").json()

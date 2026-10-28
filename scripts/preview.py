@@ -11,7 +11,7 @@ RUNTIME.mkdir(exist_ok=True, mode=0o700)
 env = {**os.environ, 'PYTHONPATH': str(ROOT / 'backend'),
        'CASECHECK_DATABASE_URL': 'sqlite:///' + str(RUNTIME / 'local-preview.db'),
        'CASECHECK_STORAGE_DIR': str(RUNTIME / 'preview-documents'),
-       'CASECHECK_SECURE_COOKIES': 'false', 'CASECHECK_ALLOWED_ORIGINS': '[]',
+       'CASECHECK_DEMO_ADMIN_OVERRIDE': 'true', 'CASECHECK_SECURE_COOKIES': 'false', 'CASECHECK_ALLOWED_ORIGINS': '[]',
        'CASECHECK_FRONTEND_DIR': str(ROOT / 'frontend/dist')}
 if not (ROOT / 'frontend/dist/index.html').exists():
     subprocess.run(['npm', 'run', 'build', '--prefix', 'frontend'], check=True)

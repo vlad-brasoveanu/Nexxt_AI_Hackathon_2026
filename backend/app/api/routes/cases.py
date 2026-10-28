@@ -31,7 +31,7 @@ def list_cases(identity: Auth, session: DB, offset: int = 0):
     if offset < 0:
         raise HTTPException(422, "Offset must be nonnegative")
     query = select(Case).where(Case.team == user.team)
-    if user.role == "manager":
+    if user.role == "manager" or user.own_cases_only:
         query = query.where(Case.owner_id == user.id)
     return [case_json(c) for c in session.scalars(query.order_by(Case.created_at.desc()).offset(offset).limit(100))]
 
