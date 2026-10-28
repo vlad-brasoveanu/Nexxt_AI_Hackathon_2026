@@ -57,7 +57,7 @@ def locate(doc: B.Doc, key: str, label: str, literal: str | None = None) -> tupl
                 if at >= 0 and window[:at].strip() in {"", "(RON)", "RON", ":"}:
                     start = match.end() + at
                     tail=window[at+len(literal):].lstrip(" ")
-                    if tail and tail[0].isalpha() and not tail.startswith("RON"):
+                    if tail and ((tail[0].isalpha() and not tail.startswith("RON")) or (len(tail)>1 and tail[0] in ".," and tail[1].isdigit())):
                         continue
                     return literal, B.span(doc, number, start, start + len(literal))
                 continue
@@ -103,6 +103,13 @@ def extract(board: dict, env: B.Env, doc: B.Doc, labels: dict, prefix: str, repo
             continue
         text, evidence = hit
         value = parse_ro(text)
+        if value is None and method == "ai_small":
+            report["rejected"].append({"document_id": doc.id, "field": key, "value": text,
+                                       "reason": "Propunerea conține o unitate sau un format nenumeric; valoarea este recitită din sursă"})
+            hit = locate(doc, key, label)
+            if hit:
+                text, evidence = hit
+                value, method = parse_ro(text), "structured"
         if value is None:
             continue
         B.fact(board, f"{prefix}-{key}", "financials", f"{label} ({prefix.removeprefix('fs')})" if prefix.startswith("fs") else label,

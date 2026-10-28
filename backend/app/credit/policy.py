@@ -185,7 +185,7 @@ def evaluate(standards: dict, market: dict, x: Inputs) -> dict:
             reason(code, text, refs)
         return result("DECLINE", None, "L1", "Respingerea nu creează expunere: competență L1. Aprobarea ar fi o excepție (L3).")
     essential = (x.cfads, x.ebitda, x.net_debt, x.existing_service, x.revenue, x.revenue_previous, x.years_in_business, x.bureau_max_dpd)
-    if any(v is None for v in essential) or (x.ebitda is not None and x.ebitda <= 0):
+    if any(v is None for v in essential) or (x.secured and x.collateral_value is None) or (x.ebitda is not None and x.ebitda <= 0):
         reason("R-DATA", "Date esențiale insuficiente sau EBITDA nepozitivă; necesită verificare umană.")
         return result("NEEDS_INFORMATION", None, "L1", "Datele necesare capacității de rambursare nu sunt complete.")
     if x.missing or x.open_requests:

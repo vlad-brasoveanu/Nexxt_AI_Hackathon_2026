@@ -26,12 +26,15 @@ All demo PDFs, companies, policies and source services are synthetic. The suppli
 
 ## Validation evidence
 
-- `.venv/bin/pytest -q`: **135 passed**; one existing dependency deprecation warning.
+- `.venv/bin/pytest -q`: **136 passed**; one existing dependency deprecation warning.
 - `npm run build --prefix frontend`: **passed**, including TypeScript.
 - Alembic fresh/legacy upgrades validated; user IDs and audit references preserved. `alembic check` on the demo SQLite DB: **no new upgrade operations detected**.
 - Real HTTP smoke: PDF upload → consolidated draft/manual send → response/manual rerun → 53 source-grounded facts → review → 30 comparables → correction/recalculation → separate-user decision → audit. Report in ignored `.runtime/credit-smoke.json`. Last run about 1.27 seconds in deterministic mode; this is automated smoke-test time, not employee productivity.
 - Browser with real API: officer login, original queue, PDF-based agent run, draft inspection/send, simulated answer, manual rerun, 53-fact review, Risk Planner and administrator users/policy/audit page. No real lending or external contact.
-- Current verification used **deterministic processing**. No Featherless key is configured in the running preview; no live model calls were made in this delivery. Existing scripted-provider tests cover hallucinated values, forbidden tasks and model-failure handling.
+- **Featherless activated and validated, 2026-10-29:** reused the prior key in Git-ignored `.env` with mode 0600; the value was never printed or added to a commit. Single real 7B PDF extraction: 24 proposed fields, 24 source-anchored, about 5 s.
+- **Cloud end-to-end smoke passed:** Qwen 14B planning/memo and Qwen 7B extraction, 53 facts, 30 comparable cases (20 observed outcomes), correction/recalculation, separate-user decision and audit; 86.61 s automated elapsed time. Final memo is model-generated with zero unverified numbers; one draft was rejected by the number guard. This is one synthetic-case validation, not a broad model accuracy benchmark.
+- The live run exposed a unit-suffixed valuation (`5.200.000 RON`) being omitted. Fixed numeric-format fallback with explicit rejection evidence, rejected partial-number prefixes, and require clarification when a secured loan lacks an extracted valuation. Added regression coverage and kept unit-test settings isolated from runtime credentials.
+- Local reports: `.runtime/featherless-reuse-validation.json`, `.runtime/featherless-live-workflow.json`, `.runtime/credit-smoke.json`.
 
 ## Branches
 
@@ -46,7 +49,7 @@ Commits use Vlad Brasoveanu's configured identity, without AI co-author/signatur
 
 ## Remaining work
 
-1. **Demo AI:** configure Featherless securely at runtime and validate an end-to-end cloud-model run, including latency and memo quality. Keep the actual mode visible.
+1. **Broader AI evaluation:** the first cloud end-to-end scenario is verified; extend live checks to the other synthetic cases and measure variability/memo quality. Keep model errors and actual processing mode visible.
 2. **Operational evidence:** have a person measure the manual baseline and assisted review time. The human baseline remains unmeasured; do not claim time saved or profit improvement from automated test duration.
 3. **Final frontend:** simplify and polish the employee experience after backend review; current controls are functional verification UI.
 4. **Bank validation:** mentor review of financial definitions, supported products, source reliability, approval authority and policies. CFADS = EBITDA − tax is a visible demo approximation. Policy and data are fictional; no compliance certification is claimed.
@@ -55,6 +58,10 @@ Commits use Vlad Brasoveanu's configured identity, without AI co-author/signatur
 7. **OCR (deferred):** add a replaceable OCR adapter and evaluate Romanian scans/tables. Mention it as planned capability, not delivered functionality.
 8. **Final product:** local inference adapter, hardware benchmark and true offline/no-cloud-fallback verification.
 
+The activation/fix follow-up is on **`codex/featherless-demo-validation`**, stacked on the full integration branch.
+
 ## Practical demo
 
 Use the running isolated demo at **http://127.0.0.1:8015/**. It has its own temporary SQLite database and documents, leaving existing servers untouched. Standard reproducible startup remains `scripts/preview.py` on port 8000, followed by `scripts/demo/credit_seed.py`; commands and test flow are in README.
+
+Verified real-AI case: http://127.0.0.1:8015/#/credit/1886c79f-ca1a-4538-bac4-0a0336abfacb. Older runs keep their original deterministic-mode label; new runs use the configured cloud models.

@@ -12,7 +12,7 @@ from helpers import login
 
 @pytest.fixture
 def app(tmp_path):
-    settings = Settings(database_url=f"sqlite:///{tmp_path / 'test.db'}", storage_dir=str(tmp_path / "documents"), secure_cookies=False,
+    settings = Settings(_env_file=None, FEATHERLESS_API_KEY=None, database_url=f"sqlite:///{tmp_path / 'test.db'}", storage_dir=str(tmp_path / "documents"), secure_cookies=False,
                         fixtures_dir=str(Path(__file__).resolve().parents[1] / "fixtures"), agent_sync=True, evaluation_date="2026-10-28")
     app = create_app(settings, models=ModelRouter())  # deterministic unless a test injects scripted models
     Base.metadata.create_all(app.state.engine)

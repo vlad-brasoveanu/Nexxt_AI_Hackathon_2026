@@ -72,3 +72,24 @@ def test_replacing_pdf_invalidates_review_and_preserves_original(client):
     rerun=start(client,cid)
     assert rerun['status']=='AWAITING_DECISION' and not rerun['review_complete']
     assert old['id'] not in {f['evidence']['document_id'] for f in rerun['board']['facts']}
+
+
+def test_model_unit_suffix_and_partial_number_cannot_drop_or_truncate_value():
+    import json
+    from types import SimpleNamespace
+    from app.ai import ModelRouter
+    from app.ai.provider import Completion
+    from app.agents.specialists.financials import extract, VALUATION
+    class Model:
+        name,mode,model='scripted','cloud','test'
+        def __init__(self,value):self.value=value
+        def complete(self,messages,*,timeout):
+            return Completion(text=json.dumps({'items':{'collateral_value':self.value}}),provider=self.name,model=self.model,latency_ms=1)
+    for literal in ['5.200.000 RON','5.200']:
+        doc=B.Doc('valuation','collateral_valuation','valuation.pdf','hash',['Valoare de piață: 5.200.000 RON'])
+        board={'facts':{}};report={'models':[],'rejected':[],'methods':{}}
+        env=SimpleNamespace(models=ModelRouter(small=Model(literal)),timeout=1)
+        values=extract(board,env,doc,VALUATION,'collateral',report)
+        assert values['collateral_value']==5200000
+        assert report['rejected'] and report['methods']['structured']==1
+        assert board['facts']['collateral-collateral_value']['evidence']['quote']=='5.200.000'

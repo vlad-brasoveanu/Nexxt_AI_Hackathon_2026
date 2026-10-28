@@ -78,6 +78,6 @@ def test_overrides_escalate_to_committee():
 
 
 def test_missing_core_inputs_and_unknown_product_never_approve():
-    for changes in ({'net_debt':None},{'existing_service':None},{'product':'Produs fără politică'}):
+    for changes in ({'net_debt':None},{'existing_service':None},{'product':'Produs fără politică'},{'collateral_value':None}):
         r=evaluate(STANDARDS,MARKET,codeforge(**changes))
         assert r['decision']=='NEEDS_INFORMATION' and r['proposed'] is None
