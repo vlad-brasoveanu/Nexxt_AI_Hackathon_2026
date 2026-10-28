@@ -5,19 +5,21 @@ from app.core.security import passwords
 from app.db import User, connect
 
 DEMO_PASSWORD = "12345"
-DEMO_USERS = ("manager", "analyst", "supervisor")
+# username → role. The credit roles sign decisions on authority levels L1, L2 and L3 (committee: two members).
+DEMO_USERS = {"manager": "manager", "analyst": "analyst", "supervisor": "supervisor", "credit_analyst": "credit_analyst",
+              "risk_officer": "risk_officer", "committee_a": "credit_committee", "committee_b": "credit_committee"}
 
 
 def main():
     engine, factory = connect(Settings().database_url)
     hashed = passwords.hash(DEMO_PASSWORD)
     with factory.begin() as session:
-        for role in DEMO_USERS:
-            user = session.scalar(select(User).where(User.username == role))
+        for username, role in DEMO_USERS.items():
+            user = session.scalar(select(User).where(User.username == username))
             if user:
-                user.password_hash = hashed
+                user.password_hash, user.role = hashed, role
             else:
-                session.add(User(username=role, password_hash=hashed, role=role, team="demo"))
+                session.add(User(username=username, password_hash=hashed, role=role, team="demo"))
     engine.dispose()
     print(f"Demo accounts ready: {', '.join(DEMO_USERS)} · password {DEMO_PASSWORD}")
 

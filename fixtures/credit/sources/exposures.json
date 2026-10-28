@@ -1,0 +1,18 @@
+{
+  "synthetic": "SURSĂ SINTETICĂ — date fictive generate pentru demonstrație; nu reprezintă un registru sau o bază de date reală.",
+  "source": "Expuneri interne Banca Demo (simulat)",
+  "as_of": "2026-10-27",
+  "clients": {
+    "47718203": {
+      "name": "Codeforge Labs SRL",
+      "facilities": [
+        {
+          "type": "Credit de investiții",
+          "approved_ron": 800000,
+          "balance_ron": 640000,
+          "status": "performant"
+        }
+      ]
+    }
+  }
+}

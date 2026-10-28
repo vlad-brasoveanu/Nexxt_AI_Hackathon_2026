@@ -35,11 +35,15 @@ def current_identity(request: Request, session: DB):
 Auth = Annotated[tuple, Depends(current_identity)]
 
 
+CREDIT_ROLES = {"credit_analyst", "risk_officer", "credit_committee"}
+ROLES = {"manager", "analyst", "supervisor"} | CREDIT_ROLES
+
+
 def case_for(session, user, case_id):
     case = session.get(Case, case_id)
     if not case or case.team != user.team or (user.role == "manager" and case.owner_id != user.id):
         raise HTTPException(404, "Case not found")
-    if user.role not in {"manager", "analyst", "supervisor"}:
+    if user.role not in ROLES:
         raise HTTPException(403, "Role not permitted")
     return case
 

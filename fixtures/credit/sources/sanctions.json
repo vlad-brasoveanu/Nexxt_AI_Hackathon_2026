@@ -1,0 +1,86 @@
+{
+  "synthetic": "SURSĂ SINTETICĂ — date fictive generate pentru demonstrație; nu reprezintă un registru sau o bază de date reală.",
+  "source": "Liste de sancțiuni consolidate (simulat)",
+  "entries": [
+    {
+      "id": "SIM-0001",
+      "name": "Zorvath Delmarek",
+      "type": "persoană",
+      "list": "UE (simulat)",
+      "listed_on": "2023-05-12",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0002",
+      "name": "Kestrel Maritime Holdings Ltd",
+      "type": "entitate",
+      "list": "ONU (simulat)",
+      "listed_on": "2022-11-03",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0003",
+      "name": "Ilvaro Tenebrandt",
+      "type": "persoană",
+      "list": "OFAC (simulat)",
+      "listed_on": "2024-02-19",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0004",
+      "name": "Quorra Petrochem FZE",
+      "type": "entitate",
+      "list": "UE (simulat)",
+      "listed_on": "2023-09-27",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0005",
+      "name": "Vasko Ulmeritsch",
+      "type": "persoană",
+      "list": "ONU (simulat)",
+      "listed_on": "2021-06-08",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0006",
+      "name": "Nimbus Trade Consortium AG",
+      "type": "entitate",
+      "list": "OFAC (simulat)",
+      "listed_on": "2025-01-14",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0007",
+      "name": "Oskara Veltrinova",
+      "type": "persoană",
+      "list": "UE (simulat)",
+      "listed_on": "2024-10-01",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0008",
+      "name": "Halvorsen-Duquette Shipping LLC",
+      "type": "entitate",
+      "list": "ONU (simulat)",
+      "listed_on": "2022-04-21",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0009",
+      "name": "Tarquin Belmoral",
+      "type": "persoană",
+      "list": "OFAC (simulat)",
+      "listed_on": "2025-07-30",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    },
+    {
+      "id": "SIM-0010",
+      "name": "Eastern Meridian Metals JSC",
+      "type": "entitate",
+      "list": "UE (simulat)",
+      "listed_on": "2023-12-05",
+      "note": "intrare fictivă, fără legătură cu persoane sau societăți reale"
+    }
+  ]
+}

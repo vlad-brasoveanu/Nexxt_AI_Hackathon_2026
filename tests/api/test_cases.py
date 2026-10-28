@@ -68,10 +68,11 @@ def test_forged_evidence_rejected(client, tamper):
 
 
 def test_supervisor_cannot_edit_evidence(client):
-    cid, _, _ = packet(client)
+    cid, revision, _ = packet(client)
     login(client, "supervisor")
     assert client.get(f"/api/v1/cases/{cid}").status_code == 200
     assert client.post("/api/v1/cases", json={"title": "forbidden"}).status_code == 403
+    assert run(client, cid, revision, key="supervisor-run").status_code == 403
 
 
 def test_invalid_upload_does_not_mutate(client):

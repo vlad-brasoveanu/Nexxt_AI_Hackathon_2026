@@ -1,0 +1,40 @@
+{
+  "version": "RO-IMM-2026.10",
+  "effective_from": "2026-10-01",
+  "synthetic": "Politică de creditare fictivă, pentru demonstrație. Nu reflectă politica vreunei bănci reale.",
+  "product": {"id": "investitii_imm", "label": "Credit de investiții IMM", "currency": "RON",
+              "min_term_months": 12, "max_term_months": 120, "amortization": "anuități lunare"},
+  "pricing": {"index": "ROBOR3M", "margins_pct": {"A": 2.5, "B": 3.0, "C": 3.75}, "stress_shock_pp": 2.0, "rounding_ron": 10000},
+  "thresholds": {
+    "dscr_min": 1.20,
+    "dscr_stressed_min": 1.00,
+    "net_debt_ebitda_max": 3.5,
+    "years_in_business_min": 2,
+    "bureau_dpd_max": 30,
+    "bureau_dpd_knockout": 90,
+    "ltv_max_pct": 70,
+    "turnover_gap_tolerance_pct": 10,
+    "client_concentration_max_pct": 40,
+    "revenue_drop_max_pct": 20,
+    "extract_age_max_days": 90
+  },
+  "risk_classes": [
+    {"class": "A", "dscr_min": 1.5, "net_debt_ebitda_max": 2.0},
+    {"class": "B", "dscr_min": 1.2, "net_debt_ebitda_max": 3.5},
+    {"class": "C", "dscr_min": 0.0, "net_debt_ebitda_max": 99}
+  ],
+  "authority": [
+    {"level": "L1", "role": "credit_analyst", "max_group_exposure_ron": 500000, "votes_required": 1},
+    {"level": "L2", "role": "risk_officer", "max_group_exposure_ron": 5000000, "votes_required": 1},
+    {"level": "L3", "role": "credit_committee", "max_group_exposure_ron": null, "votes_required": 2}
+  ],
+  "required_documents": [
+    {"code": "credit_application", "title": "Cerere de finanțare", "kind": "credit_application"},
+    {"code": "fs_current", "title": "Situații financiare pentru ultimul exercițiu încheiat (2025)", "kind": "financial_statements", "year": 2025},
+    {"code": "fs_previous", "title": "Situații financiare pentru exercițiul anterior (2024)", "kind": "financial_statements", "year": 2024},
+    {"code": "bank_statements", "title": "Extrase de cont pentru ultimul exercițiu încheiat", "kind": "bank_statement"},
+    {"code": "company_extract", "title": "Certificat constatator ONRC (cel mult 90 de zile)", "kind": "company_extract"},
+    {"code": "identity", "title": "Act de identitate al administratorului", "kind": "identity"},
+    {"code": "collateral_valuation", "title": "Raport de evaluare a garanției imobiliare", "kind": "collateral_valuation", "when": "secured"}
+  ]
+}

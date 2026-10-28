@@ -14,6 +14,34 @@ Last updated: 2026-10-28 · Repository: https://github.com/vlad-brasoveanu/Nexxt
 Roles: `manager` (relationship manager: creates own cases, uploads), `analyst` (operations: works team cases), `supervisor` (read and sign-off; cannot edit evidence).
 Demo logins are static: all three use password `12345` (demo only).
 
+## Multi-agent SME credit workflow (branch `codex/agentic-workflow`, 2026-10-28)
+
+The pitch is now framed as an SME credit file prepared from application to human decision, with KYC as the first step. Agents prepare and recommend; a human with the required authority decides. Scope change: the earlier "does not make lending decisions" now reads "does not decide autonomously; it records human decisions prepared by the agents".
+
+- **Agent model:**
+  - Orchestrator (plan, state, policy guard) → Analist financiar (synthetic history, sector statistics) → seven specialists: Completitudine, Situații financiare, Fluxuri de numerar, KYB/Diligență, Politică, Memo, Critic.
+  - The human acts: Aprobă / Modifică / Respinge.
+  - Code: `backend/app/agents/`.
+- **Autonomy fixed in code** (`agents/catalog.py`):
+  - The planner may only order eligible catalogue tasks.
+  - `loan.approve`/`loan.reject`/`policy.change`/`evidence.delete`/external contact are refused and recorded.
+  - Missing documents and client-fixable issues go out automatically as one consolidated request through a simulated portal, and are skipped on knock-out cases.
+- **Model routing by tier:**
+  - Large (Qwen 14B): planning, memo.
+  - Small (Qwen 7B): statement extraction, client message.
+  - Deterministic: everything else.
+  - Without a key, the run is labelled "Mod determinist". Every model value is re-anchored to its row label in the source text; memo numbers must appear in the data sheet.
+- **Policy as data:**
+  - Credit standards live in `fixtures/credit/standards/*.json`, ROBOR 3M in market snapshots.
+  - The engine `backend/app/credit/policy.py` gives a recommendation (APPROVE, APPROVE_WITH_CONDITIONS, COUNTER_OFFER, DECLINE, NEEDS_INFORMATION), reason codes, conditions and an authority level (L1 ≤ 500k, L2 ≤ 5M group exposure, L3 committee with 2 votes).
+  - A new fixing re-prices cases waiting for a decision automatically.
+- **Human controls:**
+  - Batch fact review (analyst) is required before a decision.
+  - Four eyes: the preparer or reviewer cannot decide.
+  - Overrides need a reason; L3 needs two committee votes.
+  - Decision on the current case revision only.
+- **Data:** 3 synthetic credit cases (Codeforge counter-offer, Nordic CUI clarification, Transport 95-day bureau knock-out), simulated registry/bureau/exposures/sanctions, 600 synthetic past cases for benchmarks and precedents (descriptive only, never an input to the decision).
+
 ## Architecture
 
 - **Backend:** FastAPI + SQLAlchemy/Alembic, PostgreSQL (SQLite for local preview and tests). Packages under `backend/app/`:
@@ -107,7 +135,41 @@ Demo logins are static: all three use password `12345` (demo only).
   - Each folder's `manifest.json` is the intake envelope: channel, received at/by, identification method (video-ID or in person), signature type, status, and every file with its document kind and sha256.
   - Not yet loadable in the app: there is no seeder, UI inbox or channel field. The new forms carry no machine-readable `label: value` lines, and the online ID photos lack `identity_expiry:`, so VAL-01 needs AI or manual extraction for them.
 
+- [x] **Multi-agent credit workflow** (branch `codex/agentic-workflow`): agents, policy engine, API (runs, SSE events, review, simulated client answer, what-if, guard test, decision, queue, market, metrics), migration `c41f2a9d7e10`, fixtures, "agent control room" frontend. `pytest -q`: 117 passed (10 end-to-end agent tests). `npm run build` passes. Not yet visually checked in the browser (the user is doing it), and no live run with the Featherless models yet.
+
+## Decisions on 2026-10-28 (evening)
+
+- **Rules folder (`~/Desktop/Reguli`):** it targets personal consumer credit (Flexicredit) and excludes company credit. Decision: keep the SME product. From the folder, apply only the rules that fit a company:
+  - KYC and PEP (Legea 129/2019, Reg. BNR 2/2019);
+  - GDPR;
+  - consultation of the Central Credit Register (Reg. BNR 4/2025, art. 23: consent form F5).
+
+  Show the source of each rule in the UI. The personal-credit rules (40% debt-to-income, ID validity by age, ANAF certificate) stay out.
+- **Public news agent (under KYB):** a simulated source, because the demo companies are fictional, plus a replaceable interface for a real feed.
+- **Scans:** local OCR with Tesseract and the Romanian language pack (no cloud). OCR text is marked as transcribed.
+- **Agent stack:** we keep our own orchestrator and `InferenceProvider`, not the OpenAI Agents SDK/Bedrock from Florin Iacob's plan. The principles match: the orchestrator is code, sub-agents are tools, calculations are deterministic, every claim has a source, the human decides.
+
 ## To do (priority order)
+
+- **Backend paused (2026-10-28 evening, the user's decision):** someone else takes over the backend from the frontend screens. Until then I work on the frontend only.
+  - Done before the pause: OCR for scans in `ingestion/parsing.py` (pdftoppm + Tesseract `ron+eng`, local), plus the `documents.ocr_pages` column and migration `d7a3b1c0e5f2`. Tests: 117 passed. No test with a real scan yet.
+  - Contract for the backend: `frontend/src/lib/agent-types.ts` (JSON shapes) + `docs/openapi.json` (routes). New screens are built first on mock data (`npm run dev:mock`); each field the backend must supply is marked in the contract.
+- **Still to do in the backend (from the list below):** points 2–4 (document type check, rules from the folder with citations, news agent). The frontend will show them on mock data.
+- **List:**
+  1. Scanned-page ingestion: textless pages are OCR'd with Tesseract (ron), marked as transcribed.
+  2. Document type check: the agent verifies from the content that each document matches its declared type. A mismatch becomes an issue and goes into the consolidated client request.
+  3. Rules from the folder: KYC/PEP, CRC consent and GDPR as policy rules, with a citation of the act and article.
+  4. Public news agent under KYB (simulated source + interface).
+  5. Frontend: more readable (larger fonts, higher contrast, larger hit areas); merge Metrici and Piață și politică into one page.
+- **Then:**
+  - Single-prompt comparison vs. agents (point 4 of Florin's plan; Codeforge is a good candidate).
+  - Commit after the user checks the UI in the browser.
+
+- **Credit demo:**
+  - Browser check of the new UI in both themes.
+  - One live run with `FEATHERLESS_API_KEY` (14B/7B) to check planning and memo quality.
+  - Measure the manual baseline into `fixtures/credit/baseline.json`.
+  - Optional: live BNR ROBOR feed behind the market interface (research not done; the subagent hit the session limit).
 
 0. **Client submissions in the app:** load `fixtures/client_submissions` through the API (a seeder reading `manifest.json`), add the channel and intake metadata to cases, and decide which declared answers (purpose, cash, PEP, FATCA/CRS) feed new checks.
 

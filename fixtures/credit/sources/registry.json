@@ -1,0 +1,308 @@
+{
+  "synthetic": "SURSĂ SINTETICĂ — date fictive generate pentru demonstrație; nu reprezintă un registru sau o bază de date reală.",
+  "source": "Registrul comerțului (simulat)",
+  "as_of": "2026-10-27",
+  "companies": [
+    {
+      "cui": "46270185",
+      "name": "Codeforge Digital SRL",
+      "status": "funcțiune",
+      "caen": "6201",
+      "founded": "2021-11-08",
+      "address": "Bd. Dimitrie Pompeiu nr. 6A, et. 3, Sector 2, București, 020337",
+      "shareholders": [
+        {
+          "name": "Vlad-Ștefan Ionescu",
+          "type": "person",
+          "id": "1910522******",
+          "share_pct": 50
+        },
+        {
+          "name": "Ana-Maria Georgescu",
+          "type": "person",
+          "id": "2940901******",
+          "share_pct": 50
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Vlad-Ștefan Ionescu",
+          "id": "1910522******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "47718203",
+      "name": "Codeforge Labs SRL",
+      "status": "funcțiune",
+      "caen": "6202",
+      "founded": "2023-03-14",
+      "address": "Str. Plantelor nr. 22, et. 2, Sector 2, București, 021235",
+      "shareholders": [
+        {
+          "name": "Ana-Maria Georgescu",
+          "type": "person",
+          "id": "2940901******",
+          "share_pct": 60
+        },
+        {
+          "name": "Mihai Georgescu",
+          "type": "person",
+          "id": "1860217******",
+          "share_pct": 40
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Mihai Georgescu",
+          "id": "1860217******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "48930415",
+      "name": "Pixel Forge Studio SRL",
+      "status": "funcțiune",
+      "caen": "5821",
+      "founded": "2022-06-20",
+      "address": "Str. Memorandumului nr. 14, Cluj-Napoca, jud. Cluj, 400114",
+      "shareholders": [
+        {
+          "name": "Vlad-Ștefan Ionescu",
+          "type": "person",
+          "id": "1910522******",
+          "share_pct": 25
+        },
+        {
+          "name": "Tudor-Andrei Cristea",
+          "type": "person",
+          "id": "1880310******",
+          "share_pct": 45
+        },
+        {
+          "name": "Teodora Lungu",
+          "type": "person",
+          "id": "2960722******",
+          "share_pct": 30
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Tudor-Andrei Cristea",
+          "id": "1880310******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "45182735",
+      "name": "Nordic Timber Solutions SRL",
+      "status": "funcțiune",
+      "caen": "1610",
+      "founded": "2020-02-27",
+      "address": "Calea Unirii nr. 87, Suceava, jud. Suceava, 720043",
+      "shareholders": [
+        {
+          "name": "Mihai-Cătălin Ursu",
+          "type": "person",
+          "id": "1821104******",
+          "share_pct": 70
+        },
+        {
+          "name": "Erik Lindqvist",
+          "type": "person",
+          "id": "7720814******",
+          "share_pct": 30
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Mihai-Cătălin Ursu",
+          "id": "1821104******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "41055267",
+      "name": "Transport Rapid Dunărea SRL",
+      "status": "funcțiune",
+      "caen": "4941",
+      "founded": "2019-08-30",
+      "address": "Str. Brăilei nr. 154, Galați, jud. Galați, 800310",
+      "shareholders": [
+        {
+          "name": "Costel Bălan",
+          "type": "person",
+          "id": "1780209******",
+          "share_pct": 100
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Costel Bălan",
+          "id": "1780209******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "43817262",
+      "name": "Brutăria Valea Mureșului SRL",
+      "status": "funcțiune",
+      "caen": "1071",
+      "founded": "2019-06-11",
+      "address": "Str. Gheorghe Doja nr. 212, Târgu Mureș, jud. Mureș, 540185",
+      "shareholders": [
+        {
+          "name": "Ioana-Maria Pop",
+          "type": "person",
+          "id": "2870314******",
+          "share_pct": 60
+        },
+        {
+          "name": "Andrei Pop",
+          "type": "person",
+          "id": "1890615******",
+          "share_pct": 40
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Ioana-Maria Pop",
+          "id": "2870314******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "39628141",
+      "name": "Clinica Dentară Zâmbet Sănătos SRL",
+      "status": "funcțiune",
+      "caen": "8623",
+      "founded": "2018-09-03",
+      "address": "Str. Observatorului nr. 118, et. 1, Cluj-Napoca, jud. Cluj, 400363",
+      "shareholders": [
+        {
+          "name": "Raluca-Elena Moldovan",
+          "type": "person",
+          "id": "2790703******",
+          "share_pct": 100
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Raluca-Elena Moldovan",
+          "id": "2790703******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "37105936",
+      "name": "AgroVest Câmpia Bărăganului SRL",
+      "status": "funcțiune",
+      "caen": "0111",
+      "founded": "2017-03-21",
+      "address": "Șos. București nr. 5, Slobozia, jud. Ialomița, 920082",
+      "shareholders": [
+        {
+          "name": "Gheorghe Dumitrescu",
+          "type": "person",
+          "id": "1700421******",
+          "share_pct": 55
+        },
+        {
+          "name": "Elena Dumitrescu",
+          "type": "person",
+          "id": "2730908******",
+          "share_pct": 45
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Gheorghe Dumitrescu",
+          "id": "1700421******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "35198408",
+      "name": "Pensiunea Cetatea de Pădure SRL",
+      "status": "funcțiune",
+      "caen": "5520",
+      "founded": "2016-05-09",
+      "address": "Str. Principală nr. 287, Bran, jud. Brașov, 507025",
+      "shareholders": [
+        {
+          "name": "Florin Neagu",
+          "type": "person",
+          "id": "1760302******",
+          "share_pct": 100
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Florin Neagu",
+          "id": "1760302******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "43901257",
+      "name": "Delta Retail Demo SRL",
+      "status": "funcțiune",
+      "caen": "4719",
+      "founded": "2020-09-02",
+      "address": "Str. Industriilor nr. 41, Ploiești, jud. Prahova, 100305",
+      "shareholders": [
+        {
+          "name": "Carpați Holding Demo SRL",
+          "type": "company",
+          "id": "40125879",
+          "share_pct": 100
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Sorin-Adrian Mihalache",
+          "id": "1720115******",
+          "role": "Administrator"
+        }
+      ]
+    },
+    {
+      "cui": "40125879",
+      "name": "Carpați Holding Demo SRL",
+      "status": "funcțiune",
+      "caen": "6420",
+      "founded": "2018-03-12",
+      "address": "Bd. Republicii nr. 9, Ploiești, jud. Prahova, 100028",
+      "shareholders": [
+        {
+          "name": "Sorin-Adrian Mihalache",
+          "type": "person",
+          "id": "1720115******",
+          "share_pct": 70
+        },
+        {
+          "name": "Daniela Voicu",
+          "type": "person",
+          "id": "2800630******",
+          "share_pct": 30
+        }
+      ],
+      "administrators": [
+        {
+          "name": "Sorin-Adrian Mihalache",
+          "id": "1720115******",
+          "role": "Administrator"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+data;descriere;contrapartida;iban_contrapartida;debit;credit;sold
+01.01.2025;Sold inițial;;;;;128000,00
+03.01.2025;Chirie depozit si parcare luna 01.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;118000,00
+08.01.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;51831,51;;66168,49
+08.01.2025;Servicii contabilitate luna 01.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;63168,49
+08.01.2025;Abonament telefonie si GPS flota luna 01.2025;Tele Demo SRL;RO00DEMO0000000000000006;4313,92;;58854,57
+08.01.2025;Prima RCA/CASCO rata 1/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;42154,57
+09.01.2025;Incasare factura TRD-2025-001;Spedition Rheinland GmbH;DE00DEMO00000000000017;;152399,56;194554,13
+10.01.2025;Plata salarii luna 01.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;141634,13
+10.01.2025;Plata salarii luna 01.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;106354,13
+10.01.2025;Taxe drum si rovinieta - factura RT-2025-01;Taxe Drum Demo SRL;RO00DEMO0000000000000008;26830,64;;79523,49
+13.01.2025;Incasare factura TRD-2025-002;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;17458,25;96981,74
+15.01.2025;Incasare factura TRD-2025-003;Cereale Delta Demo SRL;RO00DEMO0000000000000019;;74383,98;171365,72
+15.01.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;54834,19;;116531,53
+15.01.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;104631,53
+16.01.2025;Piese si anvelope - factura PA-2025-01;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;22947,84;;81683,69
+17.01.2025;Service camioane - factura SC-2025-01;Service Camioane Demo SRL;RO00DEMO0000000000000010;27479,82;;54203,87
+20.01.2025;Incasare factura TRD-2025-004;Spedition Rheinland GmbH;DE00DEMO00000000000017;;19347,71;73551,58
+20.01.2025;Rata leasing luna 01.2025 contract DL-2023-045;Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;56351,58
+21.01.2025;Transport extern partener - factura TP-2025-01;Transport Partener Demo SRL;RO00DEMO0000000000000011;28698,25;;27653,33
+23.01.2025;Incasare factura TRD-2025-005;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;71578,26;99231,59
+23.01.2025;Plata contributii salariale luna 12.2024;Bugetul de stat – contributii;RO00DEMO0000000000000002;75859,00;;23372,59
+27.01.2025;Incasare factura TRD-2025-006;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;130005,49;153378,08
+27.01.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;49004,63;;104373,45
+28.01.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;33888,62;;70484,83
+31.01.2025;Incasare factura TRD-2025-007;Spedition Rheinland GmbH;DE00DEMO00000000000017;;24740,68;95225,51
+03.02.2025;Chirie depozit si parcare luna 02.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;85225,51
+04.02.2025;Incasare factura TRD-2025-008;Cereale Delta Demo SRL;RO00DEMO0000000000000019;;43639,58;128865,09
+05.02.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;60619,58;;68245,51
+05.02.2025;Servicii contabilitate luna 02.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;65245,51
+06.02.2025;Abonament telefonie si GPS flota luna 02.2025;Tele Demo SRL;RO00DEMO0000000000000006;4062,95;;61182,56
+07.02.2025;Incasare factura TRD-2025-009;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;28913,33;90095,89
+10.02.2025;Prima RCA/CASCO rata 2/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;73395,89
+10.02.2025;Taxe drum si rovinieta - factura RT-2025-02;Taxe Drum Demo SRL;RO00DEMO0000000000000008;28324,40;;45071,49
+12.02.2025;Incasare factura TRD-2025-010;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;115496,09;160567,58
+12.02.2025;Plata salarii luna 02.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;107647,58
+12.02.2025;Plata salarii luna 02.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;72367,58
+17.02.2025;Incasare factura TRD-2025-011;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;111679,58;184047,16
+17.02.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;58384,21;;125662,95
+17.02.2025;Piese si anvelope - factura PA-2025-02;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;24253,35;;101409,60
+17.02.2025;Service camioane - factura SC-2025-02;Service Camioane Demo SRL;RO00DEMO0000000000000010;36657,57;;64752,03
+17.02.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;52852,03
+18.02.2025;Incasare factura TRD-2025-012;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;23195,28;76047,31
+20.02.2025;Rata leasing luna 02.2025 contract DL-2023-045;Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;58847,31
+21.02.2025;Incasare factura TRD-2025-013;Spedition Rheinland GmbH;DE00DEMO00000000000017;;158034,69;216882,00
+21.02.2025;Transport extern partener - factura TP-2025-02;Transport Partener Demo SRL;RO00DEMO0000000000000011;28621,65;;188260,35
+24.02.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;57077,88;;131182,47
+25.02.2025;Plata contributii salariale luna 01.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;65217,47
+27.02.2025;Incasare factura TRD-2025-014;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;23692,53;88910,00
+28.02.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;38909,53;;50000,47
+03.03.2025;Incasare factura TRD-2025-015;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;66205,97;116206,44
+03.03.2025;Chirie depozit si parcare luna 03.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;106206,44
+05.03.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;48236,30;;57970,14
+05.03.2025;Servicii contabilitate luna 03.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;54970,14
+06.03.2025;Abonament telefonie si GPS flota luna 03.2025;Tele Demo SRL;RO00DEMO0000000000000006;4221,74;;50748,40
+07.03.2025;Incasare factura TRD-2025-016;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;50429,58;101177,98
+10.03.2025;Prima RCA/CASCO rata 3/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;84477,98
+10.03.2025;Taxe drum si rovinieta - factura RT-2025-03;Taxe Drum Demo SRL;RO00DEMO0000000000000008;26879,86;;57598,12
+11.03.2025;Incasare factura TRD-2025-017;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;212040,03;269638,15
+12.03.2025;Plata salarii luna 03.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;216718,15
+12.03.2025;Plata salarii luna 03.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;181438,15
+17.03.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;58656,54;;122781,61
+17.03.2025;Piese si anvelope - factura PA-2025-03;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;27018,18;;95763,43
+17.03.2025;Service camioane - factura SC-2025-03;Service Camioane Demo SRL;RO00DEMO0000000000000010;34759,24;;61004,19
+17.03.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;49104,19
+18.03.2025;Incasare factura TRD-2025-018;Spedition Rheinland GmbH;DE00DEMO00000000000017;;43122,06;92226,25
+20.03.2025;Rata leasing luna 03.2025 contract DL-2023-045;Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;75026,25
+21.03.2025;Incasare factura TRD-2025-019;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;129615,75;204642,00
+21.03.2025;Transport extern partener - factura TP-2025-03;Transport Partener Demo SRL;RO00DEMO0000000000000011;29670,03;;174971,97
+25.03.2025;Plata contributii salariale luna 02.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;109006,97
+25.03.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;54650,08;;54356,89
+26.03.2025;Incasare factura TRD-2025-020;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;21613,36;75970,25
+28.03.2025;Incasare factura TRD-2025-021;Spedition Rheinland GmbH;DE00DEMO00000000000017;;16643,04;92613,29
+28.03.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;32199,37;;60413,92
+31.03.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000016;;1495,73;61909,65
+01.04.2025;Incasare factura TRD-2025-022;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;74814,01;136723,66
+03.04.2025;Chirie depozit si parcare luna 04.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;126723,66
+04.04.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;48259,73;;78463,93
+07.04.2025;Incasare factura TRD-2025-023;Cereale Delta Demo SRL;RO00DEMO0000000000000019;;21955,94;100419,87
+07.04.2025;Servicii contabilitate luna 04.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;97419,87
+07.04.2025;Abonament telefonie si GPS flota luna 04.2025;Tele Demo SRL;RO00DEMO0000000000000006;4367,67;;93052,20
+08.04.2025;Incasare factura TRD-2025-024;Spedition Rheinland GmbH;DE00DEMO00000000000017;;64867,17;157919,37
+08.04.2025;Prima RCA/CASCO rata 4/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;141219,37
+10.04.2025;Taxe drum si rovinieta - factura RT-2025-04;Taxe Drum Demo SRL;RO00DEMO0000000000000008;27759,24;;113460,13
+11.04.2025;Plata salarii luna 04.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;60540,13
+11.04.2025;Plata salarii luna 04.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;25260,13
+14.04.2025;Incasare factura TRD-2025-025;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;165006,51;190266,64
+15.04.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;61735,03;;128531,61
+15.04.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;116631,61
+16.04.2025;Piese si anvelope - factura PA-2025-04;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;29749,53;;86882,08
+17.04.2025;Service camioane - factura SC-2025-04;Service Camioane Demo SRL;RO00DEMO0000000000000010;27467,15;;59414,93
+22.04.2025;Incasare factura TRD-2025-026;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;52079,34;111494,27
+22.04.2025;Transport extern partener - factura TP-2025-04;Transport Partener Demo SRL;RO00DEMO0000000000000011;22795,52;;88698,75
+22.04.2025;Rata leasing luna 04.2025 contract DL-2023-045;Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;71498,75
+25.04.2025;Incasare factura TRD-2025-027;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;110078,11;181576,86
+25.04.2025;Plata contributii salariale luna 03.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;115611,86
+25.04.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;58025,34;;57586,52
+25.04.2025;Plata impozit pe profit trim. I 2025;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000015;2750,00;;54836,52
+28.04.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;36727,81;;18108,71
+30.04.2025;Incasare factura TRD-2025-028;Port Cargo Dunarea Demo SRL;RO00DEMO0000000000000024;;96271,66;114380,37
+05.05.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;50005,64;;64374,73
+05.05.2025;Chirie depozit si parcare luna 05.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;54374,73
+05.05.2025;Servicii contabilitate luna 05.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;51374,73
+06.05.2025;Incasare factura TRD-2025-029;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;31583,99;82958,72
+06.05.2025;Abonament telefonie si GPS flota luna 05.2025;Tele Demo SRL;RO00DEMO0000000000000006;4256,46;;78702,26
+07.05.2025;Incasare factura TRD-2025-030;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;24117,29;102819,55
+08.05.2025;Prima RCA/CASCO rata 5/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;86119,55
+12.05.2025;Incasare factura TRD-2025-031;Port Cargo Dunarea Demo SRL;RO00DEMO0000000000000024;;119501,21;205620,76
+12.05.2025;Plata salarii luna 05.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;152700,76
+12.05.2025;Plata salarii luna 05.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;117420,76
+12.05.2025;Taxe drum si rovinieta - factura RT-2025-05;Taxe Drum Demo SRL;RO00DEMO0000000000000008;31530,28;;85890,48
+14.05.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;58318,79;;27571,69
+15.05.2025;Incasare factura TRD-2025-032;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;171942,20;199513,89
+15.05.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;187613,89
+16.05.2025;Piese si anvelope - factura PA-2025-05;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;35573,44;;152040,45
+19.05.2025;Service camioane - factura SC-2025-05;Service Camioane Demo SRL;RO00DEMO0000000000000010;27336,03;;124704,42
+20.05.2025;Rata leasing luna 05.2025 contract DL-2023-045;Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;107504,42
+21.05.2025;Transport extern partener - factura TP-2025-05;Transport Partener Demo SRL;RO00DEMO0000000000000011;23114,88;;84389,54
+22.05.2025;Incasare factura TRD-2025-033;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;60623,26;145012,80
+22.05.2025;Remorca - reparatie capitala, factura RC-2025-05;Service Camioane Demo SRL;RO00DEMO0000000000000010;85000,00;;60012,80
+23.05.2025;Incasare factura TRD-2025-034;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;158724,65;218737,45
+23.05.2025;Plata contributii salariale luna 04.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;152772,45
+26.05.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;60110,18;;92662,27
+28.05.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;36120,65;;56541,62
+30.05.2025;Incasare factura TRD-2025-035;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;16373,65;72915,27
+02.06.2025;Incasare factura TRD-2025-036;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;34533,50;107448,77
+03.06.2025;Chirie depozit si parcare luna 06.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;97448,77
+04.06.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;58755,24;;38693,53
+05.06.2025;Servicii contabilitate luna 06.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;35693,53
+06.06.2025;Incasare factura TRD-2025-037;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;98700,74;134394,27
+06.06.2025;Abonament telefonie si GPS flota luna 06.2025;Tele Demo SRL;RO00DEMO0000000000000006;4347,33;;130046,94
+10.06.2025;Prima RCA/CASCO rata 6/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;113346,94
+10.06.2025;Taxe drum si rovinieta - factura RT-2025-06;Taxe Drum Demo SRL;RO00DEMO0000000000000008;33191,18;;80155,76
+11.06.2025;Incasare factura TRD-2025-038;Spedition Rheinland GmbH;DE00DEMO00000000000017;;188430,23;268585,99
+12.06.2025;Plata salarii luna 06.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;54508,00;;214077,99
+12.06.2025;Plata salarii luna 06.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;36338,00;;177739,99
+16.06.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;54876,94;;122863,05
+16.06.2025;Piese si anvelope - factura PA-2025-06;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;24121,99;;98741,06
+16.06.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;86841,06
+17.06.2025;Service camioane - factura SC-2025-06;Service Camioane Demo SRL;RO00DEMO0000000000000010;28541,14;;58299,92
+18.06.2025;Incasare factura TRD-2025-039;Cereale Delta Demo SRL;RO00DEMO0000000000000019;;19849,03;78148,95
+20.06.2025;Rata leasing luna 06.2025 contract DL-2023-045;Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;60948,95
+23.06.2025;Transport extern partener - factura TP-2025-06;Transport Partener Demo SRL;RO00DEMO0000000000000011;26451,03;;34497,92
+25.06.2025;Incasare factura TRD-2025-040;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;146634,84;181132,76
+25.06.2025;Plata contributii salariale luna 05.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;115167,76
+25.06.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;51768,55;;63399,21
+27.06.2025;Incasare factura TRD-2025-041;Spedition Rheinland GmbH;DE00DEMO00000000000017;;16751,27;80150,48
+27.06.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;37352,76;;42797,72
+30.06.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000016;;1426,00;44223,72
+03.07.2025;Incasare factura TRD-2025-042;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;80214,01;124437,73
+03.07.2025;Chirie depozit si parcare luna 07.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;114437,73
+04.07.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;52158,44;;62279,29
+07.07.2025;Servicii contabilitate luna 07.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;59279,29
+07.07.2025;Abonament telefonie si GPS flota luna 07.2025;Tele Demo SRL;RO00DEMO0000000000000006;4180,38;;55098,91
+08.07.2025;Prima RCA/CASCO rata 7/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;38398,91
+09.07.2025;Incasare factura TRD-2025-043;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;142007,12;180406,03
+10.07.2025;Taxe drum si rovinieta - factura RT-2025-07;Taxe Drum Demo SRL;RO00DEMO0000000000000008;30321,71;;150084,32
+11.07.2025;Plata salarii luna 07.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;97164,32
+11.07.2025;Plata salarii luna 07.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;61884,32
+14.07.2025;Incasare factura TRD-2025-044;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;41042,35;102926,67
+14.07.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;50595,81;;52330,86
+15.07.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;40430,86
+16.07.2025;Incasare factura TRD-2025-045;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;107288,49;147719,35
+16.07.2025;Piese si anvelope - factura PA-2025-07;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;34095,99;;113623,36
+17.07.2025;Service camioane - factura SC-2025-07;Service Camioane Demo SRL;RO00DEMO0000000000000010;39024,63;;74598,73
+21.07.2025;Incasare factura TRD-2025-046;Port Cargo Dunarea Demo SRL;RO00DEMO0000000000000024;;37955,42;112554,15
+21.07.2025;Transport extern partener - factura TP-2025-07;Transport Partener Demo SRL;RO00DEMO0000000000000011;23284,83;;89269,32
+21.07.2025;Rata leasing luna 07.2025 contract DL-2023-045;Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;72069,32
+24.07.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;48921,90;;23147,42
+25.07.2025;Incasare factura TRD-2025-047;Spedition Rheinland GmbH;DE00DEMO00000000000017;;156061,47;179208,89
+25.07.2025;Plata contributii salariale luna 06.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;67944,00;;111264,89
+25.07.2025;Plata impozit pe profit trim. II 2025;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000015;2750,00;;108514,89
+28.07.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;34201,27;;74313,62
+30.07.2025;Incasare factura TRD-2025-048;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;19007,54;93321,16
+01.08.2025;Incasare factura TRD-2025-049;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;21190,40;114511,56
+04.08.2025;Chirie depozit si parcare luna 08.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;104511,56
+05.08.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;56260,01;;48251,55
+05.08.2025;Servicii contabilitate luna 08.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;45251,55
+06.08.2025;Incasare factura TRD-2025-050;Spedition Rheinland GmbH;DE00DEMO00000000000017;;83913,16;129164,71
+06.08.2025;Abonament telefonie si GPS flota luna 08.2025;Tele Demo SRL;RO00DEMO0000000000000006;4009,04;;125155,67
+08.08.2025;Prima RCA/CASCO rata 8/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;108455,67
+11.08.2025;Taxe drum si rovinieta - factura RT-2025-08;Taxe Drum Demo SRL;RO00DEMO0000000000000008;26334,53;;82121,14
+12.08.2025;Incasare factura TRD-2025-051;Cereale Delta Demo SRL;RO00DEMO0000000000000019;;43667,22;125788,36
+12.08.2025;Plata salarii luna 08.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;72868,36
+12.08.2025;Plata salarii luna 08.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;37588,36
+18.08.2025;Incasare factura TRD-2025-052;Port Cargo Dunarea Demo SRL;RO00DEMO0000000000000024;;174475,58;212063,94
+18.08.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;61351,04;;150712,90
+18.08.2025;Piese si anvelope - factura PA-2025-08;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;30508,73;;120204,17
+18.08.2025;Service camioane - factura SC-2025-08;Service Camioane Demo SRL;RO00DEMO0000000000000010;39544,87;;80659,30
+18.08.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;68759,30
+20.08.2025;Alimentare card combustibil - plata in avans;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;57523,39;;11235,91
+20.08.2025;Comision refuz plata - debitare directa leasing DL-2023-045 (fonduri insuficiente);Banca Exemplu S.A.;RO00DEMO0000000000000014;35,00;;11200,91
+21.08.2025;Incasare factura TRD-2025-053;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;91257,83;102458,74
+21.08.2025;Transport extern partener - factura TP-2025-08;Transport Partener Demo SRL;RO00DEMO0000000000000011;27967,60;;74491,14
+25.08.2025;Incasare factura TRD-2025-054;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;18340,35;92831,49
+25.08.2025;Plata contributii salariale luna 07.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;26866,49
+28.08.2025;Incasare factura TRD-2025-055;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;42169,03;69035,52
+28.08.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;30903,30;;38132,22
+03.09.2025;Incasare factura TRD-2025-056;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;101106,80;139239,02
+03.09.2025;Chirie depozit si parcare luna 09.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;129239,02
+03.09.2025;Rata leasing luna 08.2025 contract DL-2023-045 (platita cu intarziere);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;112039,02
+03.09.2025;Penalitati intarziere leasing luna 08.2025 (14 zile);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;240,80;;111798,22
+05.09.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;53010,51;;58787,71
+05.09.2025;Servicii contabilitate luna 09.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;55787,71
+08.09.2025;Incasare factura TRD-2025-057;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;15390,17;71177,88
+08.09.2025;Abonament telefonie si GPS flota luna 09.2025;Tele Demo SRL;RO00DEMO0000000000000006;4372,80;;66805,08
+08.09.2025;Prima RCA/CASCO rata 9/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;50105,08
+09.09.2025;Incasare factura TRD-2025-058;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;175218,34;225323,42
+10.09.2025;Taxe drum si rovinieta - factura RT-2025-09;Taxe Drum Demo SRL;RO00DEMO0000000000000008;32556,76;;192766,66
+12.09.2025;Plata salarii luna 09.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;139846,66
+12.09.2025;Plata salarii luna 09.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;104566,66
+15.09.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;53890,60;;50676,06
+15.09.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;38776,06
+16.09.2025;Incasare factura TRD-2025-059;Spedition Rheinland GmbH;DE00DEMO00000000000017;;47049,78;85825,84
+16.09.2025;Piese si anvelope - factura PA-2025-09;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;27269,27;;58556,57
+17.09.2025;Service camioane - factura SC-2025-09;Service Camioane Demo SRL;RO00DEMO0000000000000010;33770,55;;24786,02
+19.09.2025;Incasare factura TRD-2025-060;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;91586,87;116372,89
+22.09.2025;Transport extern partener - factura TP-2025-09;Transport Partener Demo SRL;RO00DEMO0000000000000011;25783,52;;90589,37
+24.09.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;49498,29;;41091,08
+25.09.2025;Incasare factura TRD-2025-061;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;110589,32;151680,40
+25.09.2025;Plata contributii salariale luna 08.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;85715,40
+25.09.2025;Rata leasing luna 09.2025 contract DL-2023-045 (platita cu intarziere);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;68515,40
+25.09.2025;Penalitati intarziere leasing luna 09.2025 (3 zile);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;51,60;;68463,80
+26.09.2025;Incasare factura TRD-2025-062;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;47098,56;115562,36
+26.09.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;33153,19;;82409,17
+30.09.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000016;;1483,54;83892,71
+03.10.2025;Incasare factura TRD-2025-063;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;21769,86;105662,57
+03.10.2025;Chirie depozit si parcare luna 10.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;95662,57
+06.10.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;60726,63;;34935,94
+06.10.2025;Servicii contabilitate luna 10.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;31935,94
+06.10.2025;Abonament telefonie si GPS flota luna 10.2025;Tele Demo SRL;RO00DEMO0000000000000006;4039,10;;27896,84
+08.10.2025;Incasare factura TRD-2025-064;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;144689,52;172586,36
+08.10.2025;Prima RCA/CASCO rata 10/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;155886,36
+10.10.2025;Plata salarii luna 10.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;102966,36
+10.10.2025;Plata salarii luna 10.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;67686,36
+10.10.2025;Taxe drum si rovinieta - factura RT-2025-10;Taxe Drum Demo SRL;RO00DEMO0000000000000008;27187,46;;40498,90
+13.10.2025;Incasare factura TRD-2025-065;Spedition Rheinland GmbH;DE00DEMO00000000000017;;132932,91;173431,81
+15.10.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;57501,26;;115930,55
+15.10.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;104030,55
+16.10.2025;Piese si anvelope - factura PA-2025-10;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;24685,33;;79345,22
+17.10.2025;Incasare factura TRD-2025-066;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;14543,71;93888,93
+17.10.2025;Service camioane - factura SC-2025-10;Service Camioane Demo SRL;RO00DEMO0000000000000010;25461,96;;68426,97
+20.10.2025;Alimentare card combustibil - plata in avans;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;61447,28;;6979,69
+20.10.2025;Comision refuz plata - debitare directa leasing DL-2023-045 (fonduri insuficiente);Banca Exemplu S.A.;RO00DEMO0000000000000014;35,00;;6944,69
+21.10.2025;Incasare factura TRD-2025-067;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;47476,41;54421,10
+21.10.2025;Transport extern partener - factura TP-2025-10;Transport Partener Demo SRL;RO00DEMO0000000000000011;26510,54;;27910,56
+23.10.2025;Incasare factura TRD-2025-068;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;76675,11;104585,67
+24.10.2025;Plata contributii salariale luna 09.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;38620,67
+27.10.2025;Incasare factura TRD-2025-069;Spedition Rheinland GmbH;DE00DEMO00000000000017;;25997,99;64618,66
+27.10.2025;Plata impozit pe profit trim. III 2025;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000015;2750,00;;61868,66
+28.10.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;29300,36;;32568,30
+30.10.2025;Incasare factura TRD-2025-070;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;70769,34;103337,64
+03.11.2025;Chirie depozit si parcare luna 11.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;93337,64
+04.11.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;58062,60;;35275,04
+05.11.2025;Incasare factura TRD-2025-071;Port Cargo Dunarea Demo SRL;RO00DEMO0000000000000024;;40837,16;76112,20
+05.11.2025;Servicii contabilitate luna 11.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;73112,20
+06.11.2025;Incasare factura TRD-2025-072;Spedition Rheinland GmbH;DE00DEMO00000000000017;;19982,33;93094,53
+06.11.2025;Abonament telefonie si GPS flota luna 11.2025;Tele Demo SRL;RO00DEMO0000000000000006;4076,60;;89017,93
+10.11.2025;Prima RCA/CASCO rata 11/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;72317,93
+10.11.2025;Taxe drum si rovinieta - factura RT-2025-11;Taxe Drum Demo SRL;RO00DEMO0000000000000008;33099,28;;39218,65
+11.11.2025;Incasare factura TRD-2025-073;Balkan Cargo Partners d.o.o.;RS00DEMO00000000000018;;124852,40;164071,05
+12.11.2025;Plata salarii luna 11.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;52920,00;;111151,05
+12.11.2025;Plata salarii luna 11.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;35280,00;;75871,05
+13.11.2025;Incasare factura TRD-2025-074;Agro Trans Muntenia SRL;RO00DEMO0000000000000022;;102896,89;178767,94
+17.11.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;58258,33;;120509,61
+17.11.2025;Piese si anvelope - factura PA-2025-11;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;33314,61;;87195,00
+17.11.2025;Service camioane - factura SC-2025-11;Service Camioane Demo SRL;RO00DEMO0000000000000010;30931,80;;56263,20
+17.11.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;44363,20
+17.11.2025;Rata leasing luna 10.2025 contract DL-2023-045 (platita cu intarziere);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;27163,20
+17.11.2025;Penalitati intarziere leasing luna 10.2025 (28 zile);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;481,60;;26681,60
+18.11.2025;Incasare factura TRD-2025-075;Metal Ind Galati Demo SA;RO00DEMO0000000000000023;;51954,33;78635,93
+21.11.2025;Transport extern partener - factura TP-2025-11;Transport Partener Demo SRL;RO00DEMO0000000000000011;28119,84;;50516,09
+25.11.2025;Incasare factura TRD-2025-076;Spedition Rheinland GmbH;DE00DEMO00000000000017;;144722,95;195239,04
+25.11.2025;Plata contributii salariale luna 10.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;129274,04
+25.11.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;49548,17;;79725,87
+26.11.2025;Incasare factura TRD-2025-077;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;25461,56;105187,43
+28.11.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;32951,57;;72235,86
+03.12.2025;Chirie depozit si parcare luna 12.2025;Depozit Port Demo SRL;RO00DEMO0000000000000004;10000,00;;62235,86
+04.12.2025;Incasare factura TRD-2025-078;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;111727,71;173963,57
+04.12.2025;Rata leasing luna 11.2025 contract DL-2023-045 (platita cu intarziere);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;17200,00;;156763,57
+04.12.2025;Penalitati intarziere leasing luna 11.2025 (14 zile);Demo Leasing IFN S.A.;RO00DEMO0000000000000013;240,80;;156522,77
+05.12.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;50741,05;;105781,72
+05.12.2025;Servicii contabilitate luna 12.2025;Contab Demo SRL;RO00DEMO0000000000000005;3000,00;;102781,72
+08.12.2025;Abonament telefonie si GPS flota luna 12.2025;Tele Demo SRL;RO00DEMO0000000000000006;4220,30;;98561,42
+08.12.2025;Prima RCA/CASCO rata 12/12;Asigurari Demo S.A.;RO00DEMO0000000000000007;16700,00;;81861,42
+09.12.2025;Incasare factura TRD-2025-079;Cereale Delta Demo SRL;RO00DEMO0000000000000019;;19186,84;101048,26
+10.12.2025;Taxe drum si rovinieta - factura RT-2025-12;Taxe Drum Demo SRL;RO00DEMO0000000000000008;33449,84;;67598,42
+11.12.2025;Incasare factura TRD-2025-080;Euro Haul Bulgaria EOOD;BG00DEMO00000000000021;;162057,18;229655,60
+12.12.2025;Plata salarii luna 12.2025 - ordin colectiv lot 1 (16 salariati);Diversi beneficiari (ordin colectiv);;60858,00;;168797,60
+12.12.2025;Plata salarii luna 12.2025 - ordin colectiv lot 2 (11 salariati);Diversi beneficiari (ordin colectiv);;40572,00;;128225,60
+15.12.2025;Alimentare card combustibil;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;54737,36;;73488,24
+15.12.2025;Rata credit nr. 5532/2022;Banca Exemplu S.A.;RO00DEMO0000000000000012;11900,00;;61588,24
+16.12.2025;Incasare factura TRD-2025-081;Carpati Logistic Demo SRL;RO00DEMO0000000000000020;;70161,62;131749,86
+16.12.2025;Piese si anvelope - factura PA-2025-12;Anvelope si Piese Demo SRL;RO00DEMO0000000000000009;22862,57;;108887,29
+17.12.2025;Service camioane - factura SC-2025-12;Service Camioane Demo SRL;RO00DEMO0000000000000010;37304,94;;71582,35
+18.12.2025;Incasare factura TRD-2025-082;Cereale Delta Demo SRL;RO00DEMO0000000000000019;;20949,48;92531,83
+22.12.2025;Transport extern partener - factura TP-2025-12;Transport Partener Demo SRL;RO00DEMO0000000000000011;29297,07;;63234,76
+22.12.2025;Alimentare card combustibil - plata in avans;Card Combustibil Demo S.A.;RO00DEMO0000000000000003;53813,28;;9421,48
+22.12.2025;Comision refuz plata - debitare directa leasing DL-2023-045 (fonduri insuficiente);Banca Exemplu S.A.;RO00DEMO0000000000000014;35,00;;9386,48
+23.12.2025;Incasare factura TRD-2025-083;Port Cargo Dunarea Demo SRL;RO00DEMO0000000000000024;;24959,11;34345,59
+23.12.2025;Plata impozit pe profit trim. IV 2025 - plata anticipata;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000015;2750,00;;31595,59
+24.12.2025;Incasare factura TRD-2025-084;Spedition Rheinland GmbH;DE00DEMO00000000000017;;104757,11;136352,70
+24.12.2025;Plata contributii salariale luna 11.2025;Bugetul de stat – contributii;RO00DEMO0000000000000002;65965,00;;70387,70
+24.12.2025;Cheltuieli diverse - diurne, parcari, taxe;Diverse furnizori;;31713,17;;38674,53
+31.12.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000016;;1594,73;40269,26
+31.12.2025;Incasare factura TRD-2025-085;Port Cargo Dunarea Demo SRL;RO00DEMO0000000000000024;;99730,74;140000,00

@@ -1,10 +1,13 @@
-export type Role = "manager" | "analyst" | "supervisor";
+export type Role = "manager" | "analyst" | "credit_analyst" | "risk_officer" | "credit_committee" | "supervisor";
 export type User = { id: string; username: string; role: Role };
 export type SessionResp = { user: User; csrf_token: string };
 export type Evidence = { document_id: string; sha256: string; page: number; start: number; end: number; quote: string };
 export type Fact = { id: string; entity_id: string; field: string; value: string; evidence: Evidence };
 export type FactSet = { schema_version: "FactSet.v1"; extraction_mode: "manual_structured" | "ai_assisted"; facts: Fact[] };
-export type DocKind = "application" | "company_extract" | "identity" | "ownership" | "declaration" | "mandate";
+export type DocKind =
+  | "application" | "company_extract" | "identity" | "ownership" | "declaration" | "mandate"
+  // credit workflow
+  | "credit_application" | "financial_statements" | "bank_statement" | "collateral_valuation" | "bureau_report" | "other";
 export type Doc = { id: string; kind: DocKind; filename: string; sha256: string; pages: string[] };
 export type CaseSummary = { id: string; title: string; revision: number; owner_id: string; created_at: string };
 export type CaseDetail = CaseSummary & { documents: Doc[] };

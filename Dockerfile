@@ -12,6 +12,7 @@ COPY requirements.lock .
 RUN pip install --no-cache-dir -r requirements.lock
 COPY backend backend
 COPY alembic.ini .
+COPY fixtures/credit fixtures/credit
 COPY --from=frontend /build/frontend/dist /app/frontend/dist
 ENV PYTHONPATH=/app/backend CASECHECK_FRONTEND_DIR=/app/frontend/dist
 RUN useradd --create-home casecheck && mkdir -p /app/.runtime/documents && chown -R casecheck:casecheck /app

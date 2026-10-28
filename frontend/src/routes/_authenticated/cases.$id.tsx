@@ -66,7 +66,7 @@ function CasePage() {
 
   return (
     <div className="space-y-4">
-      <Link to="/" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"><ChevronLeft className="h-3 w-3" /> Dosare</Link>
+      <Link to="/kyc" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"><ChevronLeft className="h-3 w-3" /> Dosare KYC</Link>
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight">{cs.title}</h1>

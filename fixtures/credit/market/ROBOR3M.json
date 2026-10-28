@@ -1,0 +1,9 @@
+{
+  "index": "ROBOR3M",
+  "unit": "%",
+  "source": "Snapshot sintetic în formatul fixingului BNR ROBOR 3M (valori fictive pentru demonstrație)",
+  "snapshots": [
+    {"as_of": "2026-09-30", "value_pct": 5.72},
+    {"as_of": "2026-10-27", "value_pct": 5.80}
+  ]
+}

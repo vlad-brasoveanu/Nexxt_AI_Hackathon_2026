@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedKycRouteImport } from './routes/_authenticated/kyc'
+import { Route as AuthenticatedMetriciRouteImport } from './routes/_authenticated/metrici'
+import { Route as AuthenticatedPiataRouteImport } from './routes/_authenticated/piata'
 import { Route as AuthenticatedCasesIdRouteImport } from './routes/_authenticated/cases.$id'
+import { Route as AuthenticatedCreditIdRouteImport } from './routes/_authenticated/credit.$id'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -28,40 +32,90 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedKycRoute = AuthenticatedKycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedMetriciRoute = AuthenticatedMetriciRouteImport.update({
+  id: '/metrici',
+  path: '/metrici',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedPiataRoute = AuthenticatedPiataRouteImport.update({
+  id: '/piata',
+  path: '/piata',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedCasesIdRoute = AuthenticatedCasesIdRouteImport.update({
   id: '/cases/$id',
   path: '/cases/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCreditIdRoute = AuthenticatedCreditIdRouteImport.update({
+  id: '/credit/$id',
+  path: '/credit/$id',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
+  '/kyc': typeof AuthenticatedKycRoute
+  '/metrici': typeof AuthenticatedMetriciRoute
+  '/piata': typeof AuthenticatedPiataRoute
   '/cases/$id': typeof AuthenticatedCasesIdRoute
+  '/credit/$id': typeof AuthenticatedCreditIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/kyc': typeof AuthenticatedKycRoute
+  '/metrici': typeof AuthenticatedMetriciRoute
+  '/piata': typeof AuthenticatedPiataRoute
   '/': typeof AuthenticatedIndexRoute
   '/cases/$id': typeof AuthenticatedCasesIdRoute
+  '/credit/$id': typeof AuthenticatedCreditIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/kyc': typeof AuthenticatedKycRoute
+  '/_authenticated/metrici': typeof AuthenticatedMetriciRoute
+  '/_authenticated/piata': typeof AuthenticatedPiataRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/cases/$id': typeof AuthenticatedCasesIdRoute
+  '/_authenticated/credit/$id': typeof AuthenticatedCreditIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/cases/$id'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/kyc'
+    | '/metrici'
+    | '/piata'
+    | '/cases/$id'
+    | '/credit/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/' | '/cases/$id'
+  to:
+    | '/login'
+    | '/kyc'
+    | '/metrici'
+    | '/piata'
+    | '/'
+    | '/cases/$id'
+    | '/credit/$id'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/kyc'
+    | '/_authenticated/metrici'
+    | '/_authenticated/piata'
     | '/_authenticated/'
     | '/_authenticated/cases/$id'
+    | '/_authenticated/credit/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,6 +146,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/kyc': {
+      id: '/_authenticated/kyc'
+      path: '/kyc'
+      fullPath: '/kyc'
+      preLoaderRoute: typeof AuthenticatedKycRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/metrici': {
+      id: '/_authenticated/metrici'
+      path: '/metrici'
+      fullPath: '/metrici'
+      preLoaderRoute: typeof AuthenticatedMetriciRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/piata': {
+      id: '/_authenticated/piata'
+      path: '/piata'
+      fullPath: '/piata'
+      preLoaderRoute: typeof AuthenticatedPiataRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/cases/$id': {
       id: '/_authenticated/cases/$id'
       path: '/cases/$id'
@@ -99,17 +174,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCasesIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/credit/$id': {
+      id: '/_authenticated/credit/$id'
+      path: '/credit/$id'
+      fullPath: '/credit/$id'
+      preLoaderRoute: typeof AuthenticatedCreditIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedKycRoute: typeof AuthenticatedKycRoute
+  AuthenticatedMetriciRoute: typeof AuthenticatedMetriciRoute
+  AuthenticatedPiataRoute: typeof AuthenticatedPiataRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCasesIdRoute: typeof AuthenticatedCasesIdRoute
+  AuthenticatedCreditIdRoute: typeof AuthenticatedCreditIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedKycRoute: AuthenticatedKycRoute,
+  AuthenticatedMetriciRoute: AuthenticatedMetriciRoute,
+  AuthenticatedPiataRoute: AuthenticatedPiataRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCasesIdRoute: AuthenticatedCasesIdRoute,
+  AuthenticatedCreditIdRoute: AuthenticatedCreditIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

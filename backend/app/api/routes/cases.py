@@ -14,7 +14,10 @@ router = APIRouter(prefix="/api/v1/cases", tags=["cases"])
 def new_case(body: NewCase, identity: Auth, session: DB):
     user = identity[0]
     editable(user)
-    case = Case(title=body.title, owner_id=user.id, team=user.team)
+    if (body.kind == "credit") != (body.credit is not None):
+        raise HTTPException(422, "A credit case needs the credit request block, and only a credit case may have one")
+    meta = body.credit.model_dump() if body.credit else {}
+    case = Case(title=body.title, owner_id=user.id, team=user.team, kind=body.kind, meta=meta)
     session.add(case)
     session.flush()
     audit(session, user, "case.created", case.id)

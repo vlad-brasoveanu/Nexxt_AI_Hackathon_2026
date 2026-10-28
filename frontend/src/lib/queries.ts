@@ -13,3 +13,21 @@ export const findingsQ = (runId: string) => queryOptions({ queryKey: ["run", run
 export const traceQ = (runId: string) => queryOptions({ queryKey: ["run", runId, "trace"], queryFn: () => api.getTrace(runId) });
 export const documentQ = (docId: string) =>
   queryOptions({ queryKey: ["document", docId], queryFn: () => api.documentBlob(docId), staleTime: Infinity });
+
+// ---- credit workflow (multi-agent) ----
+export const creditCasesQ = () =>
+  queryOptions({ queryKey: ["credit-cases"], queryFn: () => api.listCreditCases() });
+/** Latest agent run of a credit case; null when the agents have not been started yet (404). */
+export const latestRunKey = (caseId: string) => ["credit", caseId, "run"] as const;
+export const latestRunQ = (caseId: string) =>
+  queryOptions({ queryKey: latestRunKey(caseId), queryFn: () => orNull(api.latestAgentRun(caseId)) });
+export const agentRunQ = (runId: string) =>
+  queryOptions({ queryKey: ["agent-run", runId], queryFn: () => api.getAgentRun(runId) });
+export const whatIfQ = (runId: string, amount: number, termMonths: number) =>
+  queryOptions({
+    queryKey: ["agent-run", runId, "what-if", amount, termMonths],
+    queryFn: () => api.whatIf(runId, { amount, term_months: termMonths }),
+    staleTime: 60_000,
+  });
+export const marketQ = () => queryOptions({ queryKey: ["market"], queryFn: () => api.getMarket() });
+export const metricsQ = () => queryOptions({ queryKey: ["metrics"], queryFn: () => api.getMetrics() });

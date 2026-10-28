@@ -1,0 +1,69 @@
+{
+  "synthetic": "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ · date fictive generate pentru demonstrație",
+  "client": {
+    "denumire": "Transport Rapid Dunărea SRL",
+    "cui": "41055267",
+    "caen": "4941",
+    "caen_text": "Transporturi rutiere de mărfuri",
+    "data_infiintarii": "2019-08-30",
+    "adresa": "Str. Brăilei nr. 154, Galați, jud. Galați, 800310"
+  },
+  "canal": "sucursală",
+  "cerere": "CRD-2026-00722",
+  "primit_la": "2026-10-23T11:05:00+03:00",
+  "cerere_credit": {
+    "produs": "Credit de investiții IMM",
+    "suma_ron": 600000,
+    "durata_luni": 48,
+    "scop": "Achiziție 2 autotractoare",
+    "garantii": [
+      "Gaj asupra autotractoarelor achiziționate"
+    ],
+    "garantat": false
+  },
+  "documente": [
+    {
+      "fisier": "cerere-finantare.pdf",
+      "tip_document": "credit_application",
+      "media_type": "application/pdf",
+      "sursa": "formular F-IMM-07 completat la ghișeu, semnat olograf",
+      "sha256": "c4cd161a52ab15b56a830b4c40e6e43657cdbeb9d8c0eb30cd6e58c29faaa339"
+    },
+    {
+      "fisier": "situatii-financiare-2025.pdf",
+      "tip_document": "financial_statements",
+      "media_type": "application/pdf",
+      "sursa": "adus de client (situații depuse la ANAF)",
+      "sha256": "1a8b4b1c5995fa39cd99af39059201cac2278ef1aedd8fdb21fce8b319e6166f"
+    },
+    {
+      "fisier": "situatii-financiare-2024.pdf",
+      "tip_document": "financial_statements",
+      "media_type": "application/pdf",
+      "sursa": "adus de client (situații depuse la ANAF)",
+      "sha256": "2d532e37ae271f3babbbd1c26c1e6a6ef7af534ba278d5460117535fd7f8176b"
+    },
+    {
+      "fisier": "extras-cont-2025.csv",
+      "tip_document": "bank_statement",
+      "media_type": "text/csv",
+      "sursa": "export CSV din internet banking Banca Exemplu, adus de client",
+      "sha256": "88d5e2f4716b4e599ce32f39a731b293bdbaeeaa81fd9706d5a53ad1e5988df2"
+    },
+    {
+      "fisier": "certificat-constatator-onrc.pdf",
+      "tip_document": "company_extract",
+      "media_type": "application/pdf",
+      "sursa": "adus de client (descărcat din ONRC online)",
+      "sha256": "3fa3f7f1f8700577ed4a76b10fc17efd361335af6ee3f89ba921c63ae85abb7e"
+    },
+    {
+      "fisier": "ci-costel-balan.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "copie conformă cu originalul, făcută de operator la ghișeu",
+      "sha256": "c4c8e57ed57da3bee535e7d420d9f91cd87a46af61ed476a7e8a904af7cf9e48"
+    }
+  ],
+  "raspuns_client": []
+}

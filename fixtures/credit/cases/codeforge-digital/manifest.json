@@ -1,0 +1,92 @@
+{
+  "synthetic": "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ · date fictive generate pentru demonstrație",
+  "client": {
+    "denumire": "Codeforge Digital SRL",
+    "cui": "46270185",
+    "caen": "6201",
+    "caen_text": "Activități de realizare a soft-ului la comandă (software orientat client)",
+    "data_infiintarii": "2021-11-08",
+    "adresa": "Bd. Dimitrie Pompeiu nr. 6A, et. 3, Sector 2, București, 020337"
+  },
+  "canal": "online",
+  "cerere": "CRD-2026-00731",
+  "primit_la": "2026-10-27T09:12:00+03:00",
+  "cerere_credit": {
+    "produs": "Credit de investiții IMM",
+    "suma_ron": 3900000,
+    "durata_luni": 60,
+    "scop": "Achiziție sediu birouri – Bd. Dimitrie Pompeiu nr. 6A, et. 3, Sector 2, București (412 mp; preț 5.000.000 RON; aport propriu 1.100.000 RON)",
+    "garantii": [
+      "Ipotecă de rang I asupra imobilului achiziționat",
+      "Cesiunea creanțelor din contractele comerciale"
+    ],
+    "garantat": true
+  },
+  "documente": [
+    {
+      "fisier": "cerere-finantare.pdf",
+      "tip_document": "credit_application",
+      "media_type": "application/pdf",
+      "sursa": "formular F-IMM-07 completat în portal, semnat electronic",
+      "sha256": "40ed48873c98df0807ea302558f5d37e8a6f66ae344cbd13f89541ef9260bd35"
+    },
+    {
+      "fisier": "situatii-financiare-2025.pdf",
+      "tip_document": "financial_statements",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client (situații depuse la ANAF)",
+      "sha256": "d8a542ad1b309e494a976d72d2e4b6337f41c5aaf6c240ddccb2622e06da3b95"
+    },
+    {
+      "fisier": "extras-cont-2025.csv",
+      "tip_document": "bank_statement",
+      "media_type": "text/csv",
+      "sursa": "export CSV din internet banking Banca Exemplu, încărcat de client",
+      "sha256": "904863c58b9bdab540dc674e62b3de01ca826f38466397804131d7d2bb218267"
+    },
+    {
+      "fisier": "certificat-constatator-onrc.pdf",
+      "tip_document": "company_extract",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client (descărcat din ONRC online)",
+      "sha256": "1177c7a6f49eadac3e08a4a53b9d3977f3a327bf2fd15d26c7c7d05c09ea3567"
+    },
+    {
+      "fisier": "ci-vlad-stefan-ionescu.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "reutilizat din dosarul KYC de onboarding",
+      "sha256": "19371de3afb7b95de36f0ba1c57ceb66e236d2d04f36969ec11c4cb00b0ed11a"
+    },
+    {
+      "fisier": "act-constitutiv.pdf",
+      "tip_document": "articles",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client",
+      "sha256": "43e8e2f589b2a0454444a65bbedc8474d15508bc1f79f2d268df558e2b16b9b2"
+    },
+    {
+      "fisier": "declaratie-beneficiar-real.pdf",
+      "tip_document": "ownership",
+      "media_type": "application/pdf",
+      "sursa": "reutilizat din dosarul KYC de onboarding",
+      "sha256": "2109dc234fce96e17cfd107afdf3800ac6a7bc89d981fa15091939ad884ebfbc"
+    }
+  ],
+  "raspuns_client": [
+    {
+      "fisier": "response/situatii-financiare-2024.pdf",
+      "tip_document": "financial_statements",
+      "media_type": "application/pdf",
+      "sursa": "transmis de client ca răspuns la solicitarea băncii (situații depuse la ANAF)",
+      "sha256": "994735fea3189d74e6aded217ef59a51d982174d076713202446990a9e6d3e12"
+    },
+    {
+      "fisier": "response/raport-evaluare-imobil.pdf",
+      "tip_document": "collateral_valuation",
+      "media_type": "application/pdf",
+      "sursa": "transmis de client ca răspuns la solicitarea băncii (raport de evaluare extern)",
+      "sha256": "53f782ca21b51e025a71a911f4ecb9ea17c1e544ee7a41002a2e34a437246211"
+    }
+  ]
+}

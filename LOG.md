@@ -56,3 +56,33 @@ Dated, append-only record of work, decisions and validation evidence. Newest ent
     - the questionnaire and online ID photo were checked visually;
     - `pytest -q`: 30 passed (no backend changes).
   - Not loaded into the app: no seeder or UI yet.
+
+- 2026-10-28: Branch `codex/agentic-workflow`. Multi-agent SME credit workflow (agent model from the user: Orchestrator → Analist financiar → 7 specialists → human Aprobă/Modifică/Respinge).
+  - **Backend:**
+    - `backend/app/agents/`: catalogue + guard, board, planner, orchestrator, specialists.
+    - `backend/app/credit/`: finance, policy engine, sources, history statistics.
+    - New routes: agents, credit, market.
+    - Alembic `c41f2a9d7e10`.
+    - Roles: credit_analyst, risk_officer, committee_a/b.
+    - Supervisor can no longer start KYC runs.
+    - Default large model is now Qwen2.5-14B, after the 2026-10-28 measurement.
+  - **Fixtures:**
+    - `scripts/demo/credit_fixtures.py` (3 cases, sources);
+    - `scripts/demo/history.py` (600 synthetic past cases);
+    - `scripts/demo/credit_seed.py`.
+    - Subagents on Sonnet/Haiku wrote the history module and most of the fixture generator. They stopped at the session limit; I finished and ran it.
+  - **Frontend:** "agent control room" with:
+    - queue;
+    - case workspace (live agent graph, timeline, consolidated request, review, decision cockpit with hold-to-sign, evidence, memo, group, cash flow, history);
+    - market and metrics screens;
+    - ⌘K palette and dark/light theme.
+  - **Validation:**
+    - `pytest -q`: 117 passed.
+    - Codeforge (deterministic mode): one consolidated request with 2 items; the Critic contests the cash-flow gap (+19.9%) with the KYB affiliate finding; the re-run gives −2.3%; COUNTER_OFFER 3.440.000 RON at L2 (DSCR 1.20x, stress 1.16x, LTV 66.2%); ROBOR 6.05% re-prices to 3.420.000; the hidden instruction in the valuation is detected.
+    - Transport: DECLINE at L1 (R-BUREAU-90D).
+    - Nordic: CUI clarification request.
+    - Scripted-model test: `loan.approve` refused, hallucinated values rejected.
+    - `npm run build` passes.
+    - Preview restarted and seeded with the 3 credit cases.
+  - **Not verified:** browser rendering (handed to the user) and a live Featherless run.
+

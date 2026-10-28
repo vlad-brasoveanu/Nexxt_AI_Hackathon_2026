@@ -21,6 +21,8 @@ def run_case(case_id: str, body: RunRequest, request: Request, identity: Auth, s
              idempotency_key: Annotated[str, Header(min_length=1, max_length=80)]):
     registry, workflow = request.app.state.registry, request.app.state.workflow
     user = identity[0]
+    if user.role == "supervisor":
+        raise HTTPException(403, "Read-only role cannot run checks")
     case = case_for(session, user, case_id)
     key = f"{case_id}:{idempotency_key}"
     request_hash = sha256(body.model_dump_json().encode()).hexdigest()

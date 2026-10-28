@@ -1,0 +1,76 @@
+{
+  "synthetic": "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ · date fictive generate pentru demonstrație",
+  "client": {
+    "denumire": "Nordic Timber Solutions SRL",
+    "cui": "45182735",
+    "caen": "1610",
+    "caen_text": "Tăierea și rindeluirea lemnului",
+    "data_infiintarii": "2020-02-27",
+    "adresa": "Calea Unirii nr. 87, Suceava, jud. Suceava, 720043"
+  },
+  "canal": "online",
+  "cerere": "CRD-2026-00718",
+  "primit_la": "2026-10-22T16:40:00+03:00",
+  "cerere_credit": {
+    "produs": "Credit de investiții IMM",
+    "suma_ron": 1200000,
+    "durata_luni": 36,
+    "scop": "Linie de debitare CNC",
+    "garantii": [
+      "Gaj asupra echipamentului achiziționat (linie de debitare CNC)"
+    ],
+    "garantat": false
+  },
+  "documente": [
+    {
+      "fisier": "cerere-finantare.pdf",
+      "tip_document": "credit_application",
+      "media_type": "application/pdf",
+      "sursa": "formular F-IMM-07 completat în portal, semnat electronic",
+      "sha256": "d686076dfe40bd4ce598257f84997dbab61dd8397699a5037cd12a7d4e5d1952"
+    },
+    {
+      "fisier": "situatii-financiare-2025.pdf",
+      "tip_document": "financial_statements",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client (situații depuse la ANAF)",
+      "sha256": "2df0ad2a4b6c7e08b71f5241cfb8e2cb80cea0a7118d5fca2e99b8da924e5ced"
+    },
+    {
+      "fisier": "situatii-financiare-2024.pdf",
+      "tip_document": "financial_statements",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client (situații depuse la ANAF)",
+      "sha256": "2ae50f043380655c73e45c06fe7e05b0c5007c1735964c89aa68dc6dc312bae2"
+    },
+    {
+      "fisier": "extras-cont-2025.csv",
+      "tip_document": "bank_statement",
+      "media_type": "text/csv",
+      "sursa": "export CSV din internet banking Banca Exemplu, încărcat de client",
+      "sha256": "f9f983439113fbfb553a969d87490e9097b2abee83ab5dd16361ddf60c050800"
+    },
+    {
+      "fisier": "certificat-constatator-onrc.pdf",
+      "tip_document": "company_extract",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client (descărcat din ONRC online)",
+      "sha256": "82bbf3aed0e677ed6e40533c057cf3711ced96f9b96ec4c2e88ee665e93b0be7"
+    },
+    {
+      "fisier": "ci-mihai-catalin-ursu.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "reutilizat din dosarul KYC de onboarding",
+      "sha256": "b017281d071a1284982b53a909cf3dc399372df10ab290dfbdce725311c0e3e3"
+    },
+    {
+      "fisier": "declaratie-beneficiar-real.pdf",
+      "tip_document": "ownership",
+      "media_type": "application/pdf",
+      "sursa": "reutilizat din dosarul KYC de onboarding",
+      "sha256": "9a8056cf85035d91e7e81f735e7e4b0a7a55178a9a5d5708df516048a8aebcec"
+    }
+  ],
+  "raspuns_client": []
+}

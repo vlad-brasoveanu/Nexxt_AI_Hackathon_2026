@@ -1,0 +1,302 @@
+data;descriere;contrapartida;iban_contrapartida;debit;credit;sold
+01.01.2025;Sold inițial;;;;;612000,00
+08.01.2025;Incasare factura NTS-2025-001;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;297727,76;909727,76
+08.01.2025;Energie electrica fabrica luna 01.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;54718,98;;855008,78
+08.01.2025;Transport marfa - factura TC-2025-001;TransCarpati Logistic SRL;RO00DEMO0000000000000014;28383,58;;826625,20
+08.01.2025;Mentenanta utilaje - factura SU-2025-001;Service Utilaje Demo SRL;RO00DEMO0000000000000015;9690,47;;816934,73
+08.01.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;10162,20;;806772,53
+08.01.2025;Abonament telefonie si internet luna 01.2025;Tele Demo SRL;RO00DEMO0000000000000018;3147,03;;803625,50
+08.01.2025;Servicii paza luna 01.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;798625,50
+09.01.2025;Plata factura LEM-2025-011 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;100029,04;;698596,46
+09.01.2025;Servicii contabilitate luna 01.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;694096,46
+10.01.2025;Plata salarii luna 01.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;626268,46
+10.01.2025;Plata salarii luna 01.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;584696,46
+10.01.2025;Scule si consumabile - factura SI-2025-001;Scule Industriale Demo SRL;RO00DEMO0000000000000019;8540,22;;576156,24
+13.01.2025;Plata factura OCO-2025-011 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;175393,65;;400762,59
+13.01.2025;Plata factura PAD-2025-011 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;171282,61;;229479,98
+14.01.2025;Incasare factura NTS-2025-002;Svenska Trabygg AB;SE00DEMO0000000000000003;;288574,42;518054,40
+16.01.2025;Incasare factura NTS-2025-003;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;211303,60;729358,00
+20.01.2025;Incasare factura NTS-2025-004;Nordvik Timber Import AB;SE00DEMO0000000000000005;;190693,00;920051,00
+20.01.2025;Plata factura OCO-2025-012 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;152098,96;;767952,04
+20.01.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;756752,04
+22.01.2025;Incasare factura NTS-2025-005;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;54461,66;811213,70
+22.01.2025;Transport marfa - factura TC-2025-002;TransCarpati Logistic SRL;RO00DEMO0000000000000014;19946,78;;791266,92
+22.01.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;12180,24;;779086,68
+23.01.2025;Plata contributii salariale luna 12.2024;Bugetul de stat – contributii;RO00DEMO0000000000000009;102275,00;;676811,68
+31.01.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1736,39;678548,07
+05.02.2025;Plata factura LEM-2025-021 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;113731,65;;564816,42
+05.02.2025;Servicii paza luna 02.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;559816,42
+07.02.2025;Energie electrica fabrica luna 02.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;56462,14;;503354,28
+07.02.2025;Mentenanta utilaje - factura SU-2025-002;Service Utilaje Demo SRL;RO00DEMO0000000000000015;14458,56;;488895,72
+07.02.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;8881,30;;480014,42
+10.02.2025;Incasare factura NTS-2025-006;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;225537,77;705552,19
+10.02.2025;Plata factura OCO-2025-021 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;169912,35;;535639,84
+10.02.2025;Transport marfa - factura TC-2025-003;TransCarpati Logistic SRL;RO00DEMO0000000000000014;26577,19;;509062,65
+10.02.2025;Servicii contabilitate luna 02.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;504562,65
+10.02.2025;Abonament telefonie si internet luna 02.2025;Tele Demo SRL;RO00DEMO0000000000000018;2898,92;;501663,73
+10.02.2025;Scule si consumabile - factura SI-2025-002;Scule Industriale Demo SRL;RO00DEMO0000000000000019;12212,47;;489451,26
+12.02.2025;Plata salarii luna 02.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;421623,26
+12.02.2025;Plata salarii luna 02.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;380051,26
+13.02.2025;Plata factura PAD-2025-021 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;116472,17;;263579,09
+14.02.2025;Prima asigurare trimestrul 1;Asigurari Demo S.A.;RO00DEMO0000000000000021;27500,00;;236079,09
+17.02.2025;Incasare factura NTS-2025-007;Svenska Trabygg AB;SE00DEMO0000000000000003;;237775,15;473854,24
+17.02.2025;Incasare factura NTS-2025-008;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;246701,39;720555,63
+18.02.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;10319,79;;710235,84
+18.02.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;699035,84
+19.02.2025;Incasare factura NTS-2025-009;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;191058,88;890094,72
+20.02.2025;Incasare factura NTS-2025-010;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;57817,63;947912,35
+20.02.2025;Transport marfa - factura TC-2025-004;TransCarpati Logistic SRL;RO00DEMO0000000000000014;20294,73;;927617,62
+24.02.2025;Plata factura OCO-2025-022 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;146617,91;;780999,71
+25.02.2025;Plata contributii salariale luna 01.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;699179,71
+26.02.2025;Incasare factura NTS-2025-011;Nordvik Timber Import AB;SE00DEMO0000000000000005;;214660,21;913839,92
+28.02.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1991,53;915831,45
+05.03.2025;Plata factura OCO-2025-031 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;160320,52;;755510,93
+05.03.2025;Plata factura PAD-2025-031 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;113731,65;;641779,28
+06.03.2025;Mentenanta utilaje - factura SU-2025-003;Service Utilaje Demo SRL;RO00DEMO0000000000000015;21492,85;;620286,43
+06.03.2025;Servicii contabilitate luna 03.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;615786,43
+07.03.2025;Incasare factura NTS-2025-012;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;252227,79;868014,22
+07.03.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;9278,05;;858736,17
+07.03.2025;Scule si consumabile - factura SI-2025-003;Scule Industriale Demo SRL;RO00DEMO0000000000000019;11641,89;;847094,28
+10.03.2025;Plata factura LEM-2025-031 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;152098,96;;694995,32
+10.03.2025;Energie electrica fabrica luna 03.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;46720,44;;648274,88
+10.03.2025;Transport marfa - factura TC-2025-005;TransCarpati Logistic SRL;RO00DEMO0000000000000014;18819,80;;629455,08
+10.03.2025;Abonament telefonie si internet luna 03.2025;Tele Demo SRL;RO00DEMO0000000000000018;2946,13;;626508,95
+10.03.2025;Servicii paza luna 03.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;621508,95
+12.03.2025;Incasare factura NTS-2025-013;Nordvik Timber Import AB;SE00DEMO0000000000000005;;194900,14;816409,09
+12.03.2025;Incasare factura NTS-2025-014;Svenska Trabygg AB;SE00DEMO0000000000000003;;291432,48;1107841,57
+12.03.2025;Plata salarii luna 03.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;1040013,57
+12.03.2025;Plata salarii luna 03.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;998441,57
+14.03.2025;Incasare factura NTS-2025-015;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;188012,79;1186454,36
+17.03.2025;Transport marfa - factura TC-2025-006;TransCarpati Logistic SRL;RO00DEMO0000000000000014;19936,66;;1166517,70
+18.03.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;11758,48;;1154759,22
+18.03.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;1143559,22
+21.03.2025;Plata factura OCO-2025-032 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;161690,78;;981868,44
+24.03.2025;Incasare factura NTS-2025-016;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;63453,63;1045322,07
+25.03.2025;Plata contributii salariale luna 02.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;963502,07
+25.03.2025;Plata impozit pe profit trim. IV 2024 - regularizare;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000023;40000,00;;923502,07
+31.03.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;2081,88;925583,95
+07.04.2025;Incasare factura NTS-2025-017;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;257531,09;1183115,04
+07.04.2025;Plata factura OCO-2025-041 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;124693,74;;1058421,30
+07.04.2025;Plata factura PAD-2025-041 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;145247,65;;913173,65
+07.04.2025;Transport marfa - factura TC-2025-007;TransCarpati Logistic SRL;RO00DEMO0000000000000014;21463,35;;891710,30
+07.04.2025;Mentenanta utilaje - factura SU-2025-004;Service Utilaje Demo SRL;RO00DEMO0000000000000015;19499,02;;872211,28
+07.04.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;12161,46;;860049,82
+07.04.2025;Servicii contabilitate luna 04.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;855549,82
+07.04.2025;Scule si consumabile - factura SI-2025-004;Scule Industriale Demo SRL;RO00DEMO0000000000000019;12786,72;;842763,10
+08.04.2025;Plata factura LEM-2025-041 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;141136,87;;701626,23
+09.04.2025;Energie electrica fabrica luna 04.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;54521,75;;647104,48
+09.04.2025;Servicii paza luna 04.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;642104,48
+10.04.2025;Abonament telefonie si internet luna 04.2025;Tele Demo SRL;RO00DEMO0000000000000018;2869,71;;639234,77
+11.04.2025;Plata salarii luna 04.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;571406,77
+11.04.2025;Plata salarii luna 04.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;529834,77
+14.04.2025;Incasare factura NTS-2025-018;Nordvik Timber Import AB;SE00DEMO0000000000000005;;178052,25;707887,02
+14.04.2025;Incasare factura NTS-2025-019;Svenska Trabygg AB;SE00DEMO0000000000000003;;218838,28;926725,30
+15.04.2025;Incasare factura NTS-2025-020;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;154742,95;1081468,25
+15.04.2025;Incasare factura NTS-2025-021;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;209206,67;1290674,92
+15.04.2025;Achizitie utilaj rindeluire - avans factura UF-2025-017;Utilaj Forest Demo SRL;RO00DEMO0000000000000024;280000,00;;1010674,92
+17.04.2025;Plata factura OCO-2025-042 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;143877,39;;866797,53
+17.04.2025;Transport marfa - factura TC-2025-008;TransCarpati Logistic SRL;RO00DEMO0000000000000014;25544,76;;841252,77
+17.04.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;11961,72;;829291,05
+22.04.2025;Incasare factura NTS-2025-022;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;56014,84;885305,89
+22.04.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;874105,89
+25.04.2025;Plata contributii salariale luna 03.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;792285,89
+25.04.2025;Plata impozit pe profit trim. I 2025;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000023;52000,00;;740285,89
+30.04.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;2012,29;742298,18
+05.05.2025;Incasare factura NTS-2025-023;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;290002,65;1032300,83
+05.05.2025;Plata factura OCO-2025-051 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;143877,39;;888423,44
+05.05.2025;Energie electrica fabrica luna 05.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;47318,30;;841105,14
+05.05.2025;Servicii contabilitate luna 05.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;836605,14
+05.05.2025;Abonament telefonie si internet luna 05.2025;Tele Demo SRL;RO00DEMO0000000000000018;2945,39;;833659,75
+06.05.2025;Mentenanta utilaje - factura SU-2025-005;Service Utilaje Demo SRL;RO00DEMO0000000000000015;15988,77;;817670,98
+06.05.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;8312,64;;809358,34
+09.05.2025;Transport marfa - factura TC-2025-009;TransCarpati Logistic SRL;RO00DEMO0000000000000014;24869,71;;784488,63
+12.05.2025;Plata salarii luna 05.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;716660,63
+12.05.2025;Plata salarii luna 05.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;675088,63
+12.05.2025;Plata factura PAD-2025-051 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;134285,57;;540803,06
+12.05.2025;Plata factura LEM-2025-051 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;124693,74;;416109,32
+12.05.2025;Scule si consumabile - factura SI-2025-005;Scule Industriale Demo SRL;RO00DEMO0000000000000019;16051,06;;400058,26
+12.05.2025;Servicii paza luna 05.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;395058,26
+14.05.2025;Prima asigurare trimestrul 2;Asigurari Demo S.A.;RO00DEMO0000000000000021;27500,00;;367558,26
+15.05.2025;Incasare factura NTS-2025-024;Svenska Trabygg AB;SE00DEMO0000000000000003;;258785,85;626344,11
+19.05.2025;Incasare factura NTS-2025-025;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;224844,33;851188,44
+19.05.2025;Transport marfa - factura TC-2025-010;TransCarpati Logistic SRL;RO00DEMO0000000000000014;25830,59;;825357,85
+19.05.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;814157,85
+20.05.2025;Incasare factura NTS-2025-026;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;67488,67;881646,52
+20.05.2025;Plata factura OCO-2025-052 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;121953,22;;759693,30
+20.05.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;9967,58;;749725,72
+23.05.2025;Plata contributii salariale luna 04.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;667905,72
+30.05.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1862,09;669767,81
+05.06.2025;Energie electrica fabrica luna 06.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;48169,42;;621598,39
+05.06.2025;Scule si consumabile - factura SI-2025-006;Scule Industriale Demo SRL;RO00DEMO0000000000000019;15274,85;;606323,54
+06.06.2025;Incasare factura NTS-2025-027;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;230078,06;836401,60
+06.06.2025;Transport marfa - factura TC-2025-011;TransCarpati Logistic SRL;RO00DEMO0000000000000014;19064,14;;817337,46
+06.06.2025;Mentenanta utilaje - factura SU-2025-006;Service Utilaje Demo SRL;RO00DEMO0000000000000015;16613,89;;800723,57
+06.06.2025;Servicii contabilitate luna 06.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;796223,57
+10.06.2025;Plata factura OCO-2025-061 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;149358,44;;646865,13
+10.06.2025;Plata factura PAD-2025-061 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;110991,13;;535874,00
+10.06.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;8935,11;;526938,89
+10.06.2025;Abonament telefonie si internet luna 06.2025;Tele Demo SRL;RO00DEMO0000000000000018;2983,94;;523954,95
+10.06.2025;Servicii paza luna 06.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;518954,95
+12.06.2025;Plata salarii luna 06.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;70541,00;;448413,95
+12.06.2025;Plata salarii luna 06.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;43235,00;;405178,95
+12.06.2025;Plata factura LEM-2025-061 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;100029,04;;305149,91
+13.06.2025;Incasare factura NTS-2025-028;Svenska Trabygg AB;SE00DEMO0000000000000003;;219454,86;524604,77
+16.06.2025;Incasare factura NTS-2025-029;Nordvik Timber Import AB;SE00DEMO0000000000000005;;218173,98;742778,75
+16.06.2025;Incasare factura NTS-2025-030;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;241612,67;984391,42
+18.06.2025;Plata factura OCO-2025-062 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;158950,26;;825441,16
+18.06.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;814241,16
+23.06.2025;Transport marfa - factura TC-2025-012;TransCarpati Logistic SRL;RO00DEMO0000000000000014;22109,31;;792131,85
+23.06.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;10490,31;;781641,54
+24.06.2025;Incasare factura NTS-2025-031;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;68436,51;850078,05
+25.06.2025;Plata contributii salariale luna 05.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;768258,05
+30.06.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1676,35;769934,40
+07.07.2025;Incasare factura NTS-2025-032;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;267978,75;1037913,15
+07.07.2025;Energie electrica fabrica luna 07.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;48048,18;;989864,97
+07.07.2025;Transport marfa - factura TC-2025-013;TransCarpati Logistic SRL;RO00DEMO0000000000000014;25888,97;;963976,00
+07.07.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;10019,00;;953957,00
+07.07.2025;Servicii contabilitate luna 07.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;949457,00
+07.07.2025;Abonament telefonie si internet luna 07.2025;Tele Demo SRL;RO00DEMO0000000000000018;3118,95;;946338,05
+08.07.2025;Scule si consumabile - factura SI-2025-007;Scule Industriale Demo SRL;RO00DEMO0000000000000019;9439,41;;936898,64
+09.07.2025;Incasare factura NTS-2025-033;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;228728,05;1165626,69
+09.07.2025;Plata factura PAD-2025-071 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;154839,48;;1010787,21
+09.07.2025;Servicii paza luna 07.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;1005787,21
+10.07.2025;Plata factura LEM-2025-071 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;100029,04;;905758,17
+10.07.2025;Mentenanta utilaje - factura SU-2025-007;Service Utilaje Demo SRL;RO00DEMO0000000000000015;21399,52;;884358,65
+11.07.2025;Plata salarii luna 07.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;816530,65
+11.07.2025;Plata salarii luna 07.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;774958,65
+11.07.2025;Plata factura OCO-2025-071 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;98658,78;;676299,87
+16.07.2025;Incasare factura NTS-2025-034;Nordvik Timber Import AB;SE00DEMO0000000000000005;;186147,04;862446,91
+16.07.2025;Incasare factura NTS-2025-035;Svenska Trabygg AB;SE00DEMO0000000000000003;;217147,18;1079594,09
+17.07.2025;Transport marfa - factura TC-2025-014;TransCarpati Logistic SRL;RO00DEMO0000000000000014;26704,74;;1052889,35
+18.07.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;1041689,35
+21.07.2025;Incasare factura NTS-2025-036;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;68583,26;1110272,61
+21.07.2025;Plata factura OCO-2025-072 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;139766,61;;970506,00
+21.07.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;10607,67;;959898,33
+25.07.2025;Plata contributii salariale luna 06.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;85093,00;;874805,33
+25.07.2025;Plata impozit pe profit trim. II 2025;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000023;60000,00;;814805,33
+31.07.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1826,28;816631,61
+05.08.2025;Servicii contabilitate luna 08.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;812131,61
+06.08.2025;Incasare factura NTS-2025-037;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;258957,71;1071089,32
+06.08.2025;Transport marfa - factura TC-2025-015;TransCarpati Logistic SRL;RO00DEMO0000000000000014;26067,01;;1045022,31
+06.08.2025;Scule si consumabile - factura SI-2025-008;Scule Industriale Demo SRL;RO00DEMO0000000000000019;16082,16;;1028940,15
+07.08.2025;Abonament telefonie si internet luna 08.2025;Tele Demo SRL;RO00DEMO0000000000000018;2849,57;;1026090,58
+08.08.2025;Mentenanta utilaje - factura SU-2025-008;Service Utilaje Demo SRL;RO00DEMO0000000000000015;18971,79;;1007118,79
+08.08.2025;Servicii paza luna 08.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;1002118,79
+11.08.2025;Plata factura PAD-2025-081 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;147988,17;;854130,62
+11.08.2025;Plata factura LEM-2025-081 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;123323,48;;730807,14
+11.08.2025;Energie electrica fabrica luna 08.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;45335,14;;685472,00
+11.08.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;10097,86;;675374,14
+12.08.2025;Plata salarii luna 08.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;607546,14
+12.08.2025;Plata salarii luna 08.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;565974,14
+13.08.2025;Incasare factura NTS-2025-038;Svenska Trabygg AB;SE00DEMO0000000000000003;;214752,02;780726,16
+14.08.2025;Plata factura OCO-2025-081 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;137026,09;;643700,07
+14.08.2025;Prima asigurare trimestrul 3;Asigurari Demo S.A.;RO00DEMO0000000000000021;27500,00;;616200,07
+18.08.2025;Transport marfa - factura TC-2025-016;TransCarpati Logistic SRL;RO00DEMO0000000000000014;27922,49;;588277,58
+18.08.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;12059,95;;576217,63
+18.08.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;565017,63
+20.08.2025;Plata factura OCO-2025-082 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;115101,91;;449915,72
+25.08.2025;Incasare factura NTS-2025-039;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;199581,02;649496,74
+25.08.2025;Incasare factura NTS-2025-040;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;65820,02;715316,76
+25.08.2025;Plata contributii salariale luna 07.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;633496,76
+29.08.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1770,97;635267,73
+05.09.2025;Incasare factura NTS-2025-041;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;310888,57;946156,30
+08.09.2025;Plata factura LEM-2025-091 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;116472,17;;829684,13
+08.09.2025;Transport marfa - factura TC-2025-017;TransCarpati Logistic SRL;RO00DEMO0000000000000014;18212,22;;811471,91
+08.09.2025;Mentenanta utilaje - factura SU-2025-009;Service Utilaje Demo SRL;RO00DEMO0000000000000015;18793,06;;792678,85
+08.09.2025;Servicii contabilitate luna 09.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;788178,85
+08.09.2025;Scule si consumabile - factura SI-2025-009;Scule Industriale Demo SRL;RO00DEMO0000000000000019;13223,23;;774955,62
+08.09.2025;Servicii paza luna 09.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;769955,62
+09.09.2025;Incasare factura NTS-2025-042;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;190817,22;960772,84
+09.09.2025;Plata factura OCO-2025-091 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;112361,39;;848411,45
+09.09.2025;Plata factura PAD-2025-091 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;145247,65;;703163,80
+09.09.2025;Abonament telefonie si internet luna 09.2025;Tele Demo SRL;RO00DEMO0000000000000018;3020,54;;700143,26
+10.09.2025;Energie electrica fabrica luna 09.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;49977,64;;650165,62
+10.09.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;12090,38;;638075,24
+12.09.2025;Incasare factura NTS-2025-043;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;208593,37;846668,61
+12.09.2025;Plata salarii luna 09.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;778840,61
+12.09.2025;Plata salarii luna 09.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;737268,61
+15.09.2025;Incasare factura NTS-2025-044;Nordvik Timber Import AB;SE00DEMO0000000000000005;;216779,21;954047,82
+15.09.2025;Incasare factura NTS-2025-045;Svenska Trabygg AB;SE00DEMO0000000000000003;;226120,94;1180168,76
+16.09.2025;Achizitie utilaj rindeluire - rest plata factura UF-2025-017;Utilaj Forest Demo SRL;RO00DEMO0000000000000024;250000,00;;930168,76
+18.09.2025;Transport marfa - factura TC-2025-018;TransCarpati Logistic SRL;RO00DEMO0000000000000014;18688,80;;911479,96
+18.09.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;900279,96
+22.09.2025;Incasare factura NTS-2025-046;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;63586,37;963866,33
+22.09.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;8426,84;;955439,49
+25.09.2025;Plata contributii salariale luna 08.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;873619,49
+26.09.2025;Plata factura OCO-2025-092 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;156209,74;;717409,75
+30.09.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1657,52;719067,27
+06.10.2025;Plata factura PAD-2025-101 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;164431,31;;554635,96
+07.10.2025;Plata factura LEM-2025-101 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;167171,83;;387464,13
+07.10.2025;Servicii paza luna 10.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;382464,13
+08.10.2025;Mentenanta utilaje - factura SU-2025-010;Service Utilaje Demo SRL;RO00DEMO0000000000000015;14653,11;;367811,02
+08.10.2025;Abonament telefonie si internet luna 10.2025;Tele Demo SRL;RO00DEMO0000000000000018;3033,64;;364777,38
+09.10.2025;Incasare factura NTS-2025-047;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;227235,36;592012,74
+09.10.2025;Energie electrica fabrica luna 10.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;56231,89;;535780,85
+09.10.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;9342,58;;526438,27
+09.10.2025;Scule si consumabile - factura SI-2025-010;Scule Industriale Demo SRL;RO00DEMO0000000000000019;9362,20;;517076,07
+10.10.2025;Plata salarii luna 10.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;449248,07
+10.10.2025;Plata salarii luna 10.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;407676,07
+10.10.2025;Transport marfa - factura TC-2025-019;TransCarpati Logistic SRL;RO00DEMO0000000000000014;22772,47;;384903,60
+10.10.2025;Servicii contabilitate luna 10.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;380403,60
+13.10.2025;Incasare factura NTS-2025-048;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;199191,53;579595,13
+13.10.2025;Plata factura OCO-2025-101 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;157580,00;;422015,13
+14.10.2025;Incasare factura NTS-2025-049;Svenska Trabygg AB;SE00DEMO0000000000000003;;220451,66;642466,79
+17.10.2025;Transport marfa - factura TC-2025-020;TransCarpati Logistic SRL;RO00DEMO0000000000000014;24756,90;;617709,89
+20.10.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;606509,89
+21.10.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;12086,17;;594423,72
+22.10.2025;Incasare factura NTS-2025-050;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;54770,12;649193,84
+22.10.2025;Incasare factura NTS-2025-051;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;200713,02;849906,86
+24.10.2025;Plata contributii salariale luna 09.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;768086,86
+27.10.2025;Plata factura OCO-2025-102 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;145247,65;;622839,21
+27.10.2025;Plata impozit pe profit trim. III 2025;Bugetul de stat – impozit pe profit;RO00DEMO0000000000000023;60000,00;;562839,21
+31.10.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1675,79;564515,00
+04.11.2025;Plata factura OCO-2025-111 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;165801,57;;398713,43
+05.11.2025;Incasare factura NTS-2025-052;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;312780,29;711493,72
+05.11.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;9062,01;;702431,71
+05.11.2025;Scule si consumabile - factura SI-2025-011;Scule Industriale Demo SRL;RO00DEMO0000000000000019;15529,02;;686902,69
+06.11.2025;Servicii paza luna 11.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;681902,69
+07.11.2025;Plata factura PAD-2025-111 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;143877,39;;538025,30
+07.11.2025;Transport marfa - factura TC-2025-021;TransCarpati Logistic SRL;RO00DEMO0000000000000014;26210,64;;511814,66
+07.11.2025;Mentenanta utilaje - factura SU-2025-011;Service Utilaje Demo SRL;RO00DEMO0000000000000015;10435,37;;501379,29
+07.11.2025;Servicii contabilitate luna 11.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;496879,29
+10.11.2025;Energie electrica fabrica luna 11.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;45872,65;;451006,64
+10.11.2025;Abonament telefonie si internet luna 11.2025;Tele Demo SRL;RO00DEMO0000000000000018;3144,62;;447862,02
+12.11.2025;Incasare factura NTS-2025-053;Nordvik Timber Import AB;SE00DEMO0000000000000005;;162144,25;610006,27
+12.11.2025;Plata salarii luna 11.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;67828,00;;542178,27
+12.11.2025;Plata salarii luna 11.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;41572,00;;500606,27
+12.11.2025;Plata factura LEM-2025-111 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;104139,83;;396466,44
+13.11.2025;Incasare factura NTS-2025-054;Svenska Trabygg AB;SE00DEMO0000000000000003;;240272,54;636738,98
+14.11.2025;Prima asigurare trimestrul 4;Asigurari Demo S.A.;RO00DEMO0000000000000021;27500,00;;609238,98
+18.11.2025;Transport marfa - factura TC-2025-022;TransCarpati Logistic SRL;RO00DEMO0000000000000014;23089,87;;586149,11
+18.11.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;574949,11
+19.11.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;11472,66;;563476,45
+24.11.2025;Incasare factura NTS-2025-055;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;55733,91;619210,36
+25.11.2025;Plata contributii salariale luna 10.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;537390,36
+25.11.2025;Plata factura OCO-2025-112 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;172652,87;;364737,49
+26.11.2025;Incasare factura NTS-2025-056;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;181270,09;546007,58
+28.11.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;1649,99;547657,57
+04.12.2025;Plata factura OCO-2025-121 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;104139,83;;443517,74
+05.12.2025;Incasare factura NTS-2025-057;Holzhandel Alpenblick GmbH;AT00DEMO000000000002;;289379,10;732896,84
+05.12.2025;Transport marfa - factura TC-2025-023;TransCarpati Logistic SRL;RO00DEMO0000000000000014;19375,01;;713521,83
+05.12.2025;Scule si consumabile - factura SI-2025-012;Scule Industriale Demo SRL;RO00DEMO0000000000000019;9856,77;;703665,06
+08.12.2025;Plata factura PAD-2025-121 - bustean rasinoase;Padurea Bucovinei Demo SRL;RO00DEMO0000000000000011;165801,57;;537863,49
+08.12.2025;Plata factura LEM-2025-121 - bustean rasinoase;Lemn Brut Suceava Demo SRL;RO00DEMO0000000000000012;132915,30;;404948,19
+08.12.2025;Energie electrica fabrica luna 12.2025;Electrica Demo S.A.;RO00DEMO0000000000000013;46623,47;;358324,72
+08.12.2025;Mentenanta utilaje - factura SU-2025-012;Service Utilaje Demo SRL;RO00DEMO0000000000000015;18003,59;;340321,13
+09.12.2025;Servicii contabilitate luna 12.2025;Contab Demo SRL;RO00DEMO0000000000000017;4500,00;;335821,13
+09.12.2025;Servicii paza luna 12.2025;Paza Demo SRL;RO00DEMO0000000000000020;5000,00;;330821,13
+10.12.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;8216,37;;322604,76
+10.12.2025;Abonament telefonie si internet luna 12.2025;Tele Demo SRL;RO00DEMO0000000000000018;3041,56;;319563,20
+12.12.2025;Plata salarii luna 12.2025 - ordin colectiv lot 1 (25 salariati);Diversi beneficiari (ordin colectiv);;84785,00;;234778,20
+12.12.2025;Plata salarii luna 12.2025 - ordin colectiv lot 2 (16 salariati);Diversi beneficiari (ordin colectiv);;51965,00;;182813,20
+15.12.2025;Incasare factura NTS-2025-058;Svenska Trabygg AB;SE00DEMO0000000000000003;;287931,21;470744,41
+17.12.2025;Incasare factura NTS-2025-059;Wiener Parkett Handels GmbH;AT00DEMO000000000004;;214320,94;685065,35
+18.12.2025;Alimentare card combustibil;Combustibil Demo S.A.;RO00DEMO0000000000000016;12109,63;;672955,72
+18.12.2025;Rata credit nr. 4410/2023;Banca Exemplu S.A.;RO00DEMO0000000000000022;11200,00;;661755,72
+22.12.2025;Incasare factura NTS-2025-060;Mobila Carpati Demo SRL;RO00DEMO0000000000000006;;57485,66;719241,38
+22.12.2025;Transport marfa - factura TC-2025-024;TransCarpati Logistic SRL;RO00DEMO0000000000000014;17470,28;;701771,10
+24.12.2025;Incasare factura NTS-2025-061;Bavaria Holz Import GmbH;DE00DEMO00000000000007;;165735,28;867506,38
+24.12.2025;Incasare factura NTS-2025-062;Nordvik Timber Import AB;SE00DEMO0000000000000005;;156502,35;1024008,73
+24.12.2025;Plata contributii salariale luna 11.2025;Bugetul de stat – contributii;RO00DEMO0000000000000009;81820,00;;942188,73
+29.12.2025;Plata factura OCO-2025-122 - bustean rasinoase;Ocolul Silvic Carpati Demo SRL;RO00DEMO0000000000000010;145247,65;;796941,08
+31.12.2025;Dobanda cont curent;Banca Exemplu S.A.;RO00DEMO0000000000000008;;2058,92;799000,00

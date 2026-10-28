@@ -1,0 +1,91 @@
+{
+  "synthetic": "SURSĂ SINTETICĂ — date fictive generate pentru demonstrație; nu reprezintă un registru sau o bază de date reală.",
+  "source": "Biroul de Credit (simulat)",
+  "reports": {
+    "46270185": {
+      "name": "Codeforge Digital SRL",
+      "report_date": "2026-10-27",
+      "inquiries_6m": 2,
+      "facilities": [
+        {
+          "lender": "Banca Exemplu S.A.",
+          "type": "Credit pe termen",
+          "balance_ron": 520000,
+          "monthly_installment_ron": 14500,
+          "max_dpd_12m": 0,
+          "status": "activ"
+        },
+        {
+          "lender": "Demo Leasing IFN S.A.",
+          "type": "Leasing financiar",
+          "balance_ron": 180000,
+          "monthly_installment_ron": 9500,
+          "max_dpd_12m": 0,
+          "status": "activ"
+        },
+        {
+          "lender": "Banca Exemplu S.A.",
+          "type": "Card de credit business",
+          "limit_ron": 50000,
+          "balance_ron": 12000,
+          "monthly_installment_ron": 0,
+          "max_dpd_12m": 0,
+          "status": "activ"
+        }
+      ]
+    },
+    "47718203": {
+      "name": "Codeforge Labs SRL",
+      "report_date": "2026-10-27",
+      "inquiries_6m": 0,
+      "facilities": [
+        {
+          "lender": "Banca Demo S.A.",
+          "type": "Credit de investiții",
+          "balance_ron": 640000,
+          "monthly_installment_ron": 16000,
+          "max_dpd_12m": 0,
+          "status": "activ"
+        }
+      ]
+    },
+    "45182735": {
+      "name": "Nordic Timber Solutions SRL",
+      "report_date": "2026-10-27",
+      "inquiries_6m": 1,
+      "facilities": [
+        {
+          "lender": "Banca Exemplu S.A.",
+          "type": "Credit pe termen",
+          "balance_ron": 420000,
+          "monthly_installment_ron": 11200,
+          "max_dpd_12m": 0,
+          "status": "activ"
+        }
+      ]
+    },
+    "41055267": {
+      "name": "Transport Rapid Dunărea SRL",
+      "report_date": "2026-10-27",
+      "inquiries_6m": 3,
+      "facilities": [
+        {
+          "lender": "Demo Leasing IFN S.A.",
+          "type": "Leasing financiar",
+          "balance_ron": 790000,
+          "monthly_installment_ron": 17200,
+          "max_dpd_12m": 95,
+          "status": "restanță închisă 08/2026"
+        },
+        {
+          "lender": "Banca Exemplu S.A.",
+          "type": "Credit pe termen",
+          "balance_ron": 440000,
+          "monthly_installment_ron": 11900,
+          "max_dpd_12m": 0,
+          "status": "activ"
+        }
+      ]
+    }
+  }
+}

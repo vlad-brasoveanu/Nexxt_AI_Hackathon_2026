@@ -4,17 +4,19 @@ from pathlib import Path
 from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
 
-from app.ai import build_provider
+from app.agents.orchestrator import Orchestrator
+from app.ai import ModelRouter, build_provider, build_router
 from app.api.routes import ROUTERS
 from app.config import Settings
+from app.credit.sources import Sources
 from app.db import connect
 from app.engine.workflows import default_registry, foundation_workflow
 
 
-def create_app(settings: Settings | None = None, inference=None):
+def create_app(settings: Settings | None = None, inference=None, models: ModelRouter | None = None):
     settings = settings or Settings()
     app = FastAPI(title="CaseCheck Foundation API", version="0.1.0",
-                  description="Synthetic-data foundation: 3 checks; facts entered manually or proposed by AI and confirmed by an analyst. Worker and full KYC are not implemented yet.")
+                  description="Synthetic data only. KYC foundation (3 checks) and a multi-agent SME credit workflow: agents prepare and recommend, humans decide on authority levels.")
     engine, factory = connect(settings.database_url)
     registry, workflow = default_registry(), foundation_workflow()
     registry.validate(workflow)
@@ -24,6 +26,9 @@ def create_app(settings: Settings | None = None, inference=None):
     app.state.engine, app.state.session_factory = engine, factory
     app.state.registry, app.state.workflow = registry, workflow
     app.state.inference = inference if inference is not None else build_provider(settings)
+    app.state.models = models if models is not None else build_router(settings)
+    app.state.sources = Sources(settings.fixtures_dir)
+    app.state.orchestrator = Orchestrator(factory, settings, app.state.sources, app.state.models, storage)
 
     @app.middleware("http")
     async def origin_and_headers(request, call_next):

@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "CaseCheck Foundation API",
-    "description": "Synthetic-data foundation: 3 checks; facts entered manually or proposed by AI and confirmed by an analyst. Worker and full KYC are not implemented yet.",
+    "description": "Synthetic data only. KYC foundation (3 checks) and a multi-agent SME credit workflow: agents prepare and recommend, humans decide on authority levels.",
     "version": "0.1.0"
   },
   "paths": {
@@ -725,6 +725,584 @@
           }
         }
       }
+    },
+    "/api/v1/cases/{case_id}/agent-runs": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Start",
+        "operationId": "start_api_v1_cases__case_id__agent_runs_post",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases/{case_id}/agent-runs/latest": {
+      "get": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Latest",
+        "operationId": "latest_api_v1_cases__case_id__agent_runs_latest_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agent-runs/{run_id}": {
+      "get": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Get Run",
+        "operationId": "get_run_api_v1_agent_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agent-runs/{run_id}/events": {
+      "get": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Events",
+        "description": "Server-sent events: `step` for each new timeline step, `run` on status changes, `end` once the run rests.",
+        "operationId": "events_api_v1_agent_runs__run_id__events_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "After"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agent-runs/{run_id}/review": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Review",
+        "operationId": "review_api_v1_agent_runs__run_id__review_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client-requests/{request_id}/simulate-response": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Simulate Response",
+        "description": "Demo: the client uploads the requested documents through the portal (files from the case fixture).",
+        "operationId": "simulate_response_api_v1_client_requests__request_id__simulate_response_post",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/client-requests/{request_id}/answer": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Mark Answered",
+        "description": "The client finished uploading through another channel: resume the agents on what arrived.",
+        "operationId": "mark_answered_api_v1_client_requests__request_id__answer_post",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agent-runs/{run_id}/what-if": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "What If",
+        "operationId": "what_if_api_v1_agent_runs__run_id__what_if_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TermsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agent-runs/{run_id}/red-team": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Red Team",
+        "description": "Demo safety test: a forbidden action is submitted to the guard exactly as a compromised planner would.",
+        "operationId": "red_team_api_v1_agent_runs__run_id__red_team_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases/{case_id}/decision": {
+      "post": {
+        "tags": [
+          "credit"
+        ],
+        "summary": "Decide",
+        "operationId": "decide_api_v1_cases__case_id__decision_post",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "credit"
+        ],
+        "summary": "Get Decision",
+        "operationId": "get_decision_api_v1_cases__case_id__decision_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credit-cases": {
+      "get": {
+        "tags": [
+          "credit"
+        ],
+        "summary": "Queue",
+        "operationId": "queue_api_v1_credit_cases_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metrics": {
+      "get": {
+        "tags": [
+          "credit"
+        ],
+        "summary": "Metrics",
+        "operationId": "metrics_api_v1_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Market",
+        "operationId": "get_market_api_v1_market_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market/snapshots": {
+      "post": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Publish",
+        "operationId": "publish_api_v1_market_snapshots_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarketPublish"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -744,7 +1322,13 @@
               "identity",
               "ownership",
               "declaration",
-              "mandate"
+              "mandate",
+              "credit_application",
+              "financial_statements",
+              "bank_statement",
+              "collateral_valuation",
+              "articles",
+              "client_letter"
             ],
             "title": "Kind"
           },
@@ -761,6 +1345,202 @@
           "file"
         ],
         "title": "Body_upload_api_v1_cases__case_id__documents_post"
+      },
+      "CreditRequest": {
+        "properties": {
+          "company": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Company"
+          },
+          "cui": {
+            "type": "string",
+            "pattern": "^\\d{2,10}$",
+            "title": "Cui"
+          },
+          "caen": {
+            "type": "string",
+            "pattern": "^\\d{4}$",
+            "title": "Caen"
+          },
+          "caen_text": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Caen Text",
+            "default": ""
+          },
+          "founded": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Founded",
+            "default": ""
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Address",
+            "default": ""
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "online",
+              "sucursal\u0103"
+            ],
+            "title": "Channel",
+            "default": "online"
+          },
+          "request_id": {
+            "type": "string",
+            "maxLength": 40,
+            "title": "Request Id",
+            "default": ""
+          },
+          "received_at": {
+            "type": "string",
+            "maxLength": 40,
+            "title": "Received At",
+            "default": ""
+          },
+          "product": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Product"
+          },
+          "amount": {
+            "type": "integer",
+            "maximum": 100000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Amount"
+          },
+          "term_months": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 12.0,
+            "title": "Term Months"
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Purpose"
+          },
+          "collateral": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Collateral"
+          },
+          "secured": {
+            "type": "boolean",
+            "title": "Secured",
+            "default": false
+          },
+          "fixture": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,60}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fixture"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "company",
+          "cui",
+          "caen",
+          "product",
+          "amount",
+          "term_months",
+          "purpose"
+        ],
+        "title": "CreditRequest"
+      },
+      "DecisionRequest": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "maxLength": 36,
+            "minLength": 1,
+            "title": "Run Id"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "MODIFY",
+              "REJECT"
+            ],
+            "title": "Action"
+          },
+          "terms": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TermsRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "conditions": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conditions"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "human_seconds": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 86400.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Human Seconds"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "action"
+        ],
+        "title": "DecisionRequest"
       },
       "Evidence": {
         "properties": {
@@ -936,6 +1716,34 @@
         ],
         "title": "Login"
       },
+      "MarketPublish": {
+        "properties": {
+          "value_pct": {
+            "type": "number",
+            "maximum": 30.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Value Pct"
+          },
+          "as_of": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value_pct"
+        ],
+        "title": "MarketPublish"
+      },
       "NewCase": {
         "properties": {
           "title": {
@@ -943,6 +1751,25 @@
             "maxLength": 200,
             "minLength": 1,
             "title": "Title"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "kyc",
+              "credit"
+            ],
+            "title": "Kind",
+            "default": "kyc"
+          },
+          "credit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreditRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -951,6 +1778,64 @@
           "title"
         ],
         "title": "NewCase"
+      },
+      "ReviewDecision": {
+        "properties": {
+          "fact_id": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Fact Id"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "accept",
+              "reject",
+              "correct"
+            ],
+            "title": "Action"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fact_id",
+          "action"
+        ],
+        "title": "ReviewDecision"
+      },
+      "ReviewRequest": {
+        "properties": {
+          "accept_all_verified": {
+            "type": "boolean",
+            "title": "Accept All Verified",
+            "default": false
+          },
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewDecision"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Decisions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ReviewRequest"
       },
       "RunRequest": {
         "properties": {
@@ -972,6 +1857,29 @@
           "evaluation_date"
         ],
         "title": "RunRequest"
+      },
+      "TermsRequest": {
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "maximum": 100000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Amount"
+          },
+          "term_months": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 12.0,
+            "title": "Term Months"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "amount",
+          "term_months"
+        ],
+        "title": "TermsRequest"
       },
       "ValidationError": {
         "properties": {

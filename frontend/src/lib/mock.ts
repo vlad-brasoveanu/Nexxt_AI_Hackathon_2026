@@ -2,8 +2,10 @@
 import { ApiError } from "./errors";
 import type {
   CaseDetail, CaseSummary, Doc, DocKind, Evidence, Fact, FactSet, FactsResp, Finding, Health,
-  Proposal, Rejected, Role, Run, SessionResp, TraceStep, User,
+  Proposal, Rejected, Run, SessionResp, TraceStep, User,
 } from "./types";
+import { getMockUser, MOCK_PASSWORD, setMockUser, USERS } from "./mock-auth";
+import { creditCaseDetail, creditDocPages, fakeSha } from "./mock-credit";
 
 const HDR = "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ";
 const MODEL = "Qwen/Qwen2.5-32B-Instruct";
@@ -19,16 +21,6 @@ const SEEDS: CaseSeed[] = [
   { id: "case-transport", title: "Transport Rapid Dunărea SRL · Lipsește actul de identitate", created_at: "2026-10-24T13:40:00Z", company: "Transport Rapid Dunărea SRL", cuiApp: "RO29877341", cuiOnrc: "RO29877341", extractDate: "2026-10-01", person: "Ion Stănescu", idExpiry: null, mandate: false, city: "Galați" },
   { id: "case-nordic", title: "Nordic Timber Solutions SRL · CUI diferit între cerere și extras", created_at: "2026-10-26T09:05:00Z", company: "Nordic Timber Solutions SRL", cuiApp: "RO41562093", cuiOnrc: "RO41562039", extractDate: "2026-10-09", person: "Elena Marinescu", idExpiry: "2029-12-11", mandate: true, city: "Suceava" },
 ];
-
-function fakeSha(seed: string): string {
-  let h = 2166136261;
-  let out = "";
-  for (let r = 0; out.length < 64; r++) {
-    for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ (seed.charCodeAt(i) + r), 16777619) >>> 0;
-    out += h.toString(16).padStart(8, "0");
-  }
-  return out.slice(0, 64);
-}
 
 function fmtRo(d: string) {
   const [y, m, dd] = d.split("-");
@@ -193,17 +185,11 @@ function state(): Map<string, CaseState> {
   return STATE;
 }
 
-const USERS: Record<string, User> = {
-  manager: { id: "u-manager", username: "manager", role: "manager" as Role },
-  analyst: { id: "u-analyst", username: "analyst", role: "analyst" as Role },
-  supervisor: { id: "u-supervisor", username: "supervisor", role: "supervisor" as Role },
-};
-let currentUser: User | null = null;
-
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 function need(): User {
-  if (!currentUser) throw new ApiError(401, "Neautentificat");
-  return currentUser;
+  const u = getMockUser();
+  if (!u) throw new ApiError(401, "Neautentificat");
+  return u;
 }
 function mut() {
   if (need().role === "supervisor") throw new ApiError(403, "Rolul de supervizor nu poate modifica dovezile");
@@ -229,23 +215,17 @@ function findRun(runId: string) {
 export const mockApi = {
   getSession: async (): Promise<SessionResp> => {
     await delay(120);
-    if (typeof window !== "undefined" && !currentUser) {
-      const u = window.sessionStorage.getItem("casecheck-mock-user");
-      if (u && USERS[u]) currentUser = USERS[u];
-    }
     return { user: need(), csrf_token: "mock-csrf" };
   },
   login: async (username: string, password: string): Promise<SessionResp> => {
     await delay(300);
     const u = USERS[username.trim().toLowerCase()];
-    if (!u || password !== "12345") throw new ApiError(401, "Utilizator sau parolă incorectă");
-    currentUser = u;
-    window.sessionStorage.setItem("casecheck-mock-user", u.username);
+    if (!u || password !== MOCK_PASSWORD) throw new ApiError(401, "Utilizator sau parolă incorectă");
+    setMockUser(u);
     return { user: u, csrf_token: "mock-csrf" };
   },
   logout: async () => {
-    currentUser = null;
-    window.sessionStorage.removeItem("casecheck-mock-user");
+    setMockUser(null);
   },
   listCases: async (): Promise<CaseSummary[]> => {
     need(); await delay(150);
@@ -253,6 +233,8 @@ export const mockApi = {
   },
   getCase: async (id: string): Promise<CaseDetail> => {
     need(); await delay(120);
+    const credit = creditCaseDetail(id);
+    if (credit) return credit;
     return structuredClone(cs(id).detail);
   },
   documentBlob: async (_id: string): Promise<Blob> => new Blob([], { type: "application/pdf" }),
@@ -311,6 +293,8 @@ export const mockApi = {
 
 /** Mock-only: page texts for the placeholder PDF viewer. */
 export function mockDocPages(docId: string): string[] {
+  const credit = creditDocPages(docId);
+  if (credit) return credit;
   for (const st of state().values()) {
     const d = st.detail.documents.find((x) => x.id === docId);
     if (d) return d.pages;

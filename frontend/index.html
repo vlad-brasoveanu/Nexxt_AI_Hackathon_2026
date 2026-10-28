@@ -1,10 +1,37 @@
 <!doctype html>
-<html lang="ro">
+<html lang="ro" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Spațiu de lucru intern pentru revizuirea dosarelor KYC de onboarding IMM." />
-    <title>CaseCheck · Revizuire dosare KYC</title>
+    <meta name="description" content="CaseCheck — camera de control a agentului: dosare de credit IMM pregătite de agenți, decise de oameni. Date sintetice." />
+    <meta name="color-scheme" content="dark light" />
+    <title>CaseCheck · Camera de control a agentului</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath d='M2 2h18l6 6v18H2z' fill='%230a0a0b' stroke='%23ededed' stroke-width='1.6'/%3E%3Cpath d='M8 14.5l4 4 8-9' stroke='%23c6ff3d' stroke-width='3' fill='none'/%3E%3C/svg%3E"
+    />
+    <script>
+      // Apply the stored (or OS) theme before first paint to avoid a flash. Storage can be blocked.
+      (function () {
+        var theme = "dark";
+        try {
+          var stored = window.localStorage.getItem("casecheck-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) theme = "light";
+        } catch (e) {
+          try {
+            if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) theme = "light";
+          } catch (e2) {}
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
+    <style>
+      html[data-theme="dark"] { background: #0a0a0b; }
+      html[data-theme="light"] { background: #f5f5f2; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
