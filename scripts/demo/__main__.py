@@ -5,6 +5,7 @@ Requires Google Chrome for PDF rendering.
 
     .venv/bin/python scripts/demo                # render PDFs + seed cases
     .venv/bin/python scripts/demo --render-only
+    .venv/bin/python scripts/demo --ai           # facts proposed by the AI provider, then confirmed
 """
 import argparse
 
@@ -18,11 +19,12 @@ def main():
     parser.add_argument("--username", default="manager")
     parser.add_argument("--password", default="12345")
     parser.add_argument("--render-only", action="store_true")
+    parser.add_argument("--ai", action="store_true", help="propose facts with the configured AI provider instead of the known values")
     args = parser.parse_args()
     plan = render_all()
     if args.render_only:
         return
-    seed(plan, args.url, args.username, args.password)
+    seed(plan, args.url, args.username, args.password, use_ai=args.ai)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, create_engine
+from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
 
@@ -75,6 +75,24 @@ class Run(Base):
     status: Mapped[str] = mapped_column(String(40))
     snapshot: Mapped[dict] = mapped_column(JSON)
     result: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+
+class ExtractionProposal(Base):
+    __tablename__ = "extraction_proposals"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    case_id: Mapped[str] = mapped_column(ForeignKey("cases.id"), index=True)
+    case_revision: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(20))
+    provider: Mapped[str] = mapped_column(String(40))
+    model: Mapped[str] = mapped_column(String(120))
+    mode: Mapped[str] = mapped_column(String(20))
+    prompt_version: Mapped[str] = mapped_column(String(40))
+    latency_ms: Mapped[float] = mapped_column(Float)
+    facts: Mapped[dict] = mapped_column(JSON)
+    rejected: Mapped[list] = mapped_column(JSON)
+    calls: Mapped[list] = mapped_column(JSON)
+    error: Mapped[str | None] = mapped_column(String(200), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
 
 

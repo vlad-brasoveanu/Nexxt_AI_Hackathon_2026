@@ -27,7 +27,10 @@ Demo logins are static: all three use password `12345` (demo only).
   - Facts must quote their literal value from a stored document version (sha256 + page + span).
   - Any document or fact change bumps the case revision and makes earlier runs stale.
   - Runs are idempotent, and every mutation writes an audit event.
-- **AI (planned, next):** a provider-independent inference interface. The demo uses a cloud adapter (Featherless, OpenAI-compatible), while the final product must use local inference with no silent cloud fallback. AI proposes facts and evidence, deterministic code verifies the quotes, and a human confirms before checks run.
+- **AI:** `backend/app/ai/` holds a provider-independent `InferenceProvider` interface and a Featherless adapter (OpenAI-compatible, default `Qwen/Qwen2.5-32B-Instruct`, one bounded retry, no silent fallback).
+  - `POST /cases/{id}/extractions`: the model proposes field values per document. The server locates each value verbatim in the stored page text, builds the evidence span itself and drops anything it can't find. The proposal is stored with provider, model, prompt version and latency, and the call runs outside the database transaction.
+  - The analyst confirms through `POST /facts` with `extraction_mode: ai_assisted`, which re-verifies every quote.
+  - The UI label is "Cloud demo · featherless · <model> · date sintetice". The final product must swap in a local adapter.
 - **Frontend:** React + Vite + TypeScript, served by the backend. To be regenerated with Lovable, UI only: no Lovable backend, auth or Git sync, because bot authorship is forbidden. Design is a charcoal sidebar, warm off-white surfaces, yellow accents and Romanian labels.
 
 ## Key decisions
@@ -74,19 +77,21 @@ Demo logins are static: all three use password `12345` (demo only).
 - [x] Static demo logins (`12345`). Compose now seeds them automatically.
 - [x] Modular restructure: the API split into routers, one file per check, and tests grouped by area. All 24 tests pass, and the API routes are unchanged compared with `docs/openapi.json`.
 - [x] Docs consolidated into PROGRESS.md + LOG.md.
+- [x] **AI extraction via Featherless** (branch `codex/featherless-extraction`):
+  - provider interface, adapter, proposals endpoint, migration, and the `scripts/demo --ai` mode
+  - 6 new offline tests: valid flow, hallucinated value rejected, provider failure recorded, missing key → 503, retry, no key leak
+  - Live run on all 8 demo cases: 26/26 values correct, 0 rejected, 6–14 s per case, and all verdicts as expected.
+  - Model timing on one registry extract: 7B 2.0 s, 14B 5.7 s, 32B 3.3 s, 72B 15.9 s. All four were correct.
+  - Caveat: the demo PDFs include machine-readable lines such as `extract_date: 2026-09-29`, which makes extraction easy. Messier documents haven't been evaluated yet.
 
 ## To do (priority order)
 
-1. **AI extraction via Featherless** (branch `codex/featherless-extraction`).
-   - Build the provider interface and Featherless adapter, plus extraction proposals that are quote-verified and then confirmed by an analyst.
-   - Use fake-provider tests.
-   - Measure accuracy and latency on the 8 demo cases.
-   - Blocked on: `FEATHERLESS_API_KEY` in `.env`.
-2. **Lovable frontend** (branch `codex/lovable-frontend`).
+1. **Lovable frontend** (branch `codex/lovable-frontend`).
    - Screens: login, case list, side-by-side evidence, AI review/confirm, findings, audit trail.
    - Blocked on: Lovable plugin connected, and credits.
-3. **Remaining 9 checks:** VAL-02, CON-01, CON-03, CON-04, BUS-01–04, EXT-01. Add a fixture for each.
-4. **KYC as a first step:** a verified customer-profile output that later department workflows require as a precondition.
+2. **Remaining 9 checks:** VAL-02, CON-01, CON-03, CON-04, BUS-01–04, EXT-01. Add a fixture for each.
+3. **KYC as a first step:** a verified customer-profile output that later department workflows require as a precondition.
+4. **Harder AI evaluation:** documents without machine-readable lines, DD.MM.YYYY dates, scans, and prompt-injection text.
 5. **Bounded investigation agent** (tools above), with evaluation against a no-agent baseline.
 6. Supervisor sign-off workflow, case report export, and a background worker for model jobs.
 7. Run against a real PostgreSQL instance (Docker engine was unavailable earlier).
@@ -98,7 +103,7 @@ Demo logins are static: all three use password `12345` (demo only).
 
 | Item | Impact | Next action |
 | --- | --- | --- |
-| Featherless key not yet in `.env` | AI step can't be verified live | You add `FEATHERLESS_API_KEY` to `.env` |
+| Featherless key sits in tracked `.env.example` (committed in `d3c7cfc`, pushed to private `codex/restructure`); you chose to leave it there | The app only reads `.env`, so the key must be exported when starting the server; the key is in Git history | Optional: copy it into `.env` (git-ignored); rotate it before the repo is ever shared |
 | Lovable plugin not connected | Frontend step can't start | You install the plugin and sign in |
 | Organizer rules on cloud AI, tools and submission format unconfirmed | Submission risk | Ask organizers |
 | Two rubric weights unreadable | Can't allocate the final 25% precisely | Get the official rubric |

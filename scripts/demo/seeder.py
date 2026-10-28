@@ -19,8 +19,8 @@ def locate(pages, label):
     raise ValueError(f"Label {label!r} not found in extracted text")
 
 
-def seed(plan, url, username, password):
-    with httpx.Client(base_url=url, timeout=60) as client:
+def seed(plan, url, username, password, use_ai=False):
+    with httpx.Client(base_url=url, timeout=300) as client:
         def request(method, path, **kwargs):
             response = client.request(method, path, **kwargs)
             if response.is_error:
@@ -42,9 +42,22 @@ def seed(plan, url, username, password):
                     facts.append({"id": f"{index}-{field}-{entity}", "field": field, "entity_id": entity, "value": value,
                                   "evidence": {"document_id": doc["id"], "sha256": doc["sha256"], "page": number,
                                                "start": start, "end": end, "quote": value}})
-            revision = request("POST", prefix + "/facts", json={"expected_revision": revision, "facts": {"facts": facts}})["revision"]
+            note = ""
+            if use_ai:
+                # AI proposes facts from the PDFs; compare with the known values, then confirm the proposal.
+                proposal = request("POST", prefix + "/extractions")
+                if proposal["status"] != "COMPLETED":
+                    raise SystemExit(f"{c['name']}: extraction failed: {proposal['error']}")
+                expected = {(f["field"], f["value"]) for f in facts}
+                got = {(f["field"], f["value"]) for f in proposal["facts"]["facts"]}
+                note = (f" · AI {len(expected & got)}/{len(expected)} correct, {len(got - expected)} extra,"
+                        f" {len(proposal['rejected'])} rejected, {proposal['latency_ms'] / 1000:.1f}s")
+                payload = proposal["facts"]
+            else:
+                payload = {"facts": facts}
+            revision = request("POST", prefix + "/facts", json={"expected_revision": revision, "facts": payload})["revision"]
             run = request("POST", prefix + "/runs", json={"expected_revision": revision, "evaluation_date": EVALUATION_DATE},
                           headers={"Idempotency-Key": str(uuid4())})
             disposition = run["result"]["disposition"]
             mark = "ok" if disposition == c["expected"] else f"EXPECTED {c['expected']}"
-            print(f"{c['name']:<38} {len(entries)} docs · {disposition} ({mark})")
+            print(f"{c['name']:<38} {len(entries)} docs · {disposition} ({mark}){note}")

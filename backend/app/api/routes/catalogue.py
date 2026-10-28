@@ -6,8 +6,10 @@ router = APIRouter(tags=["catalogue"])
 
 
 @router.get("/health")
-def health():
-    return {"status": "ok", "stage": "foundation", "ai_enabled": False}
+def health(request: Request):
+    provider = request.app.state.inference
+    return {"status": "ok", "stage": "foundation", "ai_enabled": provider is not None,
+            "ai": {"provider": provider.name, "model": provider.model, "mode": provider.mode} if provider else None}
 
 
 @router.get("/api/v1/modules")

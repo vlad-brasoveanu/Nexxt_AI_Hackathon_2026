@@ -1,3 +1,3 @@
-from app.api.routes import cases, catalogue, documents, facts, runs, session
+from app.api.routes import cases, catalogue, documents, extractions, facts, runs, session
 
-ROUTERS = [catalogue.router, session.router, cases.router, documents.router, facts.router, runs.router]
+ROUTERS = [catalogue.router, session.router, cases.router, documents.router, extractions.router, facts.router, runs.router]

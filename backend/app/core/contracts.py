@@ -26,7 +26,7 @@ class Fact(Contract):
 
 class FactSet(Contract):
     schema_version: Literal["FactSet.v1"] = "FactSet.v1"
-    extraction_mode: Literal["manual_structured"] = "manual_structured"
+    extraction_mode: Literal["manual_structured", "ai_assisted"] = "manual_structured"
     facts: list[Fact] = Field(max_length=500)
 
 

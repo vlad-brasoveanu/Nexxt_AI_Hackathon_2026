@@ -2,12 +2,15 @@
   "openapi": "3.1.0",
   "info": {
     "title": "CaseCheck Foundation API",
-    "description": "Synthetic-data foundation: 3 checks, manual structured observations. AI extraction, worker and full KYC are not implemented yet.",
+    "description": "Synthetic-data foundation: 3 checks; facts entered manually or proposed by AI and confirmed by an analyst. Worker and full KYC are not implemented yet.",
     "version": "0.1.0"
   },
   "paths": {
     "/health": {
       "get": {
+        "tags": [
+          "catalogue"
+        ],
         "summary": "Health",
         "operationId": "health_health_get",
         "responses": {
@@ -22,8 +25,49 @@
         }
       }
     },
+    "/api/v1/modules": {
+      "get": {
+        "tags": [
+          "catalogue"
+        ],
+        "summary": "Modules",
+        "operationId": "modules_api_v1_modules_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflow-definitions": {
+      "get": {
+        "tags": [
+          "catalogue"
+        ],
+        "summary": "Workflows",
+        "operationId": "workflows_api_v1_workflow_definitions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/session": {
       "get": {
+        "tags": [
+          "session"
+        ],
         "summary": "Me",
         "operationId": "me_api_v1_session_get",
         "responses": {
@@ -38,6 +82,9 @@
         }
       },
       "post": {
+        "tags": [
+          "session"
+        ],
         "summary": "Login",
         "operationId": "login_api_v1_session_post",
         "requestBody": {
@@ -72,6 +119,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "session"
+        ],
         "summary": "Logout",
         "operationId": "logout_api_v1_session_delete",
         "responses": {
@@ -81,40 +131,11 @@
         }
       }
     },
-    "/api/v1/modules": {
-      "get": {
-        "summary": "Modules",
-        "operationId": "modules_api_v1_modules_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflow-definitions": {
-      "get": {
-        "summary": "Workflows",
-        "operationId": "workflows_api_v1_workflow_definitions_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/cases": {
       "post": {
+        "tags": [
+          "cases"
+        ],
         "summary": "New Case",
         "operationId": "new_case_api_v1_cases_post",
         "requestBody": {
@@ -149,6 +170,9 @@
         }
       },
       "get": {
+        "tags": [
+          "cases"
+        ],
         "summary": "List Cases",
         "operationId": "list_cases_api_v1_cases_get",
         "parameters": [
@@ -187,6 +211,9 @@
     },
     "/api/v1/cases/{case_id}": {
       "get": {
+        "tags": [
+          "cases"
+        ],
         "summary": "Get Case",
         "operationId": "get_case_api_v1_cases__case_id__get",
         "parameters": [
@@ -224,6 +251,9 @@
     },
     "/api/v1/cases/{case_id}/documents": {
       "post": {
+        "tags": [
+          "documents"
+        ],
         "summary": "Upload",
         "operationId": "upload_api_v1_cases__case_id__documents_post",
         "parameters": [
@@ -271,6 +301,9 @@
     },
     "/api/v1/documents/{document_id}/download": {
       "get": {
+        "tags": [
+          "documents"
+        ],
         "summary": "Download",
         "operationId": "download_api_v1_documents__document_id__download_get",
         "parameters": [
@@ -306,8 +339,91 @@
         }
       }
     },
+    "/api/v1/cases/{case_id}/extractions": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Create Extraction",
+        "operationId": "create_extraction_api_v1_cases__case_id__extractions_post",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cases/{case_id}/extractions/latest": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Latest Extraction",
+        "operationId": "latest_extraction_api_v1_cases__case_id__extractions_latest_get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/cases/{case_id}/facts": {
       "post": {
+        "tags": [
+          "facts"
+        ],
         "summary": "Import Facts",
         "operationId": "import_facts_api_v1_cases__case_id__facts_post",
         "parameters": [
@@ -353,6 +469,9 @@
         }
       },
       "get": {
+        "tags": [
+          "facts"
+        ],
         "summary": "Current Facts",
         "operationId": "current_facts_api_v1_cases__case_id__facts_get",
         "parameters": [
@@ -390,6 +509,9 @@
     },
     "/api/v1/cases/{case_id}/runs": {
       "post": {
+        "tags": [
+          "runs"
+        ],
         "summary": "Run Case",
         "operationId": "run_case_api_v1_cases__case_id__runs_post",
         "parameters": [
@@ -446,6 +568,9 @@
         }
       },
       "get": {
+        "tags": [
+          "runs"
+        ],
         "summary": "Case Runs",
         "operationId": "case_runs_api_v1_cases__case_id__runs_get",
         "parameters": [
@@ -483,6 +608,9 @@
     },
     "/api/v1/runs/{run_id}": {
       "get": {
+        "tags": [
+          "runs"
+        ],
         "summary": "Get Run",
         "operationId": "get_run_api_v1_runs__run_id__get",
         "parameters": [
@@ -520,6 +648,9 @@
     },
     "/api/v1/runs/{run_id}/findings": {
       "get": {
+        "tags": [
+          "runs"
+        ],
         "summary": "Findings",
         "operationId": "findings_api_v1_runs__run_id__findings_get",
         "parameters": [
@@ -557,6 +688,9 @@
     },
     "/api/v1/runs/{run_id}/trace": {
       "get": {
+        "tags": [
+          "runs"
+        ],
         "summary": "Trace",
         "operationId": "trace_api_v1_runs__run_id__trace_get",
         "parameters": [
@@ -724,7 +858,10 @@
           },
           "extraction_mode": {
             "type": "string",
-            "const": "manual_structured",
+            "enum": [
+              "manual_structured",
+              "ai_assisted"
+            ],
             "title": "Extraction Mode",
             "default": "manual_structured"
           },

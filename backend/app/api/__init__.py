@@ -4,16 +4,17 @@ from pathlib import Path
 from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
 
+from app.ai import build_provider
 from app.api.routes import ROUTERS
 from app.config import Settings
 from app.db import connect
 from app.engine.workflows import default_registry, foundation_workflow
 
 
-def create_app(settings: Settings | None = None):
+def create_app(settings: Settings | None = None, inference=None):
     settings = settings or Settings()
     app = FastAPI(title="CaseCheck Foundation API", version="0.1.0",
-                  description="Synthetic-data foundation: 3 checks, manual structured observations. AI extraction, worker and full KYC are not implemented yet.")
+                  description="Synthetic-data foundation: 3 checks; facts entered manually or proposed by AI and confirmed by an analyst. Worker and full KYC are not implemented yet.")
     engine, factory = connect(settings.database_url)
     registry, workflow = default_registry(), foundation_workflow()
     registry.validate(workflow)
@@ -22,6 +23,7 @@ def create_app(settings: Settings | None = None):
     app.state.settings, app.state.storage = settings, storage
     app.state.engine, app.state.session_factory = engine, factory
     app.state.registry, app.state.workflow = registry, workflow
+    app.state.inference = inference if inference is not None else build_provider(settings)
 
     @app.middleware("http")
     async def origin_and_headers(request, call_next):
