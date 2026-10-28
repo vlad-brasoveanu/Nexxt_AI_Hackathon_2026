@@ -26,3 +26,10 @@ def packet(client, variant="clean"):
 
 def run(client, cid, revision, key="test-run"):
     return client.post(f"/api/v1/cases/{cid}/runs", json={"expected_revision": revision, "evaluation_date": "2026-10-28"}, headers={"Idempotency-Key": key})
+
+
+def login(client, username="manager"):
+    response = client.post("/api/v1/session", json={"username": username, "password": "test-password-only-123"})
+    assert response.status_code == 200
+    client.headers["x-csrf-token"] = response.json()["csrf_token"]
+    return response

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Callable
-from app.contracts import Context, FactSet, FindingSet, Manifest, Policy, Workflow
+from app.core.contracts import Context, FactSet, FindingSet, Manifest, Policy, Workflow
 
 
 @dataclass(frozen=True)

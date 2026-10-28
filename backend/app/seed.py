@@ -1,22 +1,25 @@
-"""Explicit local-demo account creation; never invoked automatically by API startup."""
-import os
+"""Create the fixed local-demo accounts. Demo only: every account uses the same public password."""
 from sqlalchemy import select
-from app.api import passwords
 from app.config import Settings
+from app.core.security import passwords
 from app.db import User, connect
+
+DEMO_PASSWORD = "12345"
+DEMO_USERS = ("manager", "analyst", "supervisor")
 
 
 def main():
-    password = os.environ.get("CASECHECK_DEMO_PASSWORD", "")
-    if len(password) < 5:
-        raise SystemExit("Set CASECHECK_DEMO_PASSWORD to a value of at least 5 characters.")
     engine, factory = connect(Settings().database_url)
+    hashed = passwords.hash(DEMO_PASSWORD)
     with factory.begin() as session:
-        for role in ("manager", "analyst", "supervisor"):
-            if not session.scalar(select(User).where(User.username == role)):
-                session.add(User(username=role, password_hash=passwords.hash(password), role=role, team="demo"))
+        for role in DEMO_USERS:
+            user = session.scalar(select(User).where(User.username == role))
+            if user:
+                user.password_hash = hashed
+            else:
+                session.add(User(username=role, password_hash=hashed, role=role, team="demo"))
     engine.dispose()
-    print("Demo accounts ready: manager, analyst, supervisor. Existing credentials unchanged.")
+    print(f"Demo accounts ready: {', '.join(DEMO_USERS)} · password {DEMO_PASSWORD}")
 
 
 if __name__ == "__main__":

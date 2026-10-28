@@ -16,7 +16,7 @@ services:
     build: .
     environment:
       CASECHECK_DATABASE_URL: postgresql+psycopg://casecheck:${CASECHECK_DB_PASSWORD}@db:5432/casecheck
-    command: ["alembic", "upgrade", "head"]
+    command: ["sh", "-c", "alembic upgrade head && python -m app.seed"]
     depends_on:
       db:
         condition: service_healthy

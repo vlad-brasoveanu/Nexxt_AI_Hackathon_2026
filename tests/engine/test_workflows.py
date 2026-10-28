@@ -1,9 +1,9 @@
 from datetime import date
 import pytest
-from app.contracts import Context, FactSet, Finding, FindingSet, Manifest, Step
-from app.modules.checks import default_registry, foundation_workflow
-from app.modules.registry import Module
-from app.runner import execute
+from app.core.contracts import Context, FactSet, Finding, FindingSet, Manifest, Step
+from app.engine.workflows import default_registry, foundation_workflow
+from app.engine.registry import Module
+from app.engine.runner import execute
 
 
 def context():

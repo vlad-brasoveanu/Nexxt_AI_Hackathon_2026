@@ -1,7 +1,7 @@
 import json
 import pytest
 from fastapi.testclient import TestClient
-from conftest import login
+from helpers import login
 from helpers import packet, run
 
 
@@ -81,7 +81,8 @@ def test_invalid_upload_does_not_mutate(client):
 
 
 def test_explicit_preview_origin_still_requires_csrf(tmp_path):
-    from app.api import create_app, passwords
+    from app.api import create_app
+    from app.core.security import passwords
     from app.config import Settings
     from app.db import Base, User
     app = create_app(Settings(database_url=f"sqlite:///{tmp_path / 'origin.db'}", storage_dir=str(tmp_path / 'docs'), secure_cookies=False, allowed_origins=frozenset({'http://127.0.0.1:5173'})))

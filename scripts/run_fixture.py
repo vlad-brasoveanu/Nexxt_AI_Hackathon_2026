@@ -1,6 +1,5 @@
 """Run a synthetic foundation packet against the live API."""
 import argparse
-import getpass
 import json
 from pathlib import Path
 from uuid import uuid4
@@ -16,7 +15,7 @@ with httpx.Client(base_url=args.url, timeout=30) as client:
         response = client.request(method, path, **kwargs)
         response.raise_for_status()
         return response.json()
-    session = request("POST", "/api/v1/session", json={"username": "manager", "password": getpass.getpass("Demo password: ")})
+    session = request("POST", "/api/v1/session", json={"username": "manager", "password": "12345"})
     client.headers["x-csrf-token"] = session["csrf_token"]
     case = request("POST", "/api/v1/cases", json={"title": packet["title"]})
     prefix = f"/api/v1/cases/{case['id']}"

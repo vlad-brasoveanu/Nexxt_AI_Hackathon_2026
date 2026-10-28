@@ -4,7 +4,7 @@ alwaysApply: true
 ---
 
 - Follow the project working instructions in AGENTS.md.
-- Read HACKATHON_PLAN.md and PROGRESS.md before work; update them after meaningful changes and before finishing a work turn.
+- Read PROGRESS.md before work; after meaningful changes update PROGRESS.md and append to LOG.md.
 - Use a separate branch for each new feature, normally `codex/<feature-name>`.
 - Do not add AI authorship, co-author trailers, or AI signatures to Git commits. Verify the user's Git identity before committing.
 - Planning does not authorize implementation; wait for the user to request the build.

@@ -1,136 +1,106 @@
-# Project progress
+# CaseCheck — progress and to-do
 
-Last updated: 2026-10-28 (Europe/Bucharest)
-Current phase: Implementation — backend foundation and frontend kickoff
-Current branch: codex/workflow-foundation
-Repository: https://github.com/vlad-brasoveanu/Nexxt_AI_Hackathon_2026.git
+Single source of truth for scope, decisions, status and remaining work. Dated history lives in [LOG.md](LOG.md).
+Earlier planning documents (HACKATHON_PLAN, BUILD_PLAN, DIRECTION_2_IMPLEMENTATION, BANK_WORKFLOWS, ROMANIA_ENTERPRISE_FEATURES, MARKET_AND_INNOVATION, IMPLEMENTATION_PLAN_REVIEW) were condensed here on 2026-10-28; their full text remains in Git history.
 
-## Achieved
+Last updated: 2026-10-28 · Repository: https://github.com/vlad-brasoveanu/Nexxt_AI_Hackathon_2026.git
 
-- [x] Reviewed the supplied challenge and scoring screenshots.
-- [x] Captured the four readable weights and marked the other weights unconfirmed.
-- [x] Proposed a narrow document-completeness and consistency review MVP.
-- [x] Defined scope, acceptance criteria, architecture, synthetic cases, evaluation targets, schedule, and demo narrative in HACKATHON_PLAN.md.
-- [x] Created persistent instructions for progress updates, separate feature branches, and Git attribution.
-- [x] Selected the dedicated planning branch and configured the supplied repository as origin.
-- [x] Checked remote HEAD: no refs were returned at planning time; local checkout had no commits.
+## Goal and scope
 
-- [x] Revised architecture for cloud inference in the synthetic-data MVP and local inference in the final product, following the latest user clarification.
-- [x] Prioritized working-demo features and cloud-provider go/no-go gates; moved local/offline checks to the final-product phase.
-- [x] Checked official Ollama documentation for local-only configuration, structured outputs, and tool calling.
+48-hour hackathon, direction 2: an AI agent for repetitive internal banking work over documents, data and predefined rules, with live orchestration and modular APIs.
 
-- [x] Added BANK_WORKFLOWS.md with department responsibilities, automation hypotheses, three-role access design, and profitability measurement boundaries.
-- [x] Revised the MVP to one shared workflow with department-specific views, server-side permissions, and structured handoffs.
+**CaseCheck** is an internal workspace that reviews a synthetic Romanian SME KYC onboarding file before substantive bank review. It extracts facts with source evidence, runs modular checks and routes the case to `READY_FOR_REVIEW`, `NEEDS_INFORMATION` or `ESCALATED`. It does not open accounts, certify compliance or make AML/lending decisions. All documents, identifiers and policies are fictional and labelled as such.
 
-- [x] Added ROMANIA_ENTERPRISE_FEATURES.md with staged feature catalogue, official Romanian/EU references, integration path and scale acceptance criteria.
-- [x] Updated MVP scope for Romanian templates/labels and a small documented case API with synthetic reference adapters.
+Roles: `manager` (relationship manager: creates own cases, uploads), `analyst` (operations: works team cases), `supervisor` (read and sign-off; cannot edit evidence).
+Demo logins are static: all three use password `12345` (demo only).
 
-- [x] Located and reviewed the external outline-the-departments-of-adaptive-kernighan.md; saved prioritized findings in IMPLEMENTATION_PLAN_REVIEW.md without modifying the source.
+## Architecture
 
-- [x] Assessed Lovable against the judging rubric and official platform docs; documented viable full-stack MVP path and Git attribution constraints.
+- **Backend:** FastAPI + SQLAlchemy/Alembic, PostgreSQL (SQLite for local preview and tests). Packages under `backend/app/`:
+  - `api/` — app factory plus one router per resource: session, cases, documents, facts, runs, catalogue
+  - `core/` — contracts, security, audit
+  - `ingestion/` — PDF/JSON parsing and evidence verification
+  - `engine/` — module registry, workflow runner, workflow definitions
+  - `modules/kyc/` — one file per check
+- **Module contract:** a module declares id, version, rule IDs and permission, reads a `FactSet` and returns a `FindingSet`. The registry rejects missing versions, schema mismatches, missing dependencies and cycles. A new module joins through a new workflow version without runner changes, and a test proves this.
+- **Integrity:**
+  - Facts must quote their literal value from a stored document version (sha256 + page + span).
+  - Any document or fact change bumps the case revision and makes earlier runs stale.
+  - Runs are idempotent, and every mutation writes an audit event.
+- **AI (planned, next):** a provider-independent inference interface. The demo uses a cloud adapter (Featherless, OpenAI-compatible), while the final product must use local inference with no silent cloud fallback. AI proposes facts and evidence, deterministic code verifies the quotes, and a human confirms before checks run.
+- **Frontend:** React + Vite + TypeScript, served by the backend. To be regenerated with Lovable, UI only: no Lovable backend, auth or Git sync, because bot authorship is forbidden. Design is a charcoal sidebar, warm off-white surfaces, yellow accents and Romanian labels.
 
-- [x] Researched commercial overlap in official UiPath, Fenergo, WorkFusion, FlowX and Concentrix sources; saved MARKET_AND_INNOVATION.md.
-- [x] Proposed a bounded evidence-conflict investigation focus and comparative evaluation; novelty remains unproven.
+## Key decisions
 
-- [x] Read the complete participant-brief text and message.txt; confirmed direction-2 live agent/modularity requirements.
-- [x] Mapped the source to four discrepancy families and 12 scoped SME KYC checks; identified beneficial-owner and BID simplifications requiring correction.
-- [x] Created DIRECTION_2_IMPLEMENTATION.md with typed module contracts, workflow definition, ownership logic, API/data contracts, failure behavior and build sequence.
+- **Scope:** SME KYC discrepancy workflow from the participant brief and message.txt. Broad document-review AI already exists commercially, so the differentiation hypothesis is a bounded **evidence-conflict investigation agent**: it chooses the next permitted check to resolve a contradiction, with grounded evidence. Novelty is unproven; don't claim market-first.
+- **Rule catalogue (12 MVP checks):**
+  - VAL-01 identity expiry
+  - VAL-02 CNP/CUI validity
+  - CON-01 names
+  - CON-02 company identifier
+  - CON-03 addresses
+  - CON-04 administrator/representative
+  - BUS-01 mandate
+  - BUS-02 shares total 100%
+  - BUS-03 ownership vs declaration
+  - BUS-04 bounded shareholder chain
+  - BUS-05 extract age (fictional 90-day policy)
+  - EXT-01 synthetic reference/sanctions/PEP candidates
+  - BUS-06 (CAEN mapping) is deferred.
+- **Outcome logic:** `FAIL` → `ESCALATED`; `UNKNOWN` → `NEEDS_INFORMATION`; module failure → `PROCESSING_FAILED`, which never counts as cleared.
+- **Agent limits (planned):**
+  - Tools: `read_source_span`, `reextract_fields`, `lookup_reference`, `evaluate_selected_rules`, `propose_information_request`.
+  - At most 4 tool calls with 1 retry each, under a deadline.
+  - It cannot change policy or approve, and information requests are drafts only.
+- **Ownership demo:** A owns 50% of H, H owns 60% of C, so A has 30% indirect; B owns 40% directly. Code computes the paths and the AI only extracts citations. The graph is capped and acyclic.
+- **Romania:** Romanian labels and templates, plus synthetic ANAF/ONRC-style fixtures. No live registry or bank integrations in the MVP.
+- **Git:**
+  - Each feature gets a `codex/<feature>` branch.
+  - Commits use the user's identity (Vlad Brasoveanu).
+  - No AI co-author trailers or signatures.
 
-- [x] Recorded hybrid frontend/backend boundaries and functional adjustments for modular workflows; documented a concrete modularity acceptance gate. These are design decisions, not implemented functionality.
+## Done (verified)
 
-## Remaining — planning decisions
+- [x] Backend foundation:
+  - sessions with CSRF and scoped case access
+  - PDF/JSON ingestion and source-verified facts
+  - registry/runner with validation
+  - idempotent, versioned runs
+  - audit events, Alembic migration, Docker Compose
+- [x] Three checks implemented: VAL-01, CON-02, BUS-05.
+- [x] Local preview without Docker (`scripts/preview.py`, SQLite).
+- [x] Hand-built React frontend (case list, upload, evidence, results). It's on `codex/review-workspace` and will be replaced by Lovable.
+- [x] Realistic demo data: 8 fictional companies and 31 Chrome-rendered PDFs (application, registry certificate, ID copies, beneficial-owner declaration, mandate). `scripts/demo` loads them through the API. Each case got its expected verdict: 3 ready, 4 escalated, 1 needs information.
+- [x] Static demo logins (`12345`). Compose now seeds them automatically.
+- [x] Modular restructure: the API split into routers, one file per check, and tests grouped by area. All 24 tests pass, and the API routes are unchanged compared with `docs/openapi.json`.
+- [x] Docs consolidated into PROGRESS.md + LOG.md.
 
-- [x] Created BUILD_PLAN.md for the conventional stack; latest frontend choice is Lovable-generated React with the same independent backend.
-- [x] User selected message.txt-driven SME KYC work under direction 2; adaptive evidence investigation is integrated into that scope, not a separate pivot. Market novelty remains unproven.
-- [ ] Confirm organizer rules on cloud AI, tool disclosure and submission evidence.
-- [x] Defined a narrow build sequence with React/TypeScript, FastAPI/Python, PostgreSQL and Docker Compose; external broad outline remains a roadmap.
-- [x] Documented proposed case/document versioning, state transitions, scoped agent authority and approval invalidation in BUILD_PLAN.md; implementation/testing pending.
-- [ ] Confirm proposed three-role workflow and permission matrix with the user or bank mentor.
-- [ ] Clarify whether actual SD-WAN network control is intended; currently interpreted as an internal platform with scoped access.
-- [ ] Validate department bottlenecks, volumes, baseline handling time, and value assumptions.
-- [ ] Confirm team capacity, familiar stack, cloud provider/API access and budget, and actual kickoff/deadline.
-- [ ] Obtain unobscured scoring weights and submission requirements from organizers.
-- [ ] Validate workflow assumptions with mentor feedback.
-- [ ] Finalize five core fixture packets, supported identity formats, scoped ownership assumptions and versioned fictional policy for the 12 checks.
-- [ ] Validate bank integration interfaces, identity/deployment standards and production workload targets before a pilot.
-- [ ] Have bank compliance owners confirm applicable current Romanian/EU rules and internal policies; real rule activation remains outside the synthetic MVP.
+## To do (priority order)
 
-## Remaining — implementation
+1. **AI extraction via Featherless** (branch `codex/featherless-extraction`).
+   - Build the provider interface and Featherless adapter, plus extraction proposals that are quote-verified and then confirmed by an analyst.
+   - Use fake-provider tests.
+   - Measure accuracy and latency on the 8 demo cases.
+   - Blocked on: `FEATHERLESS_API_KEY` in `.env`.
+2. **Lovable frontend** (branch `codex/lovable-frontend`).
+   - Screens: login, case list, side-by-side evidence, AI review/confirm, findings, audit trail.
+   - Blocked on: Lovable plugin connected, and credits.
+3. **Remaining 9 checks:** VAL-02, CON-01, CON-03, CON-04, BUS-01–04, EXT-01. Add a fixture for each.
+4. **KYC as a first step:** a verified customer-profile output that later department workflows require as a precondition.
+5. **Bounded investigation agent** (tools above), with evaluation against a no-agent baseline.
+6. Supervisor sign-off workflow, case report export, and a background worker for model jobs.
+7. Run against a real PostgreSQL instance (Docker engine was unavailable earlier).
+8. Evaluations: correctness, evidence grounding, timeouts, prompt injection, plus manual vs assisted review time.
+9. Submission: README, demo script, backup recording, and jury rehearsal.
+10. **Final product:** choose local model and hardware, add a local inference adapter, and verify offline operation with no cloud fallback.
 
-- [ ] Implement typed module/result contracts, trusted registry and workflow validation.
-- [ ] Implement four discrepancy families and bounded ownership/declaration checks from DIRECTION_2_IMPLEMENTATION.md.
-- [ ] Add adaptive evidence tools, checkpointed workflow runs and independent evidence/disposition checks.
-- [ ] Prove a new compatible module can join a workflow without runner changes.
-
-- [ ] Select a cloud provider/model and verify API access with synthetic inputs.
-- [ ] Implement a small provider-independent inference interface and cloud adapter.
-- [ ] Test provider timeout/rate limits and ensure credentials stay server-side.
-- [ ] Build local case-report export.
-- [ ] Establish project setup and reproducible commands.
-- [ ] Create Romanian synthetic fixtures and independent expected outcomes, including CUI mismatch and diacritics.
-- [ ] Build minimal documented case API, sample client and duplicate-submission protection.
-- [ ] Add labeled ANAF/ONRC-style fixtures with unavailable/stale outcomes; no live registry integration in MVP.
-- [ ] Build deterministic rule checks.
-- [ ] Build document parsing and evidence-backed extraction.
-- [ ] Build bounded agent orchestration and failure handling.
-- [ ] Build three seeded-user sessions and backend role/case authorization.
-- [ ] Build shared role-specific case/results UI, structured handoffs, and exception review.
-- [ ] Test cross-case access denial, unauthorized actions, scoped AI context/exports, and self-approval prevention.
-- [ ] Persist cases, audit events, and analyst reasons.
-- [ ] Run correctness, evidence, timeout, and injection evaluations.
-- [ ] Measure cloud inference latency, usage/cost, and manual-versus-assisted review time.
-- [ ] Complete README, demo script, backup recording, and submission evidence.
-- [ ] Verify fresh setup and rehearse jury questions.
-- [ ] Submit according to confirmed organizer requirements.
-
-## Remaining — final local product (after MVP)
-
-- [ ] Confirm target hardware and select a local model.
-- [ ] Implement the local inference adapter and rerun extraction, routing, and performance evaluations.
-- [ ] Verify local-only configuration, no cloud fallback, and offline processing with outbound-attempt inspection.
-
-## Evidence and results
-
-Backend foundation exists: 23 automated tests pass using isolated SQLite databases. Five synthetic foundation packets, API demo client, OpenAPI export, pinned Python dependencies, Docker Compose and initial Alembic migration added. SQLite migration upgrade/schema-drift checks and PostgreSQL SQL compilation are checked separately. A PostgreSQL runtime is not available: Docker engine is stopped/unavailable. AI, full KYC, reviewer approval, worker recovery, benchmark results, mentor interviews and deployment remain unimplemented/unverified.
-
-## Risks / unknowns
+## Blockers and open questions
 
 | Item | Impact | Next action |
 | --- | --- | --- |
-| Two rubric weights unreadable | Cannot precisely allocate the final 25% if total is 100%. | Obtain official rubric. |
-| Team capacity and familiarity with proposed stack unknown | Schedule may need adjustment. | Check at implementation kickoff; recommended stack is documented. |
-| Broad feature set already marketed by competitors | Weak originality claim without a narrower demonstrated contribution. | Validate the proposed investigation focus and benchmark it against simpler baselines. |
-| Workflow assumptions unvalidated | Demo may miss analyst priorities. | Short mentor discussion early. |
-| Cloud provider access, budget, and venue connectivity unknown | Could block the live MVP demo. | Smoke-test early; bound retries/spending and prepare a labeled recording backup. |
-| Final local model/hardware unvalidated | Cloud demo quality does not prove local readiness. | Benchmark and re-evaluate during local migration. |
-| Exact deadline and evidence format unknown | Submission preparation may be incomplete. | Confirm with organizers. |
-
-## Next action
-
-Build the frontend early on its own feature branch in response to the user's design priority. Connect cases, uploads, manual observations and live findings to the foundation API. Then add asynchronous worker/model integration and remaining KYC checks on separate feature branches. Verify PostgreSQL behavior when a server is available.
-
-## Change log
-
-- 2026-10-28: Initial planning documents created from the supplied screenshots. Recorded feature-branch and no-AI-attribution requirements. Implementation remains unstarted.
-
-- 2026-10-28: User required a working demo and a local AI model. Updated the plan with prioritized features, local runtime constraints, and offline acceptance tests. Hardware question pending; no model installed and no implementation started.
-
-- 2026-10-28: User clarified that cloud AI is allowed for the MVP demo. Supersedes the earlier local-only demo requirement. Final product remains local; updated architecture, schedule, acceptance criteria, risks, and repository instructions. Hardware is no longer an MVP blocker. Planning only; no provider selected or API calls made.
-
-- 2026-10-28: User requested department-specific access, bank-function research, and AI opportunities to improve profits/time/efficiency. Documented the SD-WAN/application-access distinction and a three-role workflow; added sourced research and explicit value hypotheses. Still planning only; no application code, commits, or pushes.
-
-- 2026-10-28: User requested easy integration, bank-scale growth and Romanian-market/rule tailoring. Added staged feature catalogue and official-source research. Romanian templates and a minimal integration contract are MVP scope; live bank/registry access, real compliance mappings and scale validation are pilot work. No application functionality implemented.
-
-- 2026-10-28: Reviewed the user-identified external implementation outline (428 lines). Recorded scope/integration, autonomy, authorization, model hosting, policy and reliability issues. Source left unchanged; review recommendations are not implemented.
-
-- 2026-10-28: Evaluated Lovable for the complete MVP demo. Official docs support backend, auth, storage, functions and runtime AI; mapped scoring evidence and distinguished the build assistant from the runtime agent. Automatic Git sync uses bot authorship, so proposed reviewed snapshot export into the existing feature-branch workflow. No Lovable project, purchase, sync, code generation, commit or push performed.
-
-- 2026-10-28: User requested a conventional implementation plan rather than Lovable. Created BUILD_PLAN.md; recommended React/TypeScript/Vite, FastAPI/Python, PostgreSQL/SQLAlchemy/Alembic, private storage, a small persisted-job worker and Docker Compose. Defined the first branch/milestones and updated the main plan. Planning only: no dependencies installed, application code, commits or pushes.
-
-- 2026-10-28: User requested market novelty and solid AI. Market scan found direct commercial overlap; recorded a candid assessment and a proposed evidence-conflict investigation agent with independent verification and baseline evaluation. No unsupported market-first claim and no automatic scope pivot. Implementation remains unstarted.
-
-- 2026-10-28: User supplied the direction-2 Word brief and message.txt and requested an exact modular implementation plan. Read both without changing sources. Planned SME KYC validity/consistency/business/reference modules with bounded ownership investigation; corrected automatic UBO fallback and incomplete BID eligibility examples using official sources. Updated authoritative plan references, module architecture and current build order. Still planning only.
-
-- 2026-10-28: Recorded Lovable frontend plus conventional backend decision and reviewed functional adjustments for independent modules. Updated the main/build/detailed plans: standard contracts, centralized disposition, shared review actions, approved workflow versions and generic UI. Verified planning branch and reviewed Markdown updates; no app code, runtime tests, commits or pushes. Next: freeze contract examples and fixtures before coding; implementation remains unstarted.
-
-- 2026-10-28: User authorized building. Created codex/workflow-foundation; verified configured Git identity as Vlad Brasoveanu. Implemented case/session API, CSRF and scoped authorization, private PDF/JSON ingestion, immutable source-verified manual observations, three rules, validated registry/runner, run idempotency/versioning, audit records, migration, setup and test harness. Initial 23 tests pass. Not AI-enabled; 9 planned checks and the worker remain outstanding. User requested strong frontend emphasis with black/yellow accents; preparing a dedicated frontend branch and local React implementation because no Lovable tool is connected.
+| Featherless key not yet in `.env` | AI step can't be verified live | You add `FEATHERLESS_API_KEY` to `.env` |
+| Lovable plugin not connected | Frontend step can't start | You install the plugin and sign in |
+| Organizer rules on cloud AI, tools and submission format unconfirmed | Submission risk | Ask organizers |
+| Two rubric weights unreadable | Can't allocate the final 25% precisely | Get the official rubric |
+| Workflow and roles not validated by a mentor | Demo may miss analyst priorities | Short mentor discussion |
+| Local model/hardware unvalidated | Cloud demo doesn't prove local readiness | Benchmark during final-product phase |

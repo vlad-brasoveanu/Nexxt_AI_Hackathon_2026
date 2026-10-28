@@ -1,8 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.api import create_app, passwords
+from app.api import create_app
+from app.core.security import passwords
 from app.config import Settings
 from app.db import Base, User
+from helpers import login
 
 
 @pytest.fixture
@@ -22,10 +24,3 @@ def client(app):
     with TestClient(app) as client:
         login(client)
         yield client
-
-
-def login(client, username="manager"):
-    response = client.post("/api/v1/session", json={"username": username, "password": "test-password-only-123"})
-    assert response.status_code == 200
-    client.headers["x-csrf-token"] = response.json()["csrf_token"]
-    return response

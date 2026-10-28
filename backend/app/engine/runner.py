@@ -1,5 +1,5 @@
 from time import perf_counter
-from app.contracts import FindingSet
+from app.core.contracts import FindingSet
 
 
 def execute(registry, workflow, context, facts):

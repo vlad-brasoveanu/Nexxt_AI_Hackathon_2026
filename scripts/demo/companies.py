@@ -1,0 +1,108 @@
+"""Fictional Romanian SME scenarios. Identifiers carry valid checksums only so the documents look plausible."""
+
+
+def cui(base: str) -> str:
+    """Append the Romanian CUI control digit to a fictional base number."""
+    key = "753217532"[-len(base):]
+    check = sum(int(a) * int(b) for a, b in zip(base, key)) * 10 % 11
+    return base + str(0 if check == 10 else check)
+
+
+def cnp(base12: str) -> str:
+    """Append the Romanian CNP control digit to a fictional 12-digit base."""
+    check = sum(int(a) * int(b) for a, b in zip(base12, "279146358279")) % 11
+    return base12 + str(1 if check == 10 else check)
+
+
+# --- Fictional companies and scenarios ---------------------------------------------------------
+
+COMPANIES = [
+    dict(slug="brutaria-valea-muresului", scenario="Dosar complet", expected="READY_FOR_REVIEW",
+         name="Brutăria Valea Mureșului SRL", cui=cui("4381726"), orc="J26/1184/2019", euid="ROONRC.J26/1184/2019",
+         address="Str. Gheorghe Doja nr. 212, Târgu Mureș, jud. Mureș, 540185", caen="1071", caen_text="Fabricarea pâinii; fabricarea prăjiturilor și a produselor proaspete de patiserie",
+         founded="2019-06-11", capital="45.000", employees=23, turnover="4.850.000",
+         extract_date="2026-10-14", phone="0265 214 778", email="contabilitate@brutaria-vm.ro",
+         people=[dict(name="Ioana-Maria Pop", role="Administrator", cnp=cnp("287031426201"), series="MS 482913",
+                      birth="1987-03-14", place="Târgu Mureș", address="Str. Rozelor nr. 9, ap. 4, Târgu Mureș, jud. Mureș",
+                      issued="2021-08-12", expiry="2031-03-14", issuer="SPCLEP Târgu Mureș", share=60),
+                 dict(name="Andrei Pop", role="Asociat", share=40)],
+         products=["Cont curent RON", "Cont curent EUR", "Internet & mobile banking", "Card de debit business (2)", "Încasări POS"],
+         funds="Venituri din vânzarea produselor de panificație către magazine și HoReCa"),
+    dict(slug="nordic-timber-solutions", scenario="CUI diferit între cerere și extras", expected="ESCALATED",
+         name="Nordic Timber Solutions SRL", cui=cui("4518273"), application_cui_typo=True, orc="J33/672/2020", euid="ROONRC.J33/672/2020",
+         address="Calea Unirii nr. 87, Suceava, jud. Suceava, 720043", caen="1610", caen_text="Tăierea și rindeluirea lemnului",
+         founded="2020-02-27", capital="200.000", employees=41, turnover="12.300.000",
+         extract_date="2026-10-02", phone="0230 528 116", email="office@nordictimber.ro",
+         people=[dict(name="Mihai-Cătălin Ursu", role="Administrator", cnp=cnp("182110433002"), series="SV 731046",
+                      birth="1982-11-04", place="Rădăuți", address="Str. Ștefan cel Mare nr. 41, Rădăuți, jud. Suceava",
+                      issued="2022-05-19", expiry="2032-11-04", issuer="SPCLEP Rădăuți", share=70),
+                 dict(name="Erik Lindqvist", role="Asociat", share=30)],
+         products=["Cont curent RON", "Cont curent EUR", "Internet & mobile banking", "Scrisori de garanție bancară"],
+         funds="Export cherestea către clienți din Austria și Suedia"),
+    dict(slug="clinica-zambet-sanatos", scenario="Act de identitate expirat", expected="ESCALATED",
+         name="Clinica Dentară Zâmbet Sănătos SRL", cui=cui("3962814"), orc="J12/3341/2018", euid="ROONRC.J12/3341/2018",
+         address="Str. Observatorului nr. 118, et. 1, Cluj-Napoca, jud. Cluj, 400363", caen="8623", caen_text="Activități de asistență stomatologică",
+         founded="2018-09-03", capital="10.000", employees=12, turnover="2.140.000",
+         extract_date="2026-10-20", phone="0364 401 225", email="receptie@zambetsanatos.ro",
+         people=[dict(name="Dr. Raluca-Elena Moldovan", role="Administrator", cnp=cnp("279070312004"), series="CJ 296451",
+                      birth="1979-07-03", place="Cluj-Napoca", address="Str. Fabricii nr. 22, ap. 15, Cluj-Napoca, jud. Cluj",
+                      issued="2016-07-03", expiry="2026-07-03", issuer="SPCLEP Cluj-Napoca", share=100)],
+         products=["Cont curent RON", "Internet & mobile banking", "Încasări POS", "Card de credit business"],
+         funds="Încasări din servicii stomatologice, decontări CAS Cluj"),
+    dict(slug="agrovest-baragan", scenario="Extras ONRC mai vechi de 90 de zile", expected="ESCALATED",
+         name="AgroVest Câmpia Bărăganului SRL", cui=cui("3710593"), orc="J21/215/2017", euid="ROONRC.J21/215/2017",
+         address="Șos. București nr. 5, Slobozia, jud. Ialomița, 920082", caen="0111", caen_text="Cultivarea cerealelor (exclusiv orez), plantelor leguminoase și a plantelor producătoare de semințe oleaginoase",
+         founded="2017-03-21", capital="350.000", employees=18, turnover="9.600.000",
+         extract_date="2026-05-12", phone="0243 230 917", email="agrovest.baragan@gmail.com",
+         people=[dict(name="Gheorghe Dumitrescu", role="Administrator", cnp=cnp("170042121003"), series="SZ 118724",
+                      birth="1970-04-21", place="Slobozia", address="Str. Viitorului nr. 14, Slobozia, jud. Ialomița",
+                      issued="2020-04-21", expiry="2030-04-21", issuer="SPCLEP Slobozia", share=55),
+                 dict(name="Elena Dumitrescu", role="Asociat", share=45)],
+         products=["Cont curent RON", "Linie de credit capital de lucru", "Internet & mobile banking"],
+         funds="Vânzare cereale către colectori și subvenții APIA"),
+    dict(slug="codeforge-digital", scenario="Dosar complet cu beneficiari reali și împuternicit", expected="READY_FOR_REVIEW",
+         name="Codeforge Digital SRL", cui=cui("4627018"), orc="J40/18342/2021", euid="ROONRC.J40/18342/2021",
+         address="Bd. Dimitrie Pompeiu nr. 6A, et. 3, Sector 2, București, 020337", caen="6201", caen_text="Activități de realizare a soft-ului la comandă (software orientat client)",
+         founded="2021-11-08", capital="1.000", employees=34, turnover="7.900.000",
+         extract_date="2026-09-29", phone="0726 418 902", email="finance@codeforge.ro",
+         people=[dict(name="Vlad-Ștefan Ionescu", role="Administrator", cnp=cnp("191052240019"), series="RX 905317",
+                      birth="1991-05-22", place="București", address="Str. Avrig nr. 31, ap. 12, Sector 2, București",
+                      issued="2023-02-10", expiry="2033-05-22", issuer="DEPABD București", share=50),
+                 dict(name="Ana-Maria Georgescu", role="Asociat", share=50, cnp=cnp("294090140027"), series="RT 448210",
+                      birth="1994-09-01", place="Brașov", address="Str. Lizeanu nr. 18, Sector 2, București",
+                      issued="2024-01-15", expiry="2034-09-01", issuer="DEPABD București", identity=True)],
+         mandate=dict(name="Cristina Radu", cnp=cnp("288121240031"), series="RD 612094", role="Director financiar"),
+         products=["Cont curent RON", "Cont curent EUR", "Cont curent USD", "Internet & mobile banking", "Carduri business (5)", "Depozit overnight"],
+         funds="Venituri din contracte de dezvoltare software cu clienți din UE și SUA"),
+    dict(slug="transport-rapid-dunarea", scenario="Lipsește actul de identitate", expected="NEEDS_INFORMATION",
+         name="Transport Rapid Dunărea SRL", cui=cui("4105526"), orc="J17/905/2019", euid="ROONRC.J17/905/2019",
+         address="Str. Brăilei nr. 154, Galați, jud. Galați, 800310", caen="4941", caen_text="Transporturi rutiere de mărfuri",
+         founded="2019-08-30", capital="25.000", employees=27, turnover="6.450.000",
+         extract_date="2026-10-21", phone="0236 460 312", email="dispecerat@transportrapid.ro", skip_identity=True,
+         people=[dict(name="Costel Bălan", role="Administrator", share=100)],
+         products=["Cont curent RON", "Cont curent EUR", "Leasing financiar (prin parteneri)", "Carduri combustibil"],
+         funds="Servicii de transport intern și internațional de mărfuri"),
+    dict(slug="ceramica-horezu", scenario="Dosar complet, doi administratori", expected="READY_FOR_REVIEW",
+         name="Atelier Ceramica Horezu SRL", cui=cui("3841267"), orc="J38/402/2018", euid="ROONRC.J38/402/2018",
+         address="Str. Olarilor nr. 3, Horezu, jud. Vâlcea, 245800", caen="2341", caen_text="Fabricarea articolelor ceramice pentru uz gospodăresc și ornamental",
+         founded="2018-04-17", capital="5.000", employees=6, turnover="780.000",
+         extract_date="2026-08-26", phone="0750 112 604", email="comenzi@ceramicahorezu.ro",
+         people=[dict(name="Nicolae Vlăduțu", role="Administrator", cnp=cnp("165081538002"), series="VX 207731",
+                      birth="1965-08-15", place="Horezu", address="Str. Olarilor nr. 3, Horezu, jud. Vâlcea",
+                      issued="2019-08-15", expiry="2029-08-15", issuer="SPCLEP Horezu", share=50),
+                 dict(name="Maria Vlăduțu", role="Administrator", cnp=cnp("268112038005"), series="VX 207732",
+                      birth="1968-11-20", place="Horezu", address="Str. Olarilor nr. 3, Horezu, jud. Vâlcea",
+                      issued="2018-11-20", expiry="2028-11-20", issuer="SPCLEP Horezu", share=50, identity=True)],
+         products=["Cont curent RON", "Internet & mobile banking", "Încasări online (e-commerce)"],
+         funds="Vânzări de ceramică tradițională în atelier, târguri și magazin online"),
+    dict(slug="pensiunea-cetatea", scenario="Act expirat și extras vechi", expected="ESCALATED",
+         name="Pensiunea Cetatea de Pădure SRL", cui=cui("3519840"), orc="J08/1520/2016", euid="ROONRC.J08/1520/2016",
+         address="Str. Principală nr. 287, Bran, jud. Brașov, 507025", caen="5520", caen_text="Facilități de cazare pentru vacanțe și perioade de scurtă durată",
+         founded="2016-05-09", capital="200", employees=9, turnover="1.320.000",
+         extract_date="2026-04-30", phone="0744 590 381", email="rezervari@cetateadepadure.ro",
+         people=[dict(name="Florin Neagu", role="Administrator", cnp=cnp("176030208009"), series="BV 554219",
+                      birth="1976-03-02", place="Brașov", address="Str. Principală nr. 287, Bran, jud. Brașov",
+                      issued="2016-03-02", expiry="2026-03-02", issuer="SPCLEP Bran", share=100)],
+         products=["Cont curent RON", "Cont curent EUR", "Încasări POS", "Credit investiții (renovare)"],
+         funds="Venituri din cazare turistică și servicii de alimentație"),
+]
