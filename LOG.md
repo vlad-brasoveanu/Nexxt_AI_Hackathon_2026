@@ -42,3 +42,5 @@ Dated, append-only record of work, decisions and validation evidence. Newest ent
   - Supervisor: extraction, confirm and run buttons are disabled, with a "Doar citire" badge. API: supervisor extraction 403, mutation without CSRF 403, but supervisor `POST /runs` returns 201 (policy gap, now in PROGRESS).
   - One extraction FAILED with "Model reply was not valid JSON". Reproduced directly: 2 of 6 Featherless calls returned malformed or garbled JSON at temperature 0. The retry succeeded.
   - `.venv/bin/pytest -q`: 30 passed.
+
+- 2026-10-28: Restarted the preview with `CASECHECK_AI_MODEL=Qwen/Qwen2.5-14B-Instruct` (env only; code default unchanged) after a sibling session reported corrupted 32B output. `/health` reports the 14B model. A test extraction on Nordic Timber returned COMPLETED in 10.3 s, 4 facts correct (CUIs 45182753/45182735 differ, as designed), 0 rejected.

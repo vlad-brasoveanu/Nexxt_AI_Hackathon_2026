@@ -97,7 +97,7 @@ Demo logins are static: all three use password `12345` (demo only).
 
 ## To do (priority order)
 
-1. **Extraction robustness:** Featherless/Qwen-32B sometimes returns malformed JSON at temperature 0, and one bad document fails the whole proposal. Retry parse failures per document, or record that document as rejected.
+1. **Extraction robustness:** Featherless/Qwen-32B sometimes returns malformed JSON at temperature 0, and one bad document fails the whole proposal. Retry parse failures per document, or record that document as rejected. Workaround: start the preview with `CASECHECK_AI_MODEL=Qwen/Qwen2.5-14B-Instruct` (a sibling session measured 32B at 0/10 correct and 14B at 10/10 on 2026-10-28).
 2. **Remaining 9 checks:** VAL-02, CON-01, CON-03, CON-04, BUS-01–04, EXT-01. Add a fixture for each.
 3. **KYC as a first step:** a verified customer-profile output that later department workflows require as a precondition.
 4. **Harder AI evaluation:** documents without machine-readable lines, DD.MM.YYYY dates, scans, and prompt-injection text.
