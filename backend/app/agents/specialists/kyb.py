@@ -159,6 +159,9 @@ def investigate(board: dict, env: B.Env) -> B.Report:
         else:
             B.resolve(board, "kyb:bureau", "Fără restanțe semnificative.")
 
+    if not report:
+        B.issue(board, "kyb:missing-bureau", "kyb", "blocking", "Lipsește raportul de credit", "Datoriile și restanțele nu pot fi presupuse zero.")
+
     administrators = [a["name"] if isinstance(a, dict) else str(a) for a in company.get("administrators", [])]
     names = [company["name"]] + [s["name"] for s in company["shareholders"]] + administrators \
         + [r["company"]["name"] for r in related if r["control"]]
@@ -184,7 +187,7 @@ def investigate(board: dict, env: B.Env) -> B.Report:
     result = execute(default_registry(), foundation_workflow(), context, FactSet(extraction_mode="manual_structured", facts=facts))
     checks = [{"rule_id": f["rule_id"], "outcome": f["outcome"], "detail": f["explanation"]} for f in result["findings"]]
     for rule_id, action in CLIENT_ACTION.items():
-        failing = [c for c in checks if c["rule_id"] == rule_id and c["outcome"] == "FAIL"]
+        failing = [c for c in checks if c["rule_id"] == rule_id and c["outcome"] in {"FAIL", "UNKNOWN"}]
         if failing:
             B.issue(board, f"kyc:{rule_id}", "kyb", "blocking", f"KYC {rule_id}: {failing[0]['detail']}",
                     "Verificare reutilizată din motorul de onboarding KYC.", ["kyc"], client_action=action)

@@ -17,7 +17,7 @@ def inputs_from_board(board: dict, env: B.Env) -> engine.Inputs:
     meta = env.case["meta"]
     latest = (board.get("financials") or {}).get("latest")
     kyb = board.get("kyb") or {}
-    missing = [i["client_action"] for i in B.open_issues(board) if i.get("client_action")]
+    missing = [i.get("client_action") or i["title"] for i in B.open_issues(board) if i.get("client_action") or i["severity"] == "blocking"]
     return engine.Inputs(
         amount=float(meta.get("amount", 0)), term_months=int(meta.get("term_months", 60)), product=meta.get("product", ""),
         purpose=meta.get("purpose", ""), secured=bool(meta.get("secured")),

@@ -36,7 +36,7 @@ ITEMS = {
     "equity": "Capitaluri proprii – total",
 }
 VALUATION = {"collateral_value": "Valoare de piață"}
-MONEY = re.compile(r"\(?\d{1,3}(?:\.\d{3})+\)?|\b0\b")
+MONEY = re.compile(r"-?(?:\(\d[\d. ]*(?:,\d{1,2})?\)|\d+(?:\.\d{3})*(?:,\d{1,2})?)(?![\d,])")
 COUNT = re.compile(r"\b\d{1,5}\b")
 WINDOW = 60
 
@@ -58,10 +58,10 @@ def locate(doc: B.Doc, key: str, label: str, literal: str | None = None) -> tupl
                     start = match.end() + at
                     return literal, B.span(doc, number, start, start + len(literal))
                 continue
-            found = shape.search(window)
+            found = re.match(r"\s*(?:(?:\(RON\)|RON|:)\s*)?(" + shape.pattern + r")", window)
             if found:
-                start = match.end() + found.start()
-                return found.group(0), B.span(doc, number, start, match.end() + found.end())
+                start = match.end() + found.start(1)
+                return found.group(1), B.span(doc, number, start, match.end() + found.end(1))
     return None
 
 
@@ -109,8 +109,13 @@ def extract(board: dict, env: B.Env, doc: B.Doc, labels: dict, prefix: str, repo
 def analyze(board: dict, env: B.Env) -> B.Report:
     started = perf_counter()
     report = {"models": [], "rejected": [], "methods": {}}
+    board["metrics"] = {k: v for k, v in board["metrics"].items() if v["agent"] != "financials"}
+    board["financials"] = None
+    from app.agents.document_checks import inspect
     years = {}
     for doc in sorted((d for d in env.docs if d.kind == "financial_statements"), key=lambda d: fs_year(d) or 0):
+        if inspect(doc, env.case["meta"]):
+            continue
         year = fs_year(doc)
         if year:
             extract(board, env, doc, ITEMS, f"fs{year}", report)
@@ -141,7 +146,7 @@ def analyze(board: dict, env: B.Env) -> B.Report:
         latest = max(years)
         v = years[latest]
         need = ["revenue", "ebit", "depreciation", "tax", "financial_debt", "cash", "current_assets", "current_liabilities"]
-        if all(v.get(k) is not None for k in need):
+        if all(v.get(k) is not None for k in need) and v["revenue"] > 0 and v["current_liabilities"] > 0:
             ebitda = v["ebit"] + v["depreciation"]
             cfads = ebitda - v["tax"]
             p = f"fs{latest}-"

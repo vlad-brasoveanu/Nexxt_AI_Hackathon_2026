@@ -10,6 +10,7 @@ from app.api.serializers import doc_json
 from app.core.audit import audit
 from app.db import Document, uid
 from app.ingestion import extract
+from app.ingestion.parsing import DocumentParseError
 
 router = APIRouter(prefix="/api/v1", tags=["documents"])
 DocumentKind = Literal["application", "company_extract", "identity", "ownership", "declaration", "mandate",
@@ -35,6 +36,8 @@ def store(request, session, user, case, expected_revision, kind, filename, media
         raise HTTPException(413, "Document empty or exceeds size limit")
     try:
         pages, ocr_pages = extract(data, media_type)
+    except DocumentParseError as exc:
+        raise HTTPException(422, {"code": exc.code, "message": str(exc)})
     except Exception:
         raise HTTPException(422, "Unsupported document; supply a text PDF (max 30 pages), a CSV bank export or synthetic pages JSON")
     bump(session, case, expected_revision)

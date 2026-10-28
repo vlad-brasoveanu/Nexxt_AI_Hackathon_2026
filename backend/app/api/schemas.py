@@ -40,6 +40,7 @@ class ReviewDecision(Contract):
     fact_id: str = Field(min_length=1, max_length=120)
     action: Literal["accept", "reject", "correct"]
     value: str | None = Field(default=None, max_length=40)
+    reason: str | None = Field(default=None, min_length=10, max_length=2000)
 
 
 class ReviewRequest(Contract):

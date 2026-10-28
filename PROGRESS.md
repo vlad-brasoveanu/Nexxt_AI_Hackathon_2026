@@ -3,7 +3,18 @@
 Single source of truth for scope, decisions, status and remaining work. Dated history lives in [LOG.md](LOG.md).
 Earlier planning documents (HACKATHON_PLAN, BUILD_PLAN, DIRECTION_2_IMPLEMENTATION, BANK_WORKFLOWS, ROMANIA_ENTERPRISE_FEATURES, MARKET_AND_INNOVATION, IMPLEMENTATION_PLAN_REVIEW) were condensed here on 2026-10-28; their full text remains in Git history.
 
-Last updated: 2026-10-28 · Repository: https://github.com/vlad-brasoveanu/Nexxt_AI_Hackathon_2026.git
+Last updated: 2026-10-29 · Repository: https://github.com/vlad-brasoveanu/Nexxt_AI_Hackathon_2026.git
+
+## Approved delivery — 2026-10-29 (current; supersedes older scope below)
+
+Original frontend retained. Backend work resumed by the user. Delivery order: PDF workflow → Risk Planner → three roles/audit → original frontend integration. Prospecting deferred. No OCR in the MVP; scans need replacement with text PDFs. Cloud inference remains synthetic-demo only.
+
+- [x] `codex/pdf-credit-workflow`: PDF text validation, explicit scan error, document type/company/year/currency/unit checks for supported demo templates, source-sensitive review, complete-review decision gate, missing-bureau guard, client request drafts/manual send/manual reanalysis.
+- [x] Validation: 123 pytest tests pass, including real PDF upload through the API, human decision workflow, partial review rejection, scan rejection, and source-review invalidation. No live model calls in this validation.
+- [ ] Historical SQLite adapter (6,000 synthetic EUR cases; 3,726 RO), reproducible comparable selection and stress/capacity planner. No personalized default probability.
+- [ ] Case officer, risk reviewer, administrator; separate authority levels, audited demo-only self-approval, user/policy administration and session revocation.
+- [ ] Original frontend API integration, Risk Planner and administration tabs; live API browser smoke and build.
+- [ ] Reproducible demo script and measured operational metrics. Production/local model validation remains future work.
 
 ## Goal and scope
 
@@ -146,7 +157,7 @@ The pitch is now framed as an SME credit file prepared from application to human
 
   Show the source of each rule in the UI. The personal-credit rules (40% debt-to-income, ID validity by age, ANAF certificate) stay out.
 - **Public news agent (under KYB):** a simulated source, because the demo companies are fictional, plus a replaceable interface for a real feed.
-- **Scans:** local OCR with Tesseract and the Romanian language pack (no cloud). OCR text is marked as transcribed.
+- **Scans (superseded 2026-10-29):** no OCR in the MVP; textless PDFs are rejected explicitly.
 - **Agent stack:** we keep our own orchestrator and `InferenceProvider`, not the OpenAI Agents SDK/Bedrock from Florin Iacob's plan. The principles match: the orchestrator is code, sub-agents are tools, calculations are deterministic, every claim has a source, the human decides.
 
 ## Theme refinement (2026-10-28, branch `codex/theme-contrast`)
@@ -171,9 +182,7 @@ The user rejected the `codex/employee-workspace` redesign and selected the previ
 
 ## To do (priority order)
 
-- **Backend paused (2026-10-28 evening, the user's decision):** someone else takes over the backend from the frontend screens. Until then I work on the frontend only.
-  - Done before the pause: OCR for scans in `ingestion/parsing.py` (pdftoppm + Tesseract `ron+eng`, local), plus the `documents.ocr_pages` column and migration `d7a3b1c0e5f2`. Tests: 117 passed. No test with a real scan yet.
-  - Contract for the backend: `frontend/src/lib/agent-types.ts` (JSON shapes) + `docs/openapi.json` (routes). New screens are built first on mock data (`npm run dev:mock`); each field the backend must supply is marked in the contract.
+- **Backend resumed 2026-10-29:** follow the approved delivery checklist above; the earlier pause is revoked.
 - **Frontend restructured for readability (2026-10-28, build passes, not yet checked in the browser):**
   - Text 15–16 px, labels 12 px in sans, higher contrast.
   - The home page is "Sarcinile mele", with tasks by role.
@@ -186,7 +195,7 @@ The user rejected the `codex/employee-workspace` redesign and selected the previ
   - Metrici and Piață are now a single page, "Statistici și piață".
 - **Still to do in the backend (from the list below):** points 2–4 (document type check, rules from the folder with citations, news agent). The frontend will show them on mock data.
 - **List:**
-  1. Scanned-page ingestion: textless pages are OCR'd with Tesseract (ron), marked as transcribed.
+  1. OCR deferred; textless PDFs are rejected in the MVP.
   2. Document type check: the agent verifies from the content that each document matches its declared type. A mismatch becomes an issue and goes into the consolidated client request.
   3. Rules from the folder: KYC/PEP, CRC consent and GDPR as policy rules, with a citation of the act and article.
   4. Public news agent under KYB (simulated source + interface).

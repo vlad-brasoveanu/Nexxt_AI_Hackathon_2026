@@ -49,9 +49,11 @@ def metric(run, id):
 
 def answered(client, run):
     request_id = run["requests"][-1]["id"]
+    sent = client.post(f"/api/v1/client-requests/{request_id}/send")
+    assert sent.status_code == 200, sent.text
     response = client.post(f"/api/v1/client-requests/{request_id}/simulate-response")
     assert response.status_code == 200, response.text
-    return response.json()
+    return start(client, run["case_id"])
 
 
 def ready_codeforge(client):
@@ -83,7 +85,7 @@ def test_codeforge_consolidated_request_critic_and_counter_offer(client):
     assert round(rec["proposed"]["dscr"], 2) >= 1.20 and rec["proposed"]["ltv_pct"] <= 70
     assert run["board"]["security"]["injections"], "the valuation report's hidden instruction must be detected"
     assert run["board"]["memo"]["unverified"] == []
-    assert len(run["requests"]) == 1, "no second round: the client answered everything"
+    assert not run["requests"], "new analysis must not request documents already supplied"
     # Every published fact quotes a stored document version.
     assert all(f["verified"] and f["evidence"]["quote"] == f["value"] for f in run["board"]["facts"])
 

@@ -1,3 +1,4 @@
+from app.agents.review import complete, blockers
 """Human credit decisions (Aprobă / Modifică / Respinge) on authority levels with four eyes, the work queue,
 and the demo metrics. Agents never call these endpoints."""
 from statistics import median
@@ -51,10 +52,13 @@ def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth
     if not rec or rec["decision"] == "NEEDS_INFORMATION":
         raise HTTPException(409, "Dosarul este incomplet: nu se poate decide")
     board = run.board
-    if not board.get("reviewed_by"):
+    if not complete(board):
         raise HTTPException(409, "Revizia faptelor de către un analist este necesară înainte de decizie")
     if user.id in {case.owner_id, run.started_by, *board.get("reviewed_by", [])}:
         raise HTTPException(403, "Regula celor patru ochi: cine a pregătit sau revizuit dosarul nu poate decide")
+
+    if body.action != "REJECT" and blockers(board):
+        raise HTTPException(409, {"code": "REVIEW_REQUIRED", "reasons": blockers(board)})
 
     orchestrator = request.app.state.orchestrator
     _, env, live_board = orchestrator.load(session, run)
@@ -147,7 +151,7 @@ def queue(identity: Auth, session: DB):
             pending_vote = session.scalar(select(CreditDecision).where(CreditDecision.run_id == run.id, CreditDecision.status == "PENDING_SECOND_VOTE"))
             if run.status == "WAITING_CLIENT":
                 waiting, routing = "client", "Cerere consolidată trimisă; agenții reiau automat la răspuns."
-            elif run.status == "AWAITING_DECISION" and not (run.board or {}).get("reviewed_by"):
+            elif run.status == "AWAITING_DECISION" and not complete(run.board or {}):
                 waiting, routing = "analyst", "Faptele extrase așteaptă revizia analistului."
             elif run.status == "AWAITING_DECISION":
                 waiting = "credit_committee" if pending_vote else ROLE_FOR_LEVEL.get(run.level or "")

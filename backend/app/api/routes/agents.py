@@ -43,7 +43,9 @@ def start(case_id: str, request: Request, identity: Auth, session: DB):
     editable(user)
     case = credit_case(session, user, case_id)
     current = latest_run(session, case_id)
-    if current and current.status not in {"DECIDED", "FAILED"}:
+    if current and current.status == "RUNNING":
+        return run_json(session, current, case, request.app.state.settings)
+    if current and current.status not in {"DECIDED", "FAILED"} and current.case_revision == case.revision:
         return run_json(session, current, case, request.app.state.settings)
     session.rollback()
     run_id = request.app.state.orchestrator.start(case_id, user)
@@ -103,7 +105,10 @@ def review(run_id: str, body: ReviewRequest, request: Request, identity: Auth, s
     run, case = visible(session, user, run_id)
     if run.status not in {"AWAITING_DECISION", "WAITING_CLIENT"}:
         raise HTTPException(409, "Agenții lucrează încă la dosar; revizia se face după ce se opresc")
+    if run.case_revision != case.revision:
+        raise HTTPException(409, "Dosarul s-a schimbat; reanalizați înainte de revizuire.")
     board = deepcopy(run.board)
+    before = deepcopy(board["facts"])
     facts = board["facts"]
     counts = {"accepted": 0, "corrected": 0, "rejected": 0}
     conflicts = {f["id"] for f in facts_view(board) if f["conflict"]}
@@ -117,6 +122,10 @@ def review(run_id: str, body: ReviewRequest, request: Request, identity: Auth, s
         f = facts.get(d.fact_id)
         if not f:
             raise HTTPException(422, f"Fapt necunoscut: {d.fact_id}")
+        if (d.action != "accept" or f["id"] in conflicts) and not d.reason:
+            raise HTTPException(422, "Corecțiile și conflictele necesită un motiv (minimum 10 caractere).")
+        if d.reason:
+            f["review_reason"] = d.reason
         if d.action == "accept":
             f["review"] = "accepted"
             counts["accepted"] += 1
@@ -142,7 +151,7 @@ def review(run_id: str, body: ReviewRequest, request: Request, identity: Auth, s
         orchestrator.resume(session, run, title + " → recalculez indicatorii afectați", {"by": user.username, **counts})
     else:
         orchestrator.step(session, run, "human", "event", title, "ok", detail={"by": user.username, **counts})
-    audit(session, user, "agents.review", case.id, run_id=run.id, **counts)
+    audit(session, user, "agents.review", case.id, run_id=run.id, changes=[{"fact_id": k, "before": before[k], "after": f} for k, f in facts.items() if before[k] != f], **counts)
     session.commit()
     if resume:
         orchestrator.kick(run.id)
@@ -160,12 +169,28 @@ def answer(request, session, user, client_request, uploaded):
     board["requests_open"] = 0
     B.bump(board, "requests")
     run.board = board
-    request.app.state.orchestrator.resume(session, run, f"Clientul a răspuns prin portal: {len(uploaded)} documente încărcate",
+    request.app.state.orchestrator.step(session, run, "human", "event", f"Răspuns primit: {len(uploaded)} documente. Reanalizați dosarul.", "info", detail=
                                           {"documents": uploaded, "request_id": client_request.id})
     audit(session, user, "client_request.answered", run.case_id, request_id=client_request.id, documents=len(uploaded))
     session.commit()
-    request.app.state.orchestrator.kick(run.id)
     return run
+
+
+@router.post("/client-requests/{request_id}/send")
+def send_request(request_id: str, request: Request, identity: Auth, session: DB):
+    user = identity[0]
+    editable(user)
+    item = session.get(ClientRequest, request_id)
+    if not item:
+        raise HTTPException(404, "Request not found")
+    case = credit_case(session, user, item.case_id)
+    run = session.get(AgentRun, item.run_id)
+    if item.status != "DRAFT" or run.case_revision != case.revision:
+        raise HTTPException(409, "Ciorna nu mai este actuală sau a fost trimisă.")
+    item.status, item.sent_at = "SENT", now()
+    audit(session, user, "client_request.sent", case.id, request_id=item.id, channel="simulated")
+    session.commit()
+    return {"id": item.id, "status": item.status}
 
 
 @router.post("/client-requests/{request_id}/simulate-response")

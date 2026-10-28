@@ -159,11 +159,12 @@ class Orchestrator:
                 B.bump(board, "market")
             board["market_seen"] = list(seen)
         board["requests_open"] = session.scalar(select(func.count()).select_from(ClientRequest)
-                                                .where(ClientRequest.run_id == run.id, ClientRequest.status == "SENT")) or 0
+                                                .where(ClientRequest.run_id == run.id, ClientRequest.status.in_(["SENT", "DRAFT"]))) or 0
         env = B.Env(case={"id": case.id, "title": case.title, "revision": case.revision, "meta": dict(case.meta or {})},
                     docs=docs, sources=self.sources, standards=standards, market=market, models=self.models,
                     evaluation_date=on, timeout=self.settings.ai_timeout_seconds)
-        run.case_revision = case.revision
+        if run.status == "RUNNING":
+            run.case_revision = case.revision
         return case, env, board
 
     def loop(self, run_id: str):
@@ -284,7 +285,7 @@ class Orchestrator:
             run = session.get(AgentRun, run_id)
             board = deepcopy(run.board)
             rounds = session.scalar(select(func.count()).select_from(ClientRequest).where(ClientRequest.case_id == run.case_id)) or 0
-            request = ClientRequest(case_id=run.case_id, run_id=run.id, round=rounds + 1, status="SENT",
+            request = ClientRequest(case_id=run.case_id, run_id=run.id, round=rounds + 1, status="DRAFT",
                                     channel="Portal client (simulat)", message=message, items=items)
             session.add(request)
             for i in board["issues"]:
@@ -299,10 +300,10 @@ class Orchestrator:
                 board["plan_order"].remove("client.request")
             run.status = "WAITING_CLIENT"
             self.step(session, run, "completeness", "request",
-                      f"Cerere consolidată trimisă clientului (runda {rounds + 1}): {len(items)} {'element' if len(items) == 1 else 'elemente'}",
+                      f"Ciornă de cerere consolidată pentru verificare (runda {rounds + 1}): {len(items)} {'element' if len(items) == 1 else 'elemente'}",
                       "info", task="client.request", model=model, thought=" · ".join(i["title"] for i in items),
                       detail={"items": [i["title"] for i in items], "channel": request.channel})
-            audit(session, session.get(User, run.started_by), "client_request.sent", run.case_id, run_id=run.id, items=len(items))
+            audit(session, session.get(User, run.started_by), "client_request.drafted", run.case_id, run_id=run.id, items=len(items))
 
     def route(self, session, run, board, incomplete=False):
         rec = board.get("recommendation") or run.recommendation

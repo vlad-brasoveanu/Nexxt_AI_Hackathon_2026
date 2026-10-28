@@ -21,8 +21,7 @@ def fs_year(doc: B.Doc) -> int | None:
     match = YEAR.search(" ".join(doc.pages[0].split())) if doc.pages else None
     if match:
         return int(match.group(1))
-    digits = re.findall(r"20\d\d", doc.filename)
-    return int(digits[-1]) if digits else None
+    return None  # The filename is not evidence of a fiscal year.
 
 
 def scan_injections(doc: B.Doc) -> list[dict]:
@@ -50,6 +49,8 @@ def requirements(env: B.Env) -> list[dict]:
 
 
 def check(board: dict, env: B.Env) -> B.Report:
+    from app.agents.document_checks import check as check_documents
+    check_documents(board, env)
     present, missing = [], []
     years = {d.id: fs_year(d) for d in env.docs if d.kind == "financial_statements"}
     for req in requirements(env):

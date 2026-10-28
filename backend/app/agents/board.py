@@ -87,7 +87,7 @@ def metric(board: dict, id: str, label: str, value: float, unit: str, display: s
 def fact(board: dict, id: str, agent: str, label: str, field_name: str, value: str, evidence: dict,
          normalized: float | None = None, entity: str = "company", method: str = "structured"):
     previous = board["facts"].get(id)
-    review = previous["review"] if previous and previous["value"] == value else "pending"
+    review = previous["review"] if previous and previous["value"] == value and previous["evidence"] == evidence else "pending"
     board["facts"][id] = {"id": id, "entity_id": entity, "field": field_name, "value": value, "evidence": evidence,
                           "agent": agent, "label": label, "normalized": normalized, "verified": True,
                           "review": review, "conflict": False, "method": method,
