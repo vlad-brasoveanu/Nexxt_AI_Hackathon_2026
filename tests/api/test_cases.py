@@ -16,6 +16,7 @@ def test_end_to_end(client, variant, disposition):
     assert len(body["result"]["trace"]) == 3
     assert body["snapshot"]["workflow"]["version"] == "0.1.0"
     assert client.get(f"/api/v1/runs/{body['id']}").json()["is_current"]
+    assert client.get(f"/api/v1/cases/{cid}/runs").json()[0]["created_at"]
 
 
 @pytest.mark.parametrize("username", ["other", "outsider"])

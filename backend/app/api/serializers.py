@@ -8,4 +8,5 @@ def doc_json(doc):
 
 def run_json(run):
     return {"id": run.id, "case_id": run.case_id, "case_revision": run.case_revision,
-            "status": run.status, "snapshot": run.snapshot, "result": run.result}
+            "status": run.status, "snapshot": run.snapshot, "result": run.result,
+            "created_at": run.created_at}

@@ -31,7 +31,12 @@ Demo logins are static: all three use password `12345` (demo only).
   - `POST /cases/{id}/extractions`: the model proposes field values per document. The server locates each value verbatim in the stored page text, builds the evidence span itself and drops anything it can't find. The proposal is stored with provider, model, prompt version and latency, and the call runs outside the database transaction.
   - The analyst confirms through `POST /facts` with `extraction_mode: ai_assisted`, which re-verifies every quote.
   - The UI label is "Cloud demo · featherless · <model> · date sintetice". The final product must swap in a local adapter.
-- **Frontend:** React + Vite + TypeScript, served by the backend. To be regenerated with Lovable, UI only: no Lovable backend, auth or Git sync, because bot authorship is forbidden. Design is a charcoal sidebar, warm off-white surfaces, yellow accents and Romanian labels.
+- **Frontend:** React + Vite + TypeScript + Tailwind/shadcn, built to `frontend/dist` and served by the backend.
+  - Generated with Lovable (project "Dosar KYC Clar"), UI only: no Lovable backend, auth, database or Git sync, because bot authorship is forbidden. The code was copied in by hand and committed under the user's name.
+  - Lovable scaffolded TanStack Start (SSR). The repo uses TanStack Router as a plain SPA with hash routing, because the backend's static mount has no SPA fallback.
+  - One typed client, `frontend/src/lib/api.ts`: same-origin cookie session, `x-csrf-token` from the session response on every mutation, and `Idempotency-Key` on runs. `lib/mock.ts` holds synthetic fixtures, used only on Lovable hosts or with `npm run dev:mock`.
+  - PDFs are fetched as blobs and shown through an object URL, because the download endpoint sends `octet-stream` as an attachment.
+  - Design: charcoal sidebar, warm off-white surfaces, yellow accents, semantic status colours, Romanian labels, self-hosted IBM Plex fonts.
 
 ## Key decisions
 
@@ -84,11 +89,15 @@ Demo logins are static: all three use password `12345` (demo only).
   - Model timing on one registry extract: 7B 2.0 s, 14B 5.7 s, 32B 3.3 s, 72B 15.9 s. All four were correct.
   - Caveat: the demo PDFs include machine-readable lines such as `extract_date: 2026-09-29`, which makes extraction easy. Messier documents haven't been evaluated yet.
 
+- [x] **Lovable frontend** (branch `codex/lovable-frontend`):
+  - Screens: login with demo hint; case list with disposition filters and search; case detail with Documente (PDF side by side with highlighted evidence), Extragere AI (proposal label/model/latency, proposed and rejected facts, confirm), Verificări (run, findings by outcome with evidence quotes, trace) and Istoric (client-side timeline).
+  - The supervisor sees disabled actions and a "Doar citire" badge.
+  - Backend: runs now include `created_at`, used by the timeline.
+  - Verified in the browser against the preview for all three roles (details in LOG.md). 30/30 tests pass.
+
 ## To do (priority order)
 
-1. **Lovable frontend** (branch `codex/lovable-frontend`).
-   - Screens: login, case list, side-by-side evidence, AI review/confirm, findings, audit trail.
-   - Blocked on: Lovable plugin connected, and credits.
+1. **Extraction robustness:** Featherless/Qwen-32B sometimes returns malformed JSON at temperature 0, and one bad document fails the whole proposal. Retry parse failures per document, or record that document as rejected.
 2. **Remaining 9 checks:** VAL-02, CON-01, CON-03, CON-04, BUS-01–04, EXT-01. Add a fixture for each.
 3. **KYC as a first step:** a verified customer-profile output that later department workflows require as a precondition.
 4. **Harder AI evaluation:** documents without machine-readable lines, DD.MM.YYYY dates, scans, and prompt-injection text.
@@ -104,7 +113,7 @@ Demo logins are static: all three use password `12345` (demo only).
 | Item | Impact | Next action |
 | --- | --- | --- |
 | Featherless key sits in tracked `.env.example` (committed in `d3c7cfc`, pushed to private `codex/restructure`); you chose to leave it there | The app only reads `.env`, so the key must be exported when starting the server; the key is in Git history | Optional: copy it into `.env` (git-ignored); rotate it before the repo is ever shared |
-| Lovable plugin not connected | Frontend step can't start | You install the plugin and sign in |
+| Supervisor can `POST /cases/{id}/runs` (no `editable()` guard; extraction and facts are blocked) | The UI blocks it, but the API allows it | Decide whether supervisors may run checks; if not, add the guard and a test |
 | Organizer rules on cloud AI, tools and submission format unconfirmed | Submission risk | Ask organizers |
 | Two rubric weights unreadable | Can't allocate the final 25% precisely | Get the official rubric |
 | Workflow and roles not validated by a mentor | Demo may miss analyst priorities | Short mentor discussion |
