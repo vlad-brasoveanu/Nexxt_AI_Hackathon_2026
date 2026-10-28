@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: casecheck
+      POSTGRES_USER: casecheck
+      POSTGRES_PASSWORD: ${CASECHECK_DB_PASSWORD:?Set CASECHECK_DB_PASSWORD in .env}
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U casecheck -d casecheck"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  migrate:
+    build: .
+    environment:
+      CASECHECK_DATABASE_URL: postgresql+psycopg://casecheck:${CASECHECK_DB_PASSWORD}@db:5432/casecheck
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+  api:
+    build: .
+    ports: ["127.0.0.1:8000:8000"]
+    environment:
+      CASECHECK_DATABASE_URL: postgresql+psycopg://casecheck:${CASECHECK_DB_PASSWORD}@db:5432/casecheck
+      CASECHECK_STORAGE_DIR: /app/.runtime/documents
+      CASECHECK_SECURE_COOKIES: "false"
+    volumes:
+      - documents:/app/.runtime/documents
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+volumes:
+  database:
+  documents:

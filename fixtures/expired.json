@@ -1,0 +1,52 @@
+{
+  "title": "Atelier Demo SRL · expired",
+  "evaluation_date": "2026-10-28",
+  "processing_mode": "manual_structured",
+  "expected_disposition": "ESCALATED",
+  "documents": [
+    {
+      "kind": "application",
+      "pages": [
+        "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ\nAtelier Demo SRL\ncompany_identifier: 12345678"
+      ],
+      "observations": [
+        {
+          "field": "company_identifier",
+          "entity_id": "company",
+          "value": "12345678"
+        }
+      ]
+    },
+    {
+      "kind": "company_extract",
+      "pages": [
+        "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ\nAtelier Demo SRL\ncompany_identifier: 12345678\nextract_date: 2026-09-01"
+      ],
+      "observations": [
+        {
+          "field": "company_identifier",
+          "entity_id": "company",
+          "value": "12345678"
+        },
+        {
+          "field": "extract_date",
+          "entity_id": "company",
+          "value": "2026-09-01"
+        }
+      ]
+    },
+    {
+      "kind": "identity",
+      "pages": [
+        "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ\nAtelier Demo SRL\nidentity_expiry: 2025-01-01"
+      ],
+      "observations": [
+        {
+          "field": "identity_expiry",
+          "entity_id": "person",
+          "value": "2025-01-01"
+        }
+      ]
+    }
+  ]
+}

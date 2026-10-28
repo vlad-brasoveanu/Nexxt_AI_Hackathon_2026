@@ -1,0 +1,39 @@
+{
+  "title": "Atelier Demo SRL · missing_identity",
+  "evaluation_date": "2026-10-28",
+  "processing_mode": "manual_structured",
+  "expected_disposition": "NEEDS_INFORMATION",
+  "documents": [
+    {
+      "kind": "application",
+      "pages": [
+        "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ\nAtelier Demo SRL\ncompany_identifier: 12345678"
+      ],
+      "observations": [
+        {
+          "field": "company_identifier",
+          "entity_id": "company",
+          "value": "12345678"
+        }
+      ]
+    },
+    {
+      "kind": "company_extract",
+      "pages": [
+        "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ\nAtelier Demo SRL\ncompany_identifier: 12345678\nextract_date: 2026-09-01"
+      ],
+      "observations": [
+        {
+          "field": "company_identifier",
+          "entity_id": "company",
+          "value": "12345678"
+        },
+        {
+          "field": "extract_date",
+          "entity_id": "company",
+          "value": "2026-09-01"
+        }
+      ]
+    }
+  ]
+}

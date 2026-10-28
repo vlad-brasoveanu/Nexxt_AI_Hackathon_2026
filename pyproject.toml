@@ -1,0 +1,8 @@
+[project]
+name = "casecheck"
+version = "0.1.0"
+description = "Modular synthetic SME KYC review foundation"
+requires-python = ">=3.12"
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["tests"]
