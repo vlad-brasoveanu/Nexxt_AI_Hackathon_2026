@@ -125,10 +125,10 @@ def review(run_id: str, body: ReviewRequest, request: Request, identity: Auth, s
         f = facts.get(d.fact_id)
         if not f:
             raise HTTPException(422, f"Fapt necunoscut: {d.fact_id}")
-        if (d.action != "accept" or f["id"] in conflicts) and not d.reason:
+        if (d.action != "accept" or f["id"] in conflicts) and len((d.reason or "").strip())<10:
             raise HTTPException(422, "Corecțiile și conflictele necesită un motiv (minimum 10 caractere).")
         if d.reason:
-            f["review_reason"] = d.reason
+            f["review_reason"] = d.reason.strip()
         if d.action == "accept":
             f["review"] = "accepted"
             counts["accepted"] += 1
@@ -250,7 +250,9 @@ def what_if(run_id: str, body: TermsRequest, request: Request, identity: Auth, s
     _, env, board = orchestrator.load(session, run)
     session.rollback()
     x = inputs_from_board(board, env)
-    if x.cfads is None or not x.ebitda:
+    if not run.case_revision == case.revision or run.status != "AWAITING_DECISION":
+        raise HTTPException(409, "Simularea necesită o analiză actuală și încheiată.")
+    if x.cfads is None or not x.ebitda or x.net_debt is None or x.existing_service is None:
         raise HTTPException(409, "Indicatorii financiari nu sunt încă disponibili")
     t = engine.terms_for(env.standards, env.market, x, body.amount, body.term_months)
     level, override, why = engine.required_level(env.standards, run.recommendation or {"decision": "COUNTER_OFFER"}, "MODIFY", t, x.group_exposure)

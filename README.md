@@ -1,79 +1,79 @@
 # CaseCheck
 
-An internal workspace for a Romanian bank's back office. Synthetic data only. Status, decisions and to-dos: [PROGRESS.md](PROGRESS.md). History: [LOG.md](LOG.md).
+Modular Romanian SME credit demo. Agents prepare evidence and recommendations; people make decisions. All documents, company records, history and policies are synthetic. Current delivery status: [PROGRESS.md](PROGRESS.md); dated validation: [LOG.md](LOG.md).
 
-- **SME credit (multi-agent):** agents prepare the credit file end to end and humans decide. An Orchestrator (plan, state, policy guard) and a financial Analyst (synthetic history, sector statistics) coordinate seven specialists: Completitudine, Situații financiare, Fluxuri de numerar, KYB/Diligență, Politică, Memo and Critic. Smaller agents run on a smaller model (Qwen 7B); planning and the memo use the larger one (Qwen 14B). Without an API key everything runs in a labelled deterministic mode. The final decision (Aprobă / Modifică / Respinge) is signed by a human with the required authority: L1, L2, or L3 (committee, two votes).
-- **KYC onboarding (foundation):** evidence-bound checks VAL-01, CON-02 and BUS-05 with AI-assisted extraction.
-
-**Demo logins** (demo only, password `12345`):
-
-| User | Role |
-| --- | --- |
-| `manager` | relationship manager: creates cases, starts the agents |
-| `analyst` | operations analyst: reviews the extracted facts |
-| `credit_analyst` | decides at L1 |
-| `risk_officer` | decides at L2 |
-| `committee_a`, `committee_b` | credit committee, L3 (two votes) |
-| `supervisor` | read only |
-
-## Run locally (no Docker)
+## Run the working demo
 
 ```sh
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.lock
-.venv/bin/python scripts/preview.py              # http://127.0.0.1:8000
-.venv/bin/python scripts/demo/credit_seed.py     # in a second terminal: load the 3 synthetic credit cases
-.venv/bin/python scripts/demo                    # optional: render + load the 8 KYC demo cases
+npm ci --prefix frontend
+npm run build --prefix frontend
+.venv/bin/python scripts/preview.py
+# In another terminal:
+.venv/bin/python scripts/demo/credit_seed.py
 ```
 
-- `scripts/preview.py` builds the frontend if needed, migrates a SQLite database in `.runtime/` and seeds the demo accounts. Delete `.runtime/local-preview.db` for a clean start.
-- Start the server with `FEATHERLESS_API_KEY` exported to use the models. Without it, the agents run in deterministic mode and say so in the UI.
+Open http://127.0.0.1:8000. The preview migrates SQLite and seeds demo accounts. Rebuild the frontend and reload the browser after changes. The default page is the original interface, with minimal controls for backend verification; final design is deferred.
 
-## Demo script (credit, about 3 minutes)
+| Demo user | Role | Password |
+| --- | --- | --- |
+| `officer` | Creates cases, uploads text PDFs/CSV, runs agents, reviews facts, sends consolidated requests manually | `12345` |
+| `risk` | Reviews scenarios and signs decisions; L3 demo authority, separate from the preparer | `12345` |
+| `admin` | All functions, user/policy administration and audit | `12345` |
 
-1. As `manager`, open **Codeforge Digital** and start the agents. Watch the plan, the Critic contesting the cash-flow conclusion with the KYB finding (an affiliated company), and the single consolidated client request (2024 statements and the collateral valuation).
-2. Click "Simulează răspunsul clientului". The agents resume only what changed, detect the instruction hidden in the valuation report, and recommend a counter-offer at L2.
-3. As `analyst`, accept the verified facts in one batch.
-4. As `risk_officer`, review the decision cockpit (DSCR, LTV, precedents) and sign with hold-to-sign.
-5. Under **Piață & politică**, publish a new ROBOR 3M fixing. The open cases are re-priced automatically.
-6. Under **Metrici**, read the scoreboard.
+Signing authority (L1/L2/L3) is independent of role. L3 normally requires two different people; an administrator can create another risk user and grant authority separately. Legacy users are migrated without changing their IDs or past audit records. Existing accounts are not reset by rerunning the seeder.
 
-**Manual baseline:** a team member processes the Codeforge file by hand with the same steps (checklist, statements, bank export, registry/bureau lookups, DSCR, memo). Record the measured seconds in `fixtures/credit/baseline.json`. The app shows "nemăsurat încă" until then.
+The local preview explicitly enables demo-only self-signing. It still requires a per-decision checkbox, a meaningful reason, fully reviewed evidence and a current analysis. Other deployments default to `CASECHECK_DEMO_ADMIN_OVERRIDE=false`. No real credit is granted or message sent externally.
 
-## Run with PostgreSQL (Docker Compose)
+## Walk through Codeforge
 
-```sh
-cp .env.example .env   # set CASECHECK_DB_PASSWORD
-docker compose up --build -d
-```
+1. Log in as `officer`, open Codeforge and click **Analizează documentele**. These are uploaded PDF files, not frontend mock responses. The cash-flow critic detects related-company flows.
+2. Inspect the consolidated draft and click **Am verificat ciorna · trimite solicitarea**. This records a manual send in the simulated portal.
+3. Simulate the client answer, then click **Reanalizează dosarul**. The new financial PDF and valuation are parsed; an embedded instruction is flagged as untrusted document text.
+4. Review the extracted facts next to their source PDF. Corrections, rejections and conflicting values require a reason. Correcting a financial fact recalculates affected indicators. Re-uploading the same filename creates a replacement source version; historical bytes remain available.
+5. Open **Risk Planner**. Before complete review no favorable recommendation is produced. After review, compare the request, capacity at the requested term and a permitted longer-term option. Change cash-flow/rate stress assumptions.
+6. Log in as `risk` to decide. Preparers/reviewers cannot sign their own case outside the explicit administrator demo exception. The decision remains human.
+7. As `admin`, inspect users, role counts, policy versions and audit. Publishing policy thresholds makes open analyses stale; it does not rewrite closed decisions.
 
-Migrations and demo accounts are applied automatically. API docs: http://127.0.0.1:8000/docs.
+OCR is deliberately outside the MVP: every PDF page needs extractible text. Textless/scanned PDFs return `PDF_TEXT_REQUIRED`. Supported financial demo templates are checked for type, company, CUI, financial year, RON currency and units. Ambiguous/unsupported documents need replacement or review; this is not a universal document parser.
 
-## Test
+## Risk Planner and AI
+
+`fixtures/credit/history/historical_cases.db` contains 6,000 supplied synthetic EUR credit cases (3,726 RO), confirmed by the user. Its provenance and SHA256 are recorded beside it. The adapter opens SQLite read-only, checks schema/integrity/relations and validates financial rows.
+
+Matching uses pre-credit financial ratios and company age/employees where available, restricted to Romania and an explicitly mapped sector/product. It selects at most 30 neighbors and displays five examples. Outcomes, flags and retrospective narratives never select the neighbors. Future outcomes are censored conservatively because the approval day is unavailable. Outcome shares describe the selected sample with varied observation periods; they are not a personalized default probability. EUR history amounts are displayed separately from the RON application; there is no implicit FX conversion.
+
+The deterministic policy engine computes requested terms, capacity, DSCR, LTV and stress. The planner's default extra scenario reduces CFADS by 10%; both that reduction and rate shock can be changed in simulation. The ranking maximizes admissible amount up to the request, breaking ties toward the shorter simulated term. CFADS = EBITDA minus tax is an explicit demo approximation.
+
+Export `FEATHERLESS_API_KEY` before starting the server to enable cloud AI on synthetic documents. Qwen 7B proposes financial values; Qwen 14B plans tasks and drafts the memo. Values must match source evidence; model errors and deterministic processing are visible. Without a key, the demo runs in **Mod determinist · fără AI**. Final-product local inference remains a separate adapter and offline validation task; no local/offline readiness is claimed.
+
+## Validate and reproduce
 
 ```sh
 .venv/bin/pytest -q
-.venv/bin/python scripts/run_fixture.py fixtures/mismatch.json   # one JSON fixture against a running API
-.venv/bin/python scripts/export_openapi.py                       # regenerate docs/openapi.json
+npm run build --prefix frontend
+# Against the running real API; creates a fresh SYNTHETIC Codeforge case:
+.venv/bin/python scripts/demo/verify_credit.py
+# Optional alternate port:
+.venv/bin/python scripts/demo/verify_credit.py --url http://127.0.0.1:8015
+PYTHONPATH=backend .venv/bin/python scripts/export_openapi.py
 ```
 
-## Code layout
+The HTTP smoke test covers upload → draft/manual send → response/manual rerun → source facts → review → history/scenarios → correction/recalculation → separate decision → audit. It writes `.runtime/credit-smoke.json`. Its duration is automated test time, not employee productivity. The human manual baseline stays unmeasured until a person completes a timed review; record that separately in `fixtures/credit/baseline.json`.
 
-```
-backend/app/
-  agents/         orchestrator, planner, task catalogue + guard, shared board, specialists/ (one file per agent)
-  credit/         deterministic finance, policy engine (standards as data), sources, synthetic history statistics
-  api/            app factory + one router per resource (session, cases, documents, facts, runs, agents, credit, market)
-  ai/             provider interface, Featherless adapter, model routing by tier
-  core/           contracts, security, audit
-  ingestion/      PDF/CSV/JSON parsing, evidence verification
-  engine/         KYC module registry, workflow runner, workflow definitions
-  modules/kyc/    one file per KYC check
-frontend/         React + Vite + TypeScript ("agent control room")
-scripts/demo/     synthetic companies, document templates, PDF renderer, KYC and credit seeders, history generator
-fixtures/credit/  credit standards (policy as data), ROBOR snapshots, synthetic sources, cases, history
-tests/            api/, engine/, credit/ and agents/ suites
-```
+PostgreSQL deployment uses Docker Compose (`docker compose up --build -d`) with `.env` configured locally. API docs: `/docs`. SQLite is for local demo/tests; production concurrency and PostgreSQL deployment require separate validation.
 
-- **New KYC check:** a module that declares its manifest (id, version, rule IDs), reads a `FactSet` and returns a `FindingSet`. Register it in its domain package and add a step to a new workflow version; the runner does not change.
-- **New agent:** a specialist function `(board, env) -> Report`, a catalogue entry with its dependencies and model tier, and a place in the planner's eligibility groups.
+## Modules and interfaces
+
+- `agents/`: bounded orchestrator, task catalogue, specialists and source-sensitive fact review.
+- `credit/`: deterministic arithmetic, versioned policy and replaceable registry/bureau/market sources.
+- `risk/`: read-only historical adapter and scenario planner. Reports persist dataset hash, policy, market, assumptions and case/run revision.
+- `api/routes/`: sessions, cases/documents, agent runs/review, decisions, Risk Planner and administration.
+- `core/`: contracts, permissions, audit and active policy selection.
+- `ingestion/`: text PDF/CSV/JSON parsing and source verification; OCR excluded.
+- React frontend: existing layout and typed same-origin API with cookie/CSRF protection. `dev:mock` is only the older UI preview; the new planner/admin controls require the real API.
+
+Key additions: `POST /api/v1/agent-runs/{id}/risk-planner`, `GET /api/v1/cases/{id}/risk-reports`, manual request `/send`, and `/api/v1/admin/{users,audit,policies}`. Full contract: `docs/openapi.json`.
+
+Prospecting is deferred: a separate company source and an existing-client list keyed by CUI are needed. The anonymous historical database cannot identify new companies to contact.

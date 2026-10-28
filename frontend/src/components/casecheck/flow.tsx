@@ -5,35 +5,37 @@ import { LEVEL_RANK, LEVEL_ROLE, ROLE_RANK, roleLabel } from "@/lib/labels";
 import type { User } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export type CaseTab = "agents" | "review" | "decision" | "profile";
+export type CaseTab = "agents" | "review" | "decision" | "profile" | "risk";
 
-export const isReviewed = (run: AgentRun) => run.steps.some((s) => s.agent === "human" && s.title.startsWith("Revizie")) && run.board.facts.every((f) => f.review !== "pending");
-const isPreparer = (u: User) => u.role === "manager" || u.role === "analyst";
+export const isReviewed = (run: AgentRun) => run.review_complete ?? (run.board.facts.length > 0 && run.steps.some((s) => s.agent === "human" && s.title.startsWith("Revizie")) && run.board.facts.every((f) => f.review === "accepted" || f.review === "corrected"));
+const isPreparer = (u: User) => u.permissions?.edit_case ?? (u.role === "manager" || u.role === "analyst");
 
 type StepState = "done" | "current" | "todo" | "skipped";
 type Step = { label: string; who: string; state: StepState };
 
 export function flowSteps(run: AgentRun | null): Step[] {
   const status = run?.status;
-  const asked = (run?.requests.length ?? 0) > 0;
+  const asked = ((run?.request_history ?? run?.requests)?.length ?? 0) > 0;
   const reviewed = run ? isReviewed(run) : false;
   const level = run?.recommendation?.level;
   const decisionDone = status === "DECIDED";
   return [
-    { label: "Pornire agenți", who: "Manager", state: run ? "done" : "current" },
+    { label: "Pornire agenți", who: "Ofițer dosar", state: run ? "done" : "current" },
     { label: "Analiza agenților", who: "Agenți", state: !run ? "todo" : status === "RUNNING" && !asked ? "current" : "done" },
     { label: "Documente de la client", who: "Client", state: !asked ? (status && status !== "RUNNING" ? "skipped" : "todo") : status === "WAITING_CLIENT" ? "current" : "done" },
-    { label: "Verificarea faptelor", who: "Analist", state: reviewed ? "done" : status === "AWAITING_DECISION" ? "current" : "todo" },
+    { label: "Verificarea faptelor", who: "Ofițer dosar", state: reviewed ? "done" : status === "AWAITING_DECISION" ? "current" : "todo" },
     { label: "Decizia de credit", who: level ? LEVEL_ROLE[level].label : "Decident", state: decisionDone ? "done" : status === "AWAITING_DECISION" && reviewed ? "current" : "todo" },
   ];
 }
 
-export type NextAction = { title: string; detail: string; tab?: CaseTab; action?: "start" | "client"; mine: boolean };
+export type NextAction = { title: string; detail: string; tab?: CaseTab; action?: "start" | "client" | "send"; mine: boolean };
 
 export function nextAction(run: AgentRun | null, user: User): NextAction {
   if (!run) return isPreparer(user)
     ? { title: "Pornește analiza", detail: "Verifică documentele și datele financiare ale dosarului.", action: "start", mine: true }
     : { title: "Dosarul așteaptă analiza", detail: "Managerul de relații începe verificarea.", mine: false };
+  if ((!run.is_current || run.status === "FAILED") && run.status !== "RUNNING") return {title:"Reanalizează dosarul",detail:"Documentele sau regulile au fost actualizate.",action:isPreparer(user)?"start":undefined,mine:isPreparer(user)};
+  if (run.status === "WAITING_CLIENT" && run.requests.at(-1)?.status === "DRAFT") return {title:"Verifică solicitarea către client",detail:"Ciorna este pregătită. Citește mesajul înainte de trimitere.",action:isPreparer(user)?"send":undefined,tab:"agents",mine:isPreparer(user)};
   switch (run.status) {
     case "RUNNING":
       return { title: "Analiză în curs", detail: "Rezultatele vor apărea aici când analiza se încheie.", tab: "agents", mine: false };
@@ -46,7 +48,7 @@ export function nextAction(run: AgentRun | null, user: User): NextAction {
         ? { title: "Verifică datele din documente", detail: "Compară valorile cu documentele și confirmă-le sau corectează-le.", tab: "review", mine: true }
         : { title: "Se așteaptă verificarea faptelor", detail: "Analistul confirmă datele înainte de decizie.", tab: "review", mine: false };
       const level = run.recommendation?.level ?? "L1";
-      const rank = ROLE_RANK[user.role];
+      const rank = user.authority_level ? LEVEL_RANK[user.authority_level] : ROLE_RANK[user.role];
       const can = !!rank && rank >= LEVEL_RANK[level] && run.prepared_by !== user.username;
       return can
         ? { title: "Dosarul așteaptă decizia ta", detail: "Verifică recomandarea și alege decizia potrivită.", tab: "decision", mine: true }

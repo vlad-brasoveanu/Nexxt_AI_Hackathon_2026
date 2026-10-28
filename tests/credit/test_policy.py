@@ -75,3 +75,9 @@ def test_overrides_escalate_to_committee():
     assert required_level(STANDARDS, rec, "REJECT", None, 800_000)[:2] == ("L1", True)
     decline = evaluate(STANDARDS, MARKET, codeforge(bureau_max_dpd=95))
     assert required_level(STANDARDS, decline, "APPROVE", full, 800_000)[0] == "L3"
+
+
+def test_missing_core_inputs_and_unknown_product_never_approve():
+    for changes in ({'net_debt':None},{'existing_service':None},{'product':'Produs fără politică'}):
+        r=evaluate(STANDARDS,MARKET,codeforge(**changes))
+        assert r['decision']=='NEEDS_INFORMATION' and r['proposed'] is None

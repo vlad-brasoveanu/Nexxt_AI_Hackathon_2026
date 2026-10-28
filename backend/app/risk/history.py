@@ -2,6 +2,7 @@
 import hashlib
 import math
 import sqlite3
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from statistics import pstdev
@@ -15,6 +16,7 @@ PRODUCTS = {'Credit de investiții IMM':'Credit de investiții','Credit de inves
             'Credit imobiliar comercial':'Credit imobiliar comercial','Leasing echipamente':'Leasing echipamente',
             'Linie de capital circulant':'Linie de capital circulant'}
 FEATURES = ('ebitda_margin_pct','current_ratio','revenue_growth_pct','years_in_business','employees')
+METHOD = 'standardized_distance_v2_censored'
 NOTE = 'Istoric sintetic în EUR, credite 2012–2022. Rezultate descriptive cu durate diferite de observație; nu reprezintă probabilitatea de insolvență a solicitantului.'
 
 
@@ -61,7 +63,7 @@ def _load(path, mtime, size):
           join outcomes o on o.case_id=c.case_id order by c.case_id''')]
     valid=[]; excluded=total-len(rows)
     for r in rows:
-        keys=('turnover','ebitda','current_assets','current_liabilities','previous_turnover','amount_eur','employees','founded_year','approved_year')
+        keys=('turnover','ebitda','current_assets','current_liabilities','previous_turnover','amount_eur','employees','founded_year','approved_year','fiscal_year','previous_year','term_months','months_to_event')
         if (not all(finite(r[k]) for k in keys) or min(r['turnover'],r['previous_turnover'],r['current_liabilities'],r['amount_eur'])<=0
             or not r['previous_year'] < r['fiscal_year'] < r['approved_year'] or r['founded_year']>r['approved_year']
             or r['outcome'] not in {'CLOSED_OK','INSOLVENCY','LATE_RECOVERED','NPL_DEFAULT','RESTRUCTURED'}):
@@ -74,13 +76,14 @@ def _load(path, mtime, size):
             'valid':len(valid),'excluded':excluded,'romania':sum(r['country']=='RO' for r in valid),'rows':tuple(valid)}
 
 
-def compare(dataset, caen, product, applicant):
+def compare(dataset, caen, product, applicant, as_of=None):
+    as_of = as_of or date(2026, 10, 29)
     sector=SECTORS.get(str(caen)[:2]); product=PRODUCTS.get(product)
     keys=[k for k in FEATURES if finite(applicant.get(k))]
-    pool=[r for r in dataset['rows'] if sector and product and r['country']=='RO' and r['sector']==sector and r['product']==product]
+    pool=[r for r in dataset['rows'] if sector and product and r['country']=='RO' and r['sector']==sector and r['product']==product and r['approved_year'] < as_of.year]
     result={'dataset':{k:v for k,v in dataset.items() if k!='rows'},'sector':sector,'product':product,'country':'RO',
             'currency':'EUR','matching_features':keys,'applicant':{k:applicant[k] for k in keys},'cohort_size':len(pool),
-            'n':0,'limited':True,'comparables':[],'outcomes':[],'note':NOTE,'method':'standardized_distance_v1'}
+            'n':0,'limited':True,'comparables':[],'outcomes':[],'note':NOTE,'method':METHOD,'as_of':as_of.isoformat(),'observed_n':0,'unobserved_n':0}
     if len(keys)<3 or not {'ebitda_margin_pct','current_ratio'} <= set(keys):
         result['limitation']='Sunt necesari marja EBITDA, lichiditatea și cel puțin un indicator suplimentar.'
         return result
@@ -96,13 +99,20 @@ def compare(dataset, caen, product, applicant):
                   key=lambda pair:(pair[0],pair[1]['case_id']))[:30]
     result.update(n=len(ranked),limited=len(ranked)<30)
     result['limitation']='Eșantion sub 30 de cazuri.' if len(ranked)<30 else 'Comparație descriptivă pe un istoric vechi și sintetic; fără validare predictivă.'
+    # Approval day is unavailable: conservatively assume 31 December of the approval year.
+    # Event dates after the evaluation date are censored AFTER matching, never used as matching features.
+    def observed(row):
+        elapsed=(as_of.year-row['approved_year'])*12 + as_of.month-12 - (as_of.day<31)
+        return row['months_to_event'] is not None and 0<=row['months_to_event']<=elapsed
+    result['observed_n']=sum(observed(r) for _,r in ranked)
+    result['unobserved_n']=len(ranked)-result['observed_n']
     result['comparables']=[{'case_id':r['case_id'],'year':r['approved_year'],'country':r['country'],'sector':r['sector'],
         'product':r['product'],'amount':r['amount_eur'],'currency':'EUR','term_months':r['term_months'],
         'distance':round(d,4),'features':{k:round(r['features'][k],4) for k in keys},
         'differences':{k:round(r['features'][k]-applicant[k],4) for k in keys},
-        'outcome':r['outcome'],'months_to_event':r['months_to_event'],
+        'outcome':r['outcome'] if observed(r) else 'UNOBSERVED','months_to_event':r['months_to_event'] if observed(r) else None,
         'source':{'dataset_sha256':dataset['sha256'],'case_id':r['case_id'],'financial_offsets':[-2,-1]}} for d,r in ranked[:5]]
-    counts=Counter(r['outcome'] for _,r in ranked)
+    counts=Counter(r['outcome'] if observed(r) else 'UNOBSERVED' for _,r in ranked)
     result['outcomes']=[{'outcome':key,'count':n,'share_pct':round(100*n/len(ranked),1)} for key,n in sorted(counts.items())]
     return result
 

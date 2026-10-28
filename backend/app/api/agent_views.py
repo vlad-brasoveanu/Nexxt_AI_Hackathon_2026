@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from sqlalchemy import func, select
 
 from app.agents import board as B
+from app.agents.review import complete
 from app.agents.catalog import AGENTS
 from app.db import AgentRun, AgentStep, ClientRequest, CreditDecision, User
 
@@ -74,6 +75,7 @@ def agent_cards(board):
 def run_json(session, run, case, settings):
     steps = list(session.scalars(select(AgentStep).where(AgentStep.run_id == run.id).order_by(AgentStep.seq)))
     requests = list(session.scalars(select(ClientRequest).where(ClientRequest.run_id == run.id).order_by(ClientRequest.sent_at)))
+    request_history = list(session.scalars(select(ClientRequest).where(ClientRequest.case_id == case.id).order_by(ClientRequest.sent_at)))
     decision = session.scalar(select(CreditDecision).where(CreditDecision.run_id == run.id).order_by(CreditDecision.created_at.desc()))
     refused = sum(1 for s in steps if s.status == "refused")
     started = run.segment_started_at.replace(tzinfo=timezone.utc)
@@ -82,7 +84,7 @@ def run_json(session, run, case, settings):
     recommendation = dict(run.recommendation, superseded=False) if run.recommendation else None
     return {
         "id": run.id, "case_id": run.case_id, "status": run.status, "case_revision": run.case_revision,
-        "review_complete": __import__("app.agents.review", fromlist=["complete"]).complete(run.board),
+        "review_complete": complete(run.board),
         "reviewed_by": [session.get(User, uid).username for uid in run.board.get("reviewed_by", []) if session.get(User, uid)],
         "is_current": run.case_revision == case.revision, "mode_label": run.mode_label,
         "budget": {"used": run.budget_used, "limit": settings.agent_budget, "deadline_s": settings.agent_deadline_seconds,
@@ -90,6 +92,7 @@ def run_json(session, run, case, settings):
         "agents": agent_cards(run.board), "plan": [{k: p[k] for k in ("task", "agent", "why", "status")} for p in run.plan or []],
         "steps": [step_json(s) for s in steps], "board": board_view(run.board, refused),
         "recommendation": recommendation, "requests": [request_json(r) for r in requests],
+        "request_history": [request_json(r) for r in request_history],
         "decision": decision_json(decision) if decision else None,
         "prepared_by": preparer.username if preparer else None, "error": run.error,
         "created_at": run.created_at, "updated_at": run.updated_at,

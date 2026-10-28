@@ -32,6 +32,12 @@ def inspect(doc, meta):
         if len(years) != 1:
             errors.append('Exercițiu financiar lipsă sau ambiguu.')
     if doc.kind == 'credit_application':
+        caen = re.search(r'\(CAEN\)\s*(\d{4})',text,re.I)
+        if not caen or caen[1]!=meta.get('caen'):
+            errors.append('Codul CAEN din cerere nu corespunde documentului.')
+        product = re.search(r'Produs\s+(.+?)\s+Suma solicitată',text,re.I)
+        if not product or product[1].casefold()!=meta.get('product','').casefold():
+            errors.append('Produsul din cerere nu corespunde documentului.')
         for key, pattern in [('amount', r'Suma solicitată\s+([\d.,]+)\s+RON'), ('term_months', r'Durata\s+(\d+)\s+luni')]:
             found = re.search(pattern, text, re.I)
             if not found or parse_ro(found[1]) != meta.get(key):

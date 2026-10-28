@@ -10,7 +10,7 @@ class DocumentParseError(ValueError):
 
 
 def extract(data: bytes, media_type: str) -> tuple[list[str], list[int]]:
-    """Page texts and the page numbers that were transcribed by OCR (scans without a text layer)."""
+    """Extract stored page text. OCR is outside the MVP; the legacy OCR list stays empty."""
     ocr_pages: list[int] = []
     if media_type == "application/json":
         payload = json.loads(data)

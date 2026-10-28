@@ -15,7 +15,7 @@ from app.engine.workflows import default_registry, foundation_workflow
 
 def create_app(settings: Settings | None = None, inference=None, models: ModelRouter | None = None):
     settings = settings or Settings()
-    app = FastAPI(title="CaseCheck Foundation API", version="0.1.0",
+    app = FastAPI(title="CaseCheck Foundation API", version="0.2.0",
                   description="Synthetic data only. KYC foundation (3 checks) and a multi-agent SME credit workflow: agents prepare and recommend, humans decide on authority levels.")
     engine, factory = connect(settings.database_url)
     registry, workflow = default_registry(), foundation_workflow()

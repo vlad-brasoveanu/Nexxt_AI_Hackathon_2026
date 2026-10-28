@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, Eye, Lock, Scale, Users, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import type { AgentRun, HumanAction, WhatIf } from "@/lib/agent-types";
+import { sessionQ } from "@/lib/queries";
 import { api } from "@/lib/api";
 import { ACTION_DONE_LABEL, ACTION_LABEL, LEVEL_RANK, LEVEL_ROLE, REC_LABEL, REC_TONE, ROLE_RANK, roleLabel, type Level } from "@/lib/labels";
 import { fmtInt, fmtIsoDate, fmtNum, fmtPct, fmtRon, fmtX } from "@/lib/format";
@@ -50,6 +51,9 @@ function useDebounced<T>(value: T, ms = 250) {
 
 export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: AgentRun; caseId: string; user: User; humanSeconds: () => number }) {
   const qc = useQueryClient();
+  const session = useQuery(sessionQ());
+  const [demoException,setDemoException] = useState(false);
+  const demoAllowed = !!session.data?.demo_admin_override && user.role==="admin";
   const rec = run.recommendation;
   const proposed = rec?.proposed;
   const requested = rec?.requested;
@@ -66,7 +70,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
 
   const decide = useMutation({
     mutationFn: () => api.decide(caseId, {
-      run_id: run.id, action, reason: reason.trim() || undefined, human_seconds: Math.round(humanSeconds()),
+      run_id: run.id, action, demo_exception: demoAllowed && demoException, reason: reason.trim() || undefined, human_seconds: Math.round(humanSeconds()),
       ...(action === "MODIFY" ? { terms: { amount, term_months: term } } : {}),
     }),
     onSuccess: (d) => {
@@ -84,14 +88,17 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
   const override = action === "MODIFY" || (action === "REJECT" && rec.decision !== "DECLINE") || (action === "APPROVE" && rec.decision === "DECLINE");
   const requiredLevel: Level = action === "REJECT" ? "L1" : action === "MODIFY" ? ((whatIf.data?.level as Level | undefined) ?? "L3")
     : rec.decision === "DECLINE" ? "L3" : rec.level;
-  const rank = ROLE_RANK[user.role];
-  const preparer = run.prepared_by === user.username;
+  const rank = user.authority_level ? LEVEL_RANK[user.authority_level] : ROLE_RANK[user.role];
+  const preparer = run.prepared_by === user.username || !!run.reviewed_by?.includes(user.username);
   const blockers: string[] = [];
   if (run.status !== "AWAITING_DECISION") blockers.push(run.status === "DECIDED" ? "Dosarul a fost decis." : "Agenții lucrează încă la dosar.");
   if (rec.decision === "NEEDS_INFORMATION") blockers.push("Dosarul este incomplet: se așteaptă clientul.");
   if (!reviewed) blockers.push("Faptele extrase nu au fost revizuite de analist (tab-ul Revizie).");
   if (rank && rank < LEVEL_RANK[requiredLevel]) blockers.push(`Decizia necesită nivelul ${requiredLevel} (${LEVEL_ROLE[requiredLevel].label}).`);
-  if (preparer) blockers.push("Regula celor patru ochi: ai pregătit dosarul, nu îl poți decide.");
+  if (decision?.status==="PENDING_SECOND_VOTE" && decision.votes.some(v=>v.username===user.username) && !demoException) blockers.push("Ai votat deja. Al doilea vot trebuie dat de altă persoană.");
+  if (!run.is_current) blockers.push("Analiza nu mai este actuală; reanalizează dosarul.");
+  if (demoException && reason.trim().length<10) blockers.push("Excepția demo necesită un motiv explicit.");
+  if (preparer && !(demoAllowed && demoException)) blockers.push("Regula celor patru ochi: ai pregătit dosarul, nu îl poți decide.");
   if (override && reason.trim().length < 10) blockers.push("Motivul este obligatoriu (min. 10 caractere) când decizia diferă de recomandare.");
 
   return (
@@ -150,7 +157,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
           </Panel>
         )}
 
-        {run.board.analyst && (
+        {run.board.analyst && run.board.analyst.precedents.length > 0 && (
           <Panel eyebrow="Analist financiar · date istorice sintetice" title="Sector și precedente">
             <p className="text-[15px] text-muted-foreground">{run.board.analyst.summary}</p>
             <div className="mt-4 grid gap-4 lg:grid-cols-2">
@@ -184,12 +191,14 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
       </div>
 
       <div className="space-y-5">
-        {decision ? <DecisionResult run={run} /> : !rank ? (
+        {decision?.status==="PENDING_SECOND_VOTE" && <DecisionResult run={run} />}
+        {decision?.status==="FINAL" ? <DecisionResult run={run} /> : !rank ? (
           <Panel title="Decizia o ia un decident de credit">
             <p className="text-[15px] text-muted-foreground">Rolul tău ({roleLabel(user.role)}) poate vedea recomandarea, dar nu poate semna. Dosarul necesită {LEVEL_ROLE[requiredLevel].label} ({requiredLevel}).</p>
           </Panel>
         ) : (
           <Panel eyebrow="Decizie umană" title="Analistul uman decide" className="border-human">
+            {demoAllowed && <label className="mb-4 flex gap-2 border border-warning bg-warning-soft p-3 text-sm"><input type="checkbox" checked={demoException} onChange={e=>setDemoException(e.target.checked)}/>Excepție explicită DEMO: pot semna propriul dosar și fără al doilea vot. Decizia va fi marcată demonstrativă și auditată.</label>}
             <div className="grid grid-cols-3 gap-px border bg-border" role="radiogroup" aria-label="Acțiune">
               {(["APPROVE", "MODIFY", "REJECT"] as HumanAction[]).map((a) => (
                 <button key={a} role="radio" aria-checked={action === a} onClick={() => setAction(a)}

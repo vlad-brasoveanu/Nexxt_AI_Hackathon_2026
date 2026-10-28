@@ -37,3 +37,27 @@ def test_planner_review_and_stress(client):
     assert client.post(url,json={'cfads_drop_pct':101}).status_code==422
     as_user(client,'outsider')
     assert client.get(f'/api/v1/cases/{cid}/risk-reports').status_code==404
+
+
+def test_future_outcomes_are_censored_after_matching():
+    from datetime import date
+    data=load()
+    applicant={'ebitda_margin_pct':20,'current_ratio':1.4,'revenue_growth_pct':5}
+    early=compare(data,'6201','Credit de investiții IMM',applicant,date(2026,10,29))
+    late=compare(data,'6201','Credit de investiții IMM',applicant,date(2040,1,1))
+    assert [r['case_id'] for r in early['comparables']]==[r['case_id'] for r in late['comparables']]
+    assert early['unobserved_n']>0 and late['unobserved_n']==0
+    assert early['observed_n']+early['unobserved_n']==early['n']
+    assert all(r['months_to_event'] is None for r in early['comparables'] if r['outcome']=='UNOBSERVED')
+
+
+def test_stress_and_unavailable_history_are_not_favorable(client,app,tmp_path):
+    cid,run=ready_codeforge(client)
+    as_user(client,'analyst')
+    client.post(f"/api/v1/agent-runs/{run['id']}/review",json={'accept_all_verified':True})
+    url=f"/api/v1/agent-runs/{run['id']}/risk-planner"
+    stressed=client.post(url,json={'cfads_drop_pct':80}).json()
+    assert stressed['recommended'] is None and all(not s['eligible'] for s in stressed['scenarios'])
+    corrupt=tmp_path/'invalid.db';corrupt.write_bytes(b'not sqlite')
+    app.state.settings.history_path=str(corrupt)
+    assert client.post(url,json={}).status_code==503

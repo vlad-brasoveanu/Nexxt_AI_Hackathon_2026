@@ -1,6 +1,6 @@
-export type Role = "manager" | "analyst" | "credit_analyst" | "risk_officer" | "credit_committee" | "supervisor";
-export type User = { id: string; username: string; role: Role };
-export type SessionResp = { user: User; csrf_token: string };
+export type Role = "case_officer" | "risk_reviewer" | "admin" | "manager" | "analyst" | "credit_analyst" | "risk_officer" | "credit_committee" | "supervisor";
+export type User = { id: string; username: string; role: Role; authority_level?: "L1"|"L2"|"L3"|null; active?: boolean; revision?: number; permissions?: {edit_case:boolean;review_facts:boolean;decide:boolean;admin:boolean;resolve_risk:boolean} };
+export type SessionResp = { user: User; csrf_token: string; demo_admin_override?: boolean };
 export type Evidence = { document_id: string; sha256: string; page: number; start: number; end: number; quote: string };
 export type Fact = { id: string; entity_id: string; field: string; value: string; evidence: Evidence };
 export type FactSet = { schema_version: "FactSet.v1"; extraction_mode: "manual_structured" | "ai_assisted"; facts: Fact[] };

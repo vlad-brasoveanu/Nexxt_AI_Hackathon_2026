@@ -160,7 +160,7 @@ export type Recommendation = {
 export type ClientRequest = {
   id: string;
   round: number;
-  status: "SENT" | "ANSWERED" | "PARTIAL";
+  status: "DRAFT" | "SENT" | "ANSWERED" | "PARTIAL";
   channel: string;               // "Portal client (simulat)"
   message: string;
   items: { code: string; title: string; reason: string; refs: string[]; satisfied: boolean }[];
@@ -178,6 +178,7 @@ export type Decision = {
   conditions: string[];
   reason: string | null;
   override: boolean;
+  demo_exception?: boolean;
   level: "L1" | "L2" | "L3";
   votes: { username: string; role: string; action: HumanAction; at: string }[];
   human_seconds: number | null;
@@ -191,6 +192,8 @@ export type AgentRun = {
   status: RunStatus;
   case_revision: number;
   is_current: boolean;
+  review_complete?: boolean;
+  reviewed_by?: string[];
   mode_label: string;            // "Cloud demo · featherless · Qwen2.5-14B / 7B · date sintetice" or "Mod determinist · fără AI"
   budget: { used: number; limit: number; deadline_s: number; elapsed_s: number };
   agents: AgentCard[];
@@ -199,6 +202,7 @@ export type AgentRun = {
   board: Board;
   recommendation: Recommendation | null;
   requests: ClientRequest[];
+  request_history?: ClientRequest[];
   decision: Decision | null;
   prepared_by?: string | null;   // [frontend addition] username that prepared the file (four-eyes: may not sign)
   created_at: string;
@@ -216,7 +220,7 @@ export type CreditCaseSummary = {
   channel: "online" | "sucursală";
   created_at: string;
   run: { id: string; status: RunStatus; level: "L1" | "L2" | "L3" | null; recommendation: RecommendationKind | null; updated_at: string; last_step: string | null } | null;
-  waiting_for: CreditRole | "client" | "analyst" | null;
+  waiting_for: CreditRole | "client" | "analyst" | "case_officer" | "risk_reviewer" | null;
   routing_reason?: string | null; // [frontend addition] one-line "why is it in this queue / at this level"
 };
 

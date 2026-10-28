@@ -168,6 +168,10 @@ def evaluate(standards: dict, market: dict, x: Inputs) -> dict:
                 "policy_version": standards["version"], "rules": rules,
                 "market": {"index": market["index"], "value_pct": market["value_pct"], "as_of": market["as_of"], "source": market["source"]}}
 
+    if x.product != standards['product']['label']:
+        reason("R-PRODUCT", "Produsul nu are o politică implementată în acest MVP.")
+        return result("NEEDS_INFORMATION", None, "L1", "Este necesară politica produsului solicitat.")
+
     # Knock-outs: no amount makes these acceptable.
     knockouts = []
     if x.bureau_max_dpd is not None and x.bureau_max_dpd >= t["bureau_dpd_knockout"]:
@@ -180,6 +184,10 @@ def evaluate(standards: dict, market: dict, x: Inputs) -> dict:
         for code, text, refs in knockouts:
             reason(code, text, refs)
         return result("DECLINE", None, "L1", "Respingerea nu creează expunere: competență L1. Aprobarea ar fi o excepție (L3).")
+    essential = (x.cfads, x.ebitda, x.net_debt, x.existing_service, x.revenue, x.revenue_previous, x.years_in_business, x.bureau_max_dpd)
+    if any(v is None for v in essential) or (x.ebitda is not None and x.ebitda <= 0):
+        reason("R-DATA", "Date esențiale insuficiente sau EBITDA nepozitivă; necesită verificare umană.")
+        return result("NEEDS_INFORMATION", None, "L1", "Datele necesare capacității de rambursare nu sunt complete.")
     if x.missing or x.open_requests:
         reason("R-MISSING", "Dosar incomplet: " + "; ".join(x.missing or ["răspunsul clientului este în așteptare"]), ["missing"])
         return result("NEEDS_INFORMATION", None, "L1", "Dosar incomplet: nu se poate decide încă.")

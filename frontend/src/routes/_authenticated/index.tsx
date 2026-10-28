@@ -6,6 +6,7 @@ import { creditCasesQ, sessionQ } from "@/lib/queries";
 import { REC_LABEL, REC_TONE, RUN_STATUS_META, WAITING_FOR_LABEL } from "@/lib/labels";
 import { fmtAge, fmtRon } from "@/lib/format";
 import type { CreditCaseSummary } from "@/lib/agent-types";
+import { NewCreditCase } from "@/components/casecheck/new-credit-case";
 import { Empty, Tag } from "@/components/casecheck/hud";
 import { cn } from "@/lib/utils";
 
@@ -18,16 +19,18 @@ const FILTERS = [
 type Filter = (typeof FILTERS)[number]["key"];
 
 function mine(c: CreditCaseSummary, role: string) {
-  const preparer = role === "analyst" || role === "manager";
+  const preparer = ["analyst","manager","case_officer","admin"].includes(role);
   if (!c.run) return preparer;
-  if (c.run.status === "WAITING_CLIENT") return preparer;
+  if (["DECIDED","RUNNING"].includes(c.run.status)) return false;
+  if (role==="admin") return c.waiting_for!=="client";
+  if (c.run.status === "WAITING_CLIENT") return preparer && c.waiting_for==="case_officer";
   if (!c.waiting_for) return false;
-  return preparer ? c.waiting_for === "analyst" : c.waiting_for === role;
+  return preparer ? ["analyst","case_officer"].includes(c.waiting_for ?? "") : c.waiting_for === role;
 }
 function taskLabel(c: CreditCaseSummary) {
   if (!c.run) return "Pornește agenții";
-  if (c.run.status === "WAITING_CLIENT") return "Așteaptă clientul (poți simula răspunsul)";
-  if (c.waiting_for === "analyst") return "Verifică faptele extrase";
+  if (c.run.status === "WAITING_CLIENT") return c.waiting_for==="case_officer" ? "Verifică solicitarea către client" : "Așteaptă răspunsul clientului";
+  if (["analyst","case_officer"].includes(c.waiting_for ?? "")) return "Verifică faptele extrase";
   return `Decide dosarul · ${c.run.level ?? ""}`;
 }
 function Queue() {
@@ -55,6 +58,7 @@ function Queue() {
           </label>
         </div>
       </header>
+      {["case_officer","admin","manager","analyst"].includes(role) && <NewCreditCase />}
       <section className="space-y-3">
         <h2 className="text-[20px] font-medium">De făcut de tine{todo.length ? ` (${todo.length})` : ""}</h2>
         {todo.length ? <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">

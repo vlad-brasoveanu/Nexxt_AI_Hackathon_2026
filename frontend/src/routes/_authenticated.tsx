@@ -96,6 +96,7 @@ function Layout() {
               <Icon className="h-4 w-4" />{label}
             </Link>
           ))}
+          {user.role==="admin" && <Link to="/administrare" className="block px-3 py-2 text-[15px] text-sidebar-muted hover:text-sidebar-foreground" activeProps={{className:"!text-sidebar-foreground bg-sidebar-accent"}}>Administrare și audit</Link>}
           <button onClick={() => window.dispatchEvent(new Event("casecheck-palette"))}
             className="mt-3 flex w-full items-center gap-2.5 px-3 py-2 text-[15px] text-sidebar-muted hover:text-sidebar-foreground">
             <CommandIcon className="h-4 w-4" />Comenzi<span className="ml-auto flex gap-0.5"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>

@@ -49,3 +49,26 @@ def test_client_request_requires_human_send(client):
     run=start(client,credit_case(client,'codeforge-digital'))
     assert run['requests'][0]['status']=='DRAFT'
     assert client.post(f"/api/v1/client-requests/{run['requests'][0]['id']}/simulate-response").status_code==409
+
+
+def test_missing_value_cannot_be_next_row_number():
+    doc=B.Doc('a','financial_statements','a.pdf','hash',['Cifra de afaceri netă\n06 Alte venituri 900.000'])
+    assert locate(doc,'revenue','Cifra de afaceri netă') is None
+
+
+def test_replacing_pdf_invalidates_review_and_preserves_original(client):
+    from pathlib import Path
+    cid,run=ready_codeforge(client)
+    as_user(client,'analyst')
+    client.post(f"/api/v1/agent-runs/{run['id']}/review",json={'accept_all_verified':True})
+    detail=client.get(f'/api/v1/cases/{cid}').json()
+    old=next(d for d in detail['documents'] if d['filename']=='situatii-financiare-2025.pdf')
+    data=Path('fixtures/credit/cases/codeforge-digital/situatii-financiare-2025.pdf').read_bytes()
+    response=client.post(f'/api/v1/cases/{cid}/documents',data={'kind':'financial_statements','expected_revision':detail['revision'],'supersedes_document_id':old['id']},files={'file':('corectat-2025.pdf',data,'application/pdf')})
+    assert response.status_code==201,response.text
+    documents=client.get(f'/api/v1/cases/{cid}').json()['documents']
+    assert next(d for d in documents if d['id']==old['id'])['superseded_by']==response.json()['document']['id']
+    assert client.get(f"/api/v1/documents/{old['id']}/download").content==data
+    rerun=start(client,cid)
+    assert rerun['status']=='AWAITING_DECISION' and not rerun['review_complete']
+    assert old['id'] not in {f['evidence']['document_id'] for f in rerun['board']['facts']}

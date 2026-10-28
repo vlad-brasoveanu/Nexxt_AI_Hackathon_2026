@@ -1,0 +1,9 @@
+import { useMutation,useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { api } from '@/lib/api';
+export function NewCreditCase() {
+ const qc=useQueryClient();const nav=useNavigate();
+ const create=useMutation({mutationFn:(body:Record<string,unknown>)=>api.createCreditCase(body),onSuccess:c=>{qc.invalidateQueries({queryKey:['credit-cases']});nav({to:'/credit/$id',params:{id:c.id}});},onError:(e:Error)=>toast.error(e.message)});
+ return <details className="border bg-card"><summary className="cursor-pointer px-4 py-3 font-medium">Dosar de credit nou</summary><form className="grid gap-3 border-t p-4 sm:grid-cols-2 lg:grid-cols-3" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);create.mutate({company:f.get('company'),cui:f.get('cui'),caen:f.get('caen'),product:'Credit de investiții IMM',amount:Number(f.get('amount')),term_months:Number(f.get('months')),purpose:f.get('purpose'),secured:f.get('secured')==='on'});}}>{[['company','Denumire companie','text'],['cui','CUI','text'],['caen','CAEN (4 cifre)','text'],['amount','Suma solicitată (RON)','number'],['months','Durata (luni)','number'],['purpose','Scopul finanțării','text']].map(([name,label,type])=><label key={name}>{label}<input name={name} type={type} required min={name==='months'?12:1} max={name==='months'?120:undefined} defaultValue={name==='months'?60:undefined} className="mt-1 block w-full border bg-surface-1 p-2"/></label>)}<label><input type="checkbox" name="secured"/> Credit cu garanție imobiliară</label><button disabled={create.isPending} className="bg-agent px-4 py-2 text-agent-foreground">Creează dosarul</button><p className="text-sm text-muted-foreground">Date declarate, care vor fi verificate față de documentele încărcate.</p></form></details>;
+}

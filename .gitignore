@@ -11,3 +11,6 @@ node_modules/
 dist/
 .DS_Store
 *.tsbuildinfo
+
+# Vite/TanStack generated cache
+frontend/.tanstack/

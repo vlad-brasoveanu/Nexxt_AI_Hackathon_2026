@@ -56,10 +56,16 @@ def locate(doc: B.Doc, key: str, label: str, literal: str | None = None) -> tupl
                 at = window.find(literal)
                 if at >= 0 and window[:at].strip() in {"", "(RON)", "RON", ":"}:
                     start = match.end() + at
+                    tail=window[at+len(literal):].lstrip(" ")
+                    if tail and tail[0].isalpha() and not tail.startswith("RON"):
+                        continue
                     return literal, B.span(doc, number, start, start + len(literal))
                 continue
             found = re.match(r"\s*(?:(?:\(RON\)|RON|:)\s*)?(" + shape.pattern + r")", window)
             if found:
+                tail=window[found.end(1):].lstrip(" ")
+                if tail and tail[0].isalpha() and not tail.startswith("RON"):
+                    continue
                 start = match.end() + found.start(1)
                 return found.group(1), B.span(doc, number, start, match.end() + found.end(1))
     return None
@@ -113,16 +119,38 @@ def analyze(board: dict, env: B.Env) -> B.Report:
     board["financials"] = None
     from app.agents.document_checks import inspect
     years = {}
-    for doc in sorted((d for d in env.docs if d.kind == "financial_statements"), key=lambda d: fs_year(d) or 0):
+    active_facts = set()
+    year_sources = {}
+    for d in env.docs:
+        if d.kind == 'financial_statements' and (y := fs_year(d)):
+            year_sources.setdefault(y, []).append(d)
+    ambiguous_years = {y for y, docs in year_sources.items() if len({d.sha256 for d in docs}) > 1}
+    for year in year_sources:
+        key=f'financial-version:{year}'
+        if year in ambiguous_years:
+            B.issue(board,key,'financials','blocking',f'Surse financiare contradictorii pentru {year}',
+                    'Selectați și încărcați versiunea corectă înlocuind documentele anterioare.',
+                    [d.id for d in year_sources[year]],client_action=f'Situații financiare consolidate pentru {year}')
+        else:
+            B.resolve(board,key,'O singură versiune financiară activă.')
+    financial_docs = {(fs_year(d), d.sha256): d for d in env.docs if d.kind == "financial_statements"}
+    for doc in sorted(financial_docs.values(), key=lambda d: fs_year(d) or 0):
         if inspect(doc, env.case["meta"]):
             continue
         year = fs_year(doc)
-        if year:
-            extract(board, env, doc, ITEMS, f"fs{year}", report)
+        if year and year not in ambiguous_years:
+            extracted = extract(board, env, doc, ITEMS, f"fs{year}", report)
+            active_facts.update(f"fs{year}-{k}" for k in extracted)
+            for key in ITEMS:
+                if key not in extracted:
+                    board["facts"].pop(f"fs{year}-{key}", None)
             years[year] = {k: B.value_of(board, f"fs{year}-{k}") for k in ITEMS}
     valuation = next((d for d in env.docs if d.kind == "collateral_valuation"), None)
     if valuation:
-        extract(board, env, valuation, VALUATION, "collateral", report)
+        extracted = extract(board, env, valuation, VALUATION, "collateral", report)
+        active_facts.update(f"collateral-{k}" for k in extracted)
+
+    board["facts"] = {k: f for k, f in board["facts"].items() if f["agent"] != "financials" or k in active_facts}
 
     for year, v in years.items():
         checks = [("Total active = active imobilizate + active circulante", v.get("total_assets"), (v.get("fixed_assets") or 0) + (v.get("current_assets") or 0)),
@@ -172,7 +200,7 @@ def analyze(board: dict, env: B.Env) -> B.Report:
                 B.metric(board, "revenue_growth_pct", f"Evoluția cifrei de afaceri {latest}/{latest - 1}", round(growth, 1), "%",
                          fmt_pct(growth), "financials", "CA curentă / CA anterioară − 1", ev(p + "revenue", f"fs{latest - 1}-revenue"))
             summary = (f"CA {latest}: {fmt_ron(v['revenue'])}; EBITDA {fmt_ron(ebitda)} ({fmt_pct(ebitda / v['revenue'] * 100)}); "
-                       f"profit net {fmt_ron(v.get('net_profit') or 0)}" + (f"; creștere {fmt_pct(growth)} față de {latest - 1}" if previous and previous.get("revenue") else ""))
+                       f"profit net {fmt_ron(v['net_profit']) if v.get('net_profit') is not None else 'nedisponibil'}" + (f"; creștere {fmt_pct(growth)} față de {latest - 1}" if previous and previous.get("revenue") else ""))
             status = "ok"
             board["financials"] = {"years": [{"year": y, "items": {k: x for k, x in vals.items() if x is not None}} for y, vals in sorted(years.items())],
                                    "latest": latest}

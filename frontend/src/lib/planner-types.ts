@@ -1,0 +1,11 @@
+import type { Terms } from './agent-types';
+import type { User } from './types';
+export type Comparable = { case_id:number; year:number; sector:string; country:string; product:string; amount:number; currency:'EUR'; term_months:number; distance:number; features:Record<string,number>; differences:Record<string,number>; outcome:string; months_to_event:number|null; source:{dataset_sha256:string;case_id:number} };
+export type RiskReport = { id:string;created_at:string;is_current?:boolean;run_id:string;run_updated_at:string;case_revision:number;policy_version:string;currency:'RON';assumptions:{cfads_drop_pct:number;rate_shock_pp:number};blockers:string[];recommended:string|null;note:string;
+  history:{dataset:{id:string;sha256:string;total:number;valid:number;excluded:number;romania:number};n:number;observed_n:number;unobserved_n:number;as_of:string;cohort_size:number;limited:boolean;limitation:string;note:string;matching_features:string[];applicant:Record<string,number>;comparables:Comparable[];outcomes:{outcome:string;count:number;share_pct:number}[]};
+  scenarios:{id:string;terms:Terms;stressed:Terms;eligible:boolean;decision:string;reasons:{code:string;text:string}[]}[]};
+export type AdminUsers = {users:User[];counts:Record<string,number>};
+export type AuditPage = {items:{id:string;actor:string;actor_id:string;case_id:string|null;action:string;details:Record<string,unknown>;created_at:string}[];next_offset:number|null};
+export type AdminPolicies = {current:{version:string;thresholds:Record<string,number>};versions:{version:string;parent_version:string;reason:string;created_at:string}[];requires_reanalysis:{id:string;title:string}[]};
+export type AdminRole = 'case_officer'|'risk_reviewer'|'admin';
+export type UserChange = {expected_revision:number;role:AdminRole;authority_level:'L1'|'L2'|'L3'|null;active:boolean;reason:string};

@@ -65,8 +65,8 @@ export function RequestCard({ run, caseId, canAct }: { run: AgentRun; caseId: st
   const waiting = request.status === "SENT";
   return (
     <Panel agent={waiting} eyebrow={<span className="inline-flex items-center gap-1.5"><Inbox className="h-3 w-3" />Cerere consolidată · runda {request.round}</span>}
-      title={waiting ? "Trimisă automat clientului — o singură cerere" : "Clientul a răspuns"}
-      actions={<Tag tone={waiting ? "warning" : "success"}>{waiting ? "Așteaptă clientul" : "Răspuns primit"}</Tag>}>
+      title={request.status==="DRAFT" ? "Ciornă — verificare și trimitere manuală" : waiting ? "Solicitare trimisă de angajat" : "Clientul a răspuns"}
+      actions={<Tag tone={waiting ? "warning" : "success"}>{request.status==="DRAFT" ? "Necesită verificare" : waiting ? "Așteaptă clientul" : "Răspuns primit"}</Tag>}>
       <ul className="space-y-2">
         {request.items.map((item) => (
           <li key={item.code} className="flex gap-2.5 text-[15px]">
@@ -76,7 +76,7 @@ export function RequestCard({ run, caseId, canAct }: { run: AgentRun; caseId: st
         ))}
       </ul>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-[13px] text-muted-foreground">
-        <span className="num">{request.channel} · trimisă {fmtClockTime(request.sent_at)}</span>
+        <span className="num">{request.channel} · {request.status==="DRAFT" ? "pregătită" : "trimisă"} {fmtClockTime(request.sent_at)}</span>
         {waiting && canAct && (
           <button onClick={() => simulate.mutate()} disabled={simulate.isPending}
             className="inline-flex items-center gap-2 border border-agent-border bg-agent-soft px-3 py-1.5 text-[14px] text-agent-text hover:bg-agent hover:text-agent-foreground disabled:opacity-60">
@@ -85,7 +85,7 @@ export function RequestCard({ run, caseId, canAct }: { run: AgentRun; caseId: st
         )}
       </div>
       <details className="mt-2 text-[14px] text-muted-foreground">
-        <summary className="hud-label py-1">Mesajul trimis</summary>
+        <summary className="hud-label py-1">Mesajul solicitării</summary>
         <p className="mt-1 whitespace-pre-line border-l-2 border-border pl-3">{request.message}</p>
       </details>
     </Panel>

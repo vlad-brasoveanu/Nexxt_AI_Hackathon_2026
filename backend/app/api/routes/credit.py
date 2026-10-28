@@ -105,7 +105,7 @@ def decide(case_id: str, body: DecisionRequest, request: Request, identity: Auth
         if any(v["username"] == user.username for v in pending.votes):
             raise HTTPException(409, "Al doilea vot trebuie dat de alt membru al comitetului")
         if pending.action != body.action or (pending.terms or {}).get("amount") != (terms or {}).get("amount") \
-                or (pending.terms or {}).get("term_months") != (terms or {}).get("term_months"):
+                or pending.terms != terms or pending.conditions != (conditions if body.action != "REJECT" else []) or pending.case_revision != case.revision:
             raise HTTPException(409, "Votul diferă de primul vot al comitetului; comitetul trebuie să convină asupra aceleiași decizii")
         pending.votes = pending.votes + [vote]
         pending.status = "FINAL"
@@ -183,7 +183,10 @@ def queue(identity: Auth, session: DB):
 @router.get("/metrics")
 def metrics(request: Request, identity: Auth, session: DB):
     user = identity[0]
-    cases = list(session.scalars(select(Case).where(Case.team == user.team, Case.kind == "credit")))
+    query=select(Case).where(Case.team == user.team, Case.kind == "credit")
+    if user.role=="manager" or user.own_cases_only:
+        query=query.where(Case.owner_id==user.id)
+    cases = list(session.scalars(query))
     runs = [r for r in (latest_run(session, c.id) for c in cases) if r]
     rounds = [len(list(session.scalars(select(ClientRequest).where(ClientRequest.case_id == r.case_id)))) for r in runs
               if r.status in {"AWAITING_DECISION", "DECIDED"}]

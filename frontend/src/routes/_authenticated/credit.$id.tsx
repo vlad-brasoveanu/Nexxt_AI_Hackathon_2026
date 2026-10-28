@@ -13,6 +13,8 @@ import { useUser } from "@/routes/_authenticated";
 import { AgentGraph } from "@/components/casecheck/agent-graph";
 import { Timeline } from "@/components/casecheck/timeline";
 import { IssuesList, RequestCard, RulesTable } from "@/components/casecheck/run-panels";
+import { RiskPlanner } from "@/components/casecheck/risk-planner";
+import { DocumentIntake } from "@/components/casecheck/document-intake";
 import { DecisionCockpit } from "@/components/casecheck/decision";
 import { ReviewBatch } from "@/components/casecheck/review";
 import { PdfFrame, TextFrame, type CaseDoc } from "@/components/casecheck/evidence";
@@ -28,7 +30,8 @@ export const Route = createFileRoute("/_authenticated/credit/$id")({
 const TABS: { key: CaseTab; label: string }[] = [
   { key: "agents", label: "1. Analiza agenților" },
   { key: "review", label: "2. Verificarea faptelor" },
-  { key: "decision", label: "3. Decizie" },
+  { key: "risk", label: "3. Risk Planner" },
+  { key: "decision", label: "4. Decizie" },
   { key: "profile", label: "Profilul firmei" },
 ];
 
@@ -54,7 +57,7 @@ function CreditCase() {
   const [tab, setTab] = useState<CaseTab>("agents");
   const [focused, setFocused] = useState<ReviewFact | null>(null);
   const seconds = useActiveSeconds(tab === "review" || tab === "decision");
-  const preparer = user.role === "manager" || user.role === "analyst";
+  const preparer = user.permissions?.edit_case ?? (user.role === "manager" || user.role === "analyst");
 
   const start = useMutation({
     mutationFn: () => api.startAgentRun(id),
@@ -63,9 +66,10 @@ function CreditCase() {
   });
   const client = useMutation({
     mutationFn: () => api.simulateClientResponse(run!.requests.at(-1)!.id),
-    onSuccess: (r) => { qc.setQueryData(latestRunKey(id), r); toast.success("Clientul a trimis documentele. Analiza se reia."); },
+    onSuccess: (r) => { qc.setQueryData(latestRunKey(id), r); qc.invalidateQueries({queryKey:["case",id]}); toast.success("Documente primite. Apasă Reanalizează dosarul."); },
     onError: (e: Error) => toast.error(e.message),
   });
+  const sendDraft = useMutation({mutationFn:()=>api.sendClientRequest(run!.requests.at(-1)!.id),onSuccess:()=>{qc.invalidateQueries({queryKey:latestRunKey(id)});qc.invalidateQueries({queryKey:["credit-cases"]});toast.success("Solicitare trimisă prin portalul simulat.");},onError:(e:Error)=>toast.error(e.message)});
   const redTeam = useMutation({
     mutationFn: () => api.redTeam(run!.id),
     onSuccess: (r) => { qc.setQueryData(latestRunKey(id), r); toast.error("Garda a blocat aprobarea cerută de un agent: doar omul poate aproba."); },
@@ -104,6 +108,7 @@ function CreditCase() {
 
 
       <FlowBar run={run} />
+      <DocumentIntake caseId={id} revision={detail.data?.revision??0} documents={docs} canUpload={preparer && run?.status!=="RUNNING"} />
 
       {run && !run.is_current && <p role="alert" className="border border-warning bg-warning-soft px-4 py-3 text-[15px] text-warning">Documentele s-au modificat după această analiză. Rezultatul trebuie actualizat înainte de decizie.</p>}
       <div className={cn("flex flex-wrap items-center justify-between gap-4 border-2 px-5 py-4", next.mine ? "border-human bg-surface-1" : "border-border bg-card")}>
@@ -114,9 +119,10 @@ function CreditCase() {
         </div>
         {next.action === "start" && (
           <button onClick={() => start.mutate()} disabled={start.isPending} className="inline-flex items-center gap-2 bg-agent px-5 py-3 text-[16px] font-medium text-agent-foreground disabled:opacity-50">
-            {start.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}Pornește agenții
+            {start.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}{run ? "Reanalizează dosarul" : "Analizează documentele"}
           </button>
         )}
+        {next.action === "send" && <button onClick={()=>sendDraft.mutate()} disabled={sendDraft.isPending||!run?.is_current} className="bg-human px-5 py-3 text-human-foreground disabled:opacity-50">Am verificat ciorna · trimite solicitarea</button>}
         {next.action === "client" && (
           <button onClick={() => client.mutate()} disabled={client.isPending} className="inline-flex items-center gap-2 border-2 border-agent-border px-5 py-3 text-[16px] text-agent-text hover:bg-agent-soft disabled:opacity-50">
             {client.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}Simulează răspunsul clientului
@@ -181,6 +187,7 @@ function CreditCase() {
             </div>
           )}
 
+          {tab === "risk" && <RiskPlanner run={run} caseId={id} onReview={()=>setTab("review")} />}
           {tab === "decision" && (
             <div className="space-y-5">
               <DecisionCockpit run={run} caseId={id} user={user} humanSeconds={seconds} />

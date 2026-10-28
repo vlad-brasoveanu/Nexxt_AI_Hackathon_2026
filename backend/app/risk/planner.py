@@ -8,12 +8,14 @@ from app.risk.history import applicant_from_board, compare, load
 
 
 def build(board, env, cfads_drop_pct=10, rate_shock_pp=None, history_path=None):
-    history=compare(load(history_path),env.case['meta'].get('caen'),env.case['meta'].get('product'),applicant_from_board(board))
+    history=compare(load(history_path),env.case['meta'].get('caen'),env.case['meta'].get('product'),applicant_from_board(board), env.evaluation_date)
     x=inputs_from_board(board,env)
     rules=deepcopy(env.standards)
     if rate_shock_pp is not None:
         rules['pricing']['stress_shock_pp']=rate_shock_pp
     reasons=blockers(board)
+    if history["limited"]:
+        reasons.append("Comparația istorică este insuficientă; este necesară verificarea analistului de risc.")
     if x.cfads is None or x.ebitda is None or x.ebitda<=0 or x.net_debt is None or x.existing_service is None:
         reasons.append('Indicatori financiari esențiali lipsă sau EBITDA nepozitiv.')
     if not env.standards['product']['min_term_months']<=x.term_months<=env.standards['product']['max_term_months']:
@@ -26,8 +28,20 @@ def build(board, env, cfads_drop_pct=10, rate_shock_pp=None, history_path=None):
         return base
     durations=sorted({x.term_months,min(x.term_months+12,rules['product']['max_term_months'])})
     variants=[('requested',x.amount,x.term_months)]
+    def passes_stress(amount, months):
+        terms=policy.terms_for(rules,env.market,x,amount,months)
+        stressed=policy.terms_for(rules,env.market,replace(x,cfads=x.cfads*(1-cfads_drop_pct/100)),amount,months)
+        return terms['passes'] and stressed['dscr_stressed']>=rules['thresholds']['dscr_stressed_min']
+    def capacity(months):
+        step=rules['pricing']['rounding_ron']
+        low,high=0,int(x.amount//step)
+        while low<high:
+            middle=(low+high+1)//2
+            if passes_stress(middle*step,months):low=middle
+            else:high=middle-1
+        return low*step
     for months in durations:
-        amount,binding=policy.max_amount(rules,env.market,x,months)
+        amount=capacity(months)
         if amount>0:
             variants.append((f'capacity_{months}',amount,months))
     for label,amount,months in variants:
@@ -35,7 +49,7 @@ def build(board, env, cfads_drop_pct=10, rate_shock_pp=None, history_path=None):
         evaluation=policy.evaluate(rules,env.market,candidate)
         terms=policy.terms_for(rules,env.market,candidate,amount,months)
         stressed=policy.terms_for(rules,env.market,replace(candidate,cfads=x.cfads*(1-cfads_drop_pct/100)),amount,months)
-        eligible=not reasons and evaluation['decision'] in {'APPROVE','APPROVE_WITH_CONDITIONS'} and terms['passes']
+        eligible=not reasons and evaluation['decision'] in {'APPROVE','APPROVE_WITH_CONDITIONS'} and terms['passes'] and stressed['dscr_stressed']>=rules['thresholds']['dscr_stressed_min']
         base['scenarios'].append({'id':label,'terms':terms,'stressed':stressed,'eligible':eligible,
                                   'decision':evaluation['decision'],'reasons':evaluation['reasons']})
     feasible=[s for s in base['scenarios'] if s['eligible']]

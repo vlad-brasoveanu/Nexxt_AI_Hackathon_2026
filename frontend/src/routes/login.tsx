@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { api, ApiError } from "@/lib/api";
+import { api, ApiError, isMock } from "@/lib/api";
 import { sessionQ } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,7 +60,7 @@ function Login() {
           <Button type="submit" className="h-11 w-full rounded-none" disabled={busy || !u || !p}>{busy ? "Se autentifică…" : "Autentificare"}</Button>
           <div className="border border-dashed px-3 py-2 text-[13px] leading-relaxed text-muted-foreground">
             Conturi demo, parola <span className="num text-foreground">12345</span>:<br />
-            <span className="num">manager · analyst · credit_analyst · risk_officer · committee_a · committee_b · supervisor</span>
+            <span className="num">{isMock() ? "manager · analyst · risk_officer (mock UI)" : "officer · risk · admin"}</span>
           </div>
         </form>
         <p className="hud-label text-center text-warning">Date sintetice · fără valoare juridică</p>

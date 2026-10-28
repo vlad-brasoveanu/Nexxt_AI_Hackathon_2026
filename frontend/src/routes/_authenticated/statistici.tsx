@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Radio } from "lucide-react";
 import { toast } from "sonner";
+import { useUser } from "@/routes/_authenticated";
 import { api } from "@/lib/api";
 import { marketQ, metricsQ } from "@/lib/queries";
 import { fmtDuration, fmtIsoDate, fmtNum, fmtPct } from "@/lib/format";
@@ -10,6 +11,7 @@ import { Empty, Panel, Stat } from "@/components/casecheck/hud";
 
 export const Route = createFileRoute("/_authenticated/statistici")({ component: Statistics });
 function Statistics() {
+  const user=useUser();
   const qc = useQueryClient();
   const metrics = useQuery({ ...metricsQ(), refetchInterval: 5000 });
   const market = useQuery(marketQ());
@@ -56,7 +58,7 @@ function Statistics() {
               <p className="text-[15px] text-muted-foreground">Dosarele care așteaptă decizia sunt recalculate automat.</p>
               <div className="mt-4 flex gap-2">
                 <input value={value} onChange={(e) => setValue(e.target.value)} inputMode="decimal" aria-label="ROBOR 3M (%)" className="num h-11 w-32 border border-border bg-surface-1 px-3 text-lg outline-none focus:border-agent-border" />
-                <button onClick={() => publish.mutate()} disabled={publish.isPending} className="inline-flex items-center gap-2 bg-agent px-4 text-[16px] font-medium text-agent-foreground disabled:opacity-50"><Radio className="h-4 w-4" />Publică</button>
+                <button onClick={() => publish.mutate()} disabled={publish.isPending||user.role!=="admin"} className="inline-flex items-center gap-2 bg-agent px-4 text-[16px] font-medium text-agent-foreground disabled:opacity-50"><Radio className="h-4 w-4" />Publică</button>
               </div>
             </Panel>
           </div>

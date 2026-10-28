@@ -18,9 +18,10 @@ export function ReviewBatch({ run, caseId, canReview, docNames, onFocus }: { run
   const facts = run.board.facts;
   const [cursor, setCursor] = useState(0);
   const [local, setLocal] = useState<Record<string, Decision>>({});
+  const [reason,setReason] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const list = useRef<HTMLDivElement>(null);
-  const editable = canReview && (run.status === "AWAITING_DECISION" || run.status === "WAITING_CLIENT");
+  const editable = canReview && run.is_current && (run.status === "AWAITING_DECISION" || run.status === "WAITING_CLIENT");
 
   const state = (f: ReviewFact) => local[f.id]?.action ?? (f.review === "pending" ? null : f.review === "accepted" ? "accept" : f.review === "rejected" ? "reject" : "correct");
   const done = facts.filter((f) => state(f) !== null).length;
@@ -38,7 +39,7 @@ export function ReviewBatch({ run, caseId, canReview, docNames, onFocus }: { run
 
   const sendAll = (acceptAll: boolean) => submit.mutate({
     accept_all_verified: acceptAll,
-    decisions: Object.entries(local).map(([fact_id, d]) => ({ fact_id, action: d.action, ...(d.value ? { value: d.value } : {}) })),
+    decisions: Object.entries(local).map(([fact_id, d]) => ({ fact_id, action: d.action, ...(d.value ? { value: d.value } : {}), ...(reason.trim() ? {reason:reason.trim()} : {}) })),
   });
 
   const sorted = useMemo(() => [...facts].sort((a, b) => Number(b.conflict) - Number(a.conflict)), [facts]);
@@ -90,7 +91,8 @@ export function ReviewBatch({ run, caseId, canReview, docNames, onFocus }: { run
           </div>
         )}
       </div>
-      {!canReview && <p className="text-[14px] text-muted-foreground">Revizia faptelor o face analistul de operațiuni (rolul analyst); decidentul nu poate fi și revizor.</p>}
+      {editable && <label className="block text-sm">Motiv pentru corecții, respingeri sau acceptarea conflictelor<textarea value={reason} onChange={e=>setReason(e.target.value)} minLength={10} className="mt-1 block w-full border bg-surface-1 p-2" placeholder="Descrie verificarea făcută și sursa folosită (minimum 10 caractere)."/></label>}
+      {!canReview && <p className="text-[14px] text-muted-foreground">Revizia faptelor o face ofițerul dosarului. Decidentul verifică separat recomandarea.</p>}
       <div ref={list} className="divide-y border bg-card" role="listbox" aria-label="Fapte extrase">
         {sorted.map((f, i) => {
           const s = state(f);

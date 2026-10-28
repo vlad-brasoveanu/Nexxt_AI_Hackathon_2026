@@ -2,7 +2,7 @@
 from copy import deepcopy
 from typing import Literal
 from fastapi import APIRouter,HTTPException,Request,Query
-from pydantic import Field,model_validator
+from pydantic import Field,model_validator,field_validator
 from sqlalchemy import select,delete,update,func
 from sqlalchemy.exc import IntegrityError
 from app.api.deps import Auth,DB
@@ -21,7 +21,15 @@ def admin(user):
     if role(user)!='admin':raise HTTPException(403,'Doar administratorul poate folosi această funcție.')
 
 
-class NewUser(Contract):
+class Reasoned(Contract):
+    @field_validator('reason',check_fields=False)
+    @classmethod
+    def meaningful_reason(cls,value):
+        if len(value.strip())<10:raise ValueError('Motivul trebuie să conțină minimum 10 caractere utile.')
+        return value.strip()
+
+
+class NewUser(Reasoned):
     username:str=Field(pattern=r'^[a-zA-Z0-9_.-]{3,80}$')
     password:str=Field(min_length=10,max_length=200)
     role:Literal['case_officer','risk_reviewer','admin']
@@ -29,7 +37,7 @@ class NewUser(Contract):
     reason:str=Field(min_length=10,max_length=2000)
 
 
-class UpdateUser(Contract):
+class UpdateUser(Reasoned):
     expected_revision:int=Field(ge=1)
     role:Literal['case_officer','risk_reviewer','admin']
     authority_level:Literal['L1','L2','L3']|None=None
@@ -87,7 +95,7 @@ def events(identity:Auth,session:DB,offset:int=Query(0,ge=0),limit:int=Query(50,
                      for e,name in rows[:limit]],'next_offset':offset+limit if len(rows)>limit else None}
 
 
-class PublishPolicy(Contract):
+class PublishPolicy(Reasoned):
     expected_version:str=Field(max_length=80)
     reason:str=Field(min_length=10,max_length=2000)
     dscr_min:float=Field(ge=1,le=5,allow_inf_nan=False)
@@ -105,8 +113,9 @@ def policies(request:Request,identity:Auth,session:DB):
     actor=identity[0];admin(actor)
     active=current(session,request.app.state.sources,request.app.state.orchestrator.evaluation_date(),actor.team)
     rows=session.scalars(select(PolicyVersion).where(PolicyVersion.team==actor.team).order_by(PolicyVersion.created_at.desc()).limit(30))
-    stale=session.execute(select(Case.id,Case.title).join(AgentRun,AgentRun.case_id==Case.id).where(Case.team==actor.team,
-             AgentRun.case_revision!=Case.revision,AgentRun.status!='DECIDED').distinct()).all()
+    from app.api.agent_views import latest_run
+    stale=[(c.id,c.title) for c in session.scalars(select(Case).where(Case.team==actor.team,Case.kind=='credit'))
+           if (r:=latest_run(session,c.id)) and r.status!='DECIDED' and r.case_revision!=c.revision]
     return {'current':active,'versions':[{'version':r.version,'parent_version':r.parent_version,'reason':r.reason,'created_at':r.created_at} for r in rows],
             'requires_reanalysis':[{'id':i,'title':t} for i,t in stale]}
 
@@ -123,7 +132,9 @@ def publish_policy(body:PublishPolicy,request:Request,identity:Auth,session:DB):
     try:session.flush()
     except IntegrityError:
         session.rollback();raise HTTPException(409,'Alt administrator a publicat deja o versiune; reîncărcați.')
-    ids=list(session.scalars(select(Case.id).where(Case.team==actor.team,Case.kind=='credit')))
+    from app.api.agent_views import latest_run
+    ids=[c.id for c in session.scalars(select(Case).where(Case.team==actor.team,Case.kind=='credit'))
+         if (r:=latest_run(session,c.id)) and r.status!='DECIDED']
     if ids:session.execute(update(Case).where(Case.id.in_(ids)).values(revision=Case.revision+1))
     audit(session,actor,'policy.published',before=before,after=after,reason=body.reason,affected_cases=ids)
     session.commit();return {'version':row.version,'requires_reanalysis':ids}

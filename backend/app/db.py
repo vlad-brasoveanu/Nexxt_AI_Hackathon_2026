@@ -59,6 +59,7 @@ class Document(Base):
     sha256: Mapped[str] = mapped_column(String(64))
     media_type: Mapped[str] = mapped_column(String(80))
     pages: Mapped[list] = mapped_column(JSON)
+    superseded_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
     ocr_pages: Mapped[list] = mapped_column(JSON, default=list)  # pages transcribed locally from a scan
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
 

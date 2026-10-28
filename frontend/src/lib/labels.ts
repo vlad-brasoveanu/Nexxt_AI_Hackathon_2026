@@ -54,6 +54,7 @@ export const OUTCOME_ORDER: Outcome[] = ["FAIL", "UNKNOWN", "PASS", "NOT_APPLICA
 export type Tone = "success" | "warning" | "danger" | "neutral";
 
 export const ROLE_LABEL: Record<Role, string> = {
+  case_officer: "Ofițer dosar", risk_reviewer: "Analist risc / decident", admin: "Administrator",
   manager: "Manager relație",
   analyst: "Analist operațiuni",
   credit_analyst: "Analist credit · L1",
@@ -149,15 +150,16 @@ export const ACTION_DONE_LABEL: Record<HumanAction, string> = { APPROVE: "Aproba
 export const LEVELS = ["L1", "L2", "L3"] as const;
 export type Level = (typeof LEVELS)[number];
 export const LEVEL_ROLE: Record<Level, { role: CreditRole; label: string; votes: number }> = {
-  L1: { role: "credit_analyst", label: "Analist credit", votes: 1 },
-  L2: { role: "risk_officer", label: "Ofițer risc", votes: 1 },
-  L3: { role: "credit_committee", label: "Comitet credit", votes: 2 },
+  L1: { role: "credit_analyst", label: "Decident · L1", votes: 1 },
+  L2: { role: "risk_officer", label: "Decident · L2", votes: 1 },
+  L3: { role: "credit_committee", label: "Decidenți · L3", votes: 2 },
 };
 /** Authority rank of a role; roles outside the credit chain have none. */
 export const ROLE_RANK: Partial<Record<Role, number>> = { credit_analyst: 1, risk_officer: 2, credit_committee: 3 };
 export const LEVEL_RANK: Record<Level, number> = { L1: 1, L2: 2, L3: 3 };
 
 export const WAITING_FOR_LABEL: Record<string, string> = {
+  case_officer: "Ofițer dosar", risk_reviewer: "Analist risc / decident", admin: "Administrator",
   client: "Client",
   analyst: "Analist",
   credit_analyst: "Analist credit · L1",

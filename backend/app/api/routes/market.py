@@ -6,13 +6,14 @@ from sqlalchemy import select
 from app.api.deps import DB, Auth
 from app.api.schemas import MarketPublish
 from app.core.audit import audit
+from app.core.policies import current as current_policy
 from app.credit.numbers import fmt_pct
 from app.db import AgentRun, Case, MarketSnapshot
 
 router = APIRouter(prefix="/api/v1/market", tags=["market"])
 
 
-def state(request, session):
+def state(request, session, team):
     orchestrator, sources = request.app.state.orchestrator, request.app.state.sources
     current = orchestrator.market(session)
     seed = sources.market_seed("ROBOR3M")
@@ -20,12 +21,12 @@ def state(request, session):
             for r in session.scalars(select(MarketSnapshot).where(MarketSnapshot.index == "ROBOR3M"))]
     rows += [{"value_pct": s["value_pct"], "as_of": s["as_of"], "source": seed["source"]} for s in seed["snapshots"]]
     history = sorted(rows, key=lambda r: r["as_of"], reverse=True)
-    return {**current, "policy_version": sources.standards(orchestrator.evaluation_date())["version"], "history": history}
+    return {**current, "policy_version": current_policy(session,sources,orchestrator.evaluation_date(),team)["version"], "history": history}
 
 
 @router.get("")
 def get_market(request: Request, identity: Auth, session: DB):
-    return state(request, session)
+    return state(request, session, identity[0].team)
 
 
 @router.post("/snapshots", status_code=201)
@@ -48,5 +49,5 @@ def publish(body: MarketPublish, request: Request, identity: Auth, session: DB):
     session.commit()
     for run in waiting:
         orchestrator.kick(run.id)
-    return {**state(request, session), "reevaluated": len(waiting)}
+    return {**state(request, session, user.team), "reevaluated": len(waiting)}
 

@@ -4,6 +4,8 @@ import type {
 import type {
   AgentRun, AgentStep, CreditCaseSummary, Decision, HumanAction, MarketState, Metrics, RunStatus, WhatIf,
 } from "./agent-types";
+import type { RiskReport, AdminUsers, AuditPage, AdminPolicies, UserChange, AdminRole } from "./planner-types";
+import type { User } from "./types";
 import { mockApi } from "./mock";
 import { mockCreditApi } from "./mock-credit";
 import { ApiError } from "./errors";
@@ -34,6 +36,9 @@ async function send(path: string, opts: { method?: string; body?: unknown; heade
     try {
       const j = await res.json();
       if (typeof j?.detail === "string") detail = j.detail;
+      else if (j?.detail?.message) detail = j.detail.message;
+      else if (j?.detail?.reasons) detail = j.detail.reasons.join(" ");
+      else if (Array.isArray(j?.detail)) detail = j.detail.map((v: {msg: string}) => v.msg).join("; ");
     } catch { /* non-JSON error body */ }
     throw new ApiError(res.status, detail);
   }
@@ -48,7 +53,7 @@ async function request<T>(path: string, opts: Parameters<typeof send>[1] = {}): 
 
 export type ReviewBody = {
   accept_all_verified: boolean;
-  decisions: { fact_id: string; action: "accept" | "reject" | "correct"; value?: string }[];
+  decisions: { fact_id: string; action: "accept" | "reject" | "correct"; value?: string; reason?: string }[];
 };
 export type DecisionBody = {
   run_id: string;
@@ -57,6 +62,7 @@ export type DecisionBody = {
   conditions?: string[];
   reason?: string;
   human_seconds?: number;
+  demo_exception?: boolean;
 };
 export type RunEvent = { status: RunStatus; updated_at: string };
 export type OnStep = (step: AgentStep) => void;
@@ -195,6 +201,22 @@ const realApi = {
     request<MarketState>("/market/snapshots", { method: "POST", body }),
   redTeam: (runId: string) => request<AgentRun>(`/agent-runs/${runId}/red-team`, { method: "POST" }),
   getMetrics: () => request<Metrics>("/metrics"),
+  sendClientRequest: (id: string) => request<{id:string;status:string}>(`/client-requests/${id}/send`,{method:"POST"}),
+  riskPlanner: (id:string, body:{cfads_drop_pct:number;rate_shock_pp:number}) => request<RiskReport>(`/agent-runs/${id}/risk-planner`,{method:"POST",body}),
+  riskReports: (id:string) => request<RiskReport[]>(`/cases/${id}/risk-reports`),
+  adminUsers: () => request<AdminUsers>("/admin/users"),
+  adminCreateUser: (body:{username:string;password:string;role:AdminRole;authority_level:string|null;reason:string}) => request<User>("/admin/users",{method:"POST",body}),
+  adminUpdateUser: (id:string,body:UserChange) => request<User>(`/admin/users/${id}`,{method:"PATCH",body}),
+  adminAudit: (params:URLSearchParams) => request<AuditPage>(`/admin/audit?${params}`),
+  adminPolicies: () => request<AdminPolicies>("/admin/policies"),
+  publishPolicy: (body:{expected_version:string;reason:string;dscr_min:number;dscr_stressed_min:number;net_debt_ebitda_max:number;ltv_max_pct:number}) => request<{version:string}>("/admin/policies",{method:"POST",body}),
+  createCreditCase: (credit:Record<string,unknown>) => request<CaseDetail>("/cases",{method:"POST",body:{title:String(credit.company),kind:"credit",credit}}),
+  uploadCreditDocument: async (caseId:string, revision:number, kind:string, file:File, supersedes?:string) => {
+    const body=new FormData();body.set("expected_revision",String(revision));body.set("kind",kind);body.set("file",file);if(supersedes)body.set("supersedes_document_id",supersedes);
+    const res=await fetch(`/api/v1/cases/${caseId}/documents`,{method:"POST",credentials:"same-origin",headers:{"x-csrf-token":csrfToken ?? ""},body});
+    const data=await res.json();if(!res.ok) throw new Error(typeof data.detail==="string"?data.detail:data.detail?.message ?? "Documentul nu a putut fi încărcat.");
+    return data as {revision:number};
+  },
 };
 
 export type Api = typeof realApi;
@@ -208,6 +230,7 @@ const mockAll = { ...mockApi, ...mockCreditApi };
 
 export const api: Api = new Proxy({} as Api, {
   get(_t, key: keyof Api) {
+    if (isMock() && !(key in mockAll)) return () => Promise.reject(new Error("Această funcție necesită backend-ul real. Deschideți demo-ul pe portul 8000."));
     return (isMock() ? mockAll : realApi)[key as keyof typeof mockAll];
   },
 });

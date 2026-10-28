@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedAdministrareRouteImport } from './routes/_authenticated/administrare'
 import { Route as AuthenticatedKycRouteImport } from './routes/_authenticated/kyc'
 import { Route as AuthenticatedStatisticiRouteImport } from './routes/_authenticated/statistici'
 import { Route as AuthenticatedCasesIdRouteImport } from './routes/_authenticated/cases.$id'
@@ -31,6 +32,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdministrareRoute =
+  AuthenticatedAdministrareRouteImport.update({
+    id: '/administrare',
+    path: '/administrare',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedKycRoute = AuthenticatedKycRouteImport.update({
   id: '/kyc',
   path: '/kyc',
@@ -55,6 +62,7 @@ const AuthenticatedCreditIdRoute = AuthenticatedCreditIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
+  '/administrare': typeof AuthenticatedAdministrareRoute
   '/kyc': typeof AuthenticatedKycRoute
   '/statistici': typeof AuthenticatedStatisticiRoute
   '/cases/$id': typeof AuthenticatedCasesIdRoute
@@ -62,6 +70,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/administrare': typeof AuthenticatedAdministrareRoute
   '/kyc': typeof AuthenticatedKycRoute
   '/statistici': typeof AuthenticatedStatisticiRoute
   '/': typeof AuthenticatedIndexRoute
@@ -72,6 +81,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/administrare': typeof AuthenticatedAdministrareRoute
   '/_authenticated/kyc': typeof AuthenticatedKycRoute
   '/_authenticated/statistici': typeof AuthenticatedStatisticiRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -81,13 +91,27 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/login' | '/kyc' | '/statistici' | '/cases/$id' | '/credit/$id'
+    | '/'
+    | '/login'
+    | '/administrare'
+    | '/kyc'
+    | '/statistici'
+    | '/cases/$id'
+    | '/credit/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/kyc' | '/statistici' | '/' | '/cases/$id' | '/credit/$id'
+  to:
+    | '/login'
+    | '/administrare'
+    | '/kyc'
+    | '/statistici'
+    | '/'
+    | '/cases/$id'
+    | '/credit/$id'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/administrare'
     | '/_authenticated/kyc'
     | '/_authenticated/statistici'
     | '/_authenticated/'
@@ -123,6 +147,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/administrare': {
+      id: '/_authenticated/administrare'
+      path: '/administrare'
+      fullPath: '/administrare'
+      preLoaderRoute: typeof AuthenticatedAdministrareRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/kyc': {
       id: '/_authenticated/kyc'
       path: '/kyc'
@@ -155,6 +186,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAdministrareRoute: typeof AuthenticatedAdministrareRoute
   AuthenticatedKycRoute: typeof AuthenticatedKycRoute
   AuthenticatedStatisticiRoute: typeof AuthenticatedStatisticiRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -163,6 +195,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdministrareRoute: AuthenticatedAdministrareRoute,
   AuthenticatedKycRoute: AuthenticatedKycRoute,
   AuthenticatedStatisticiRoute: AuthenticatedStatisticiRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,

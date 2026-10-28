@@ -147,7 +147,9 @@ class Orchestrator:
     def load(self, session, run):
         case = session.get(Case, run.case_id)
         docs = [B.Doc(id=d.id, kind=d.kind, filename=d.filename, sha256=d.sha256, pages=d.pages, media_type=d.media_type)
-                for d in session.scalars(select(Document).where(Document.case_id == case.id).order_by(Document.created_at))]
+                for d in session.scalars(select(Document).where(Document.case_id == case.id, Document.superseded_by.is_(None)).order_by(Document.created_at))]
+        # Re-uploading a filename creates a new source version; historical bytes remain downloadable.
+        docs = list({(d.kind, d.filename): d for d in docs}.values())
         board = deepcopy(run.board)
         known = board.setdefault("doc_index", {})
         for d in docs:

@@ -5,7 +5,7 @@ def case_json(case):
 
 def doc_json(doc):
     return {"id": doc.id, "kind": doc.kind, "filename": doc.filename, "sha256": doc.sha256, "pages": doc.pages,
-            "media_type": doc.media_type, "ocr_pages": doc.ocr_pages or [], "source": "agent" if doc.kind.startswith("source_") else "upload"}
+            "media_type": doc.media_type, "ocr_pages": doc.ocr_pages or [], "superseded_by": doc.superseded_by, "source": "agent" if doc.kind.startswith("source_") else "upload"}
 
 
 def run_json(run):
