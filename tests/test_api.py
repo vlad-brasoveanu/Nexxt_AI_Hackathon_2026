@@ -78,3 +78,23 @@ def test_invalid_upload_does_not_mutate(client):
     response = client.post(f"/api/v1/cases/{cid}/documents", data={"expected_revision": 0, "kind": "identity"}, files={"file": ("scan.pdf", b"not a PDF", "application/pdf")})
     assert response.status_code == 422
     assert client.get(f"/api/v1/cases/{cid}").json()["revision"] == 0
+
+
+def test_explicit_preview_origin_still_requires_csrf(tmp_path):
+    from app.api import create_app, passwords
+    from app.config import Settings
+    from app.db import Base, User
+    app = create_app(Settings(database_url=f"sqlite:///{tmp_path / 'origin.db'}", storage_dir=str(tmp_path / 'docs'), secure_cookies=False, allowed_origins=frozenset({'http://127.0.0.1:5173'})))
+    Base.metadata.create_all(app.state.engine)
+    with app.state.session_factory.begin() as db:
+        db.add(User(username='manager', password_hash=passwords.hash('test-password-only-123'), role='manager', team='demo'))
+    with TestClient(app) as browser:
+        browser.headers['origin'] = 'http://127.0.0.1:5173'
+        session = browser.post('/api/v1/session', json={'username': 'manager', 'password': 'test-password-only-123'})
+        assert session.status_code == 200
+        assert browser.post('/api/v1/cases', json={'title': 'No CSRF'}).status_code == 403
+        browser.headers['x-csrf-token'] = session.json()['csrf_token']
+        assert browser.post('/api/v1/cases', json={'title': 'Valid preview request'}).status_code == 201
+        browser.headers['origin'] = 'https://untrusted.invalid'
+        assert browser.post('/api/v1/cases', json={'title': 'Bad origin'}).status_code == 403
+    app.state.engine.dispose()

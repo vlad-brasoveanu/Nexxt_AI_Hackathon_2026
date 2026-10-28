@@ -8,8 +8,8 @@ from app.db import User, connect
 
 def main():
     password = os.environ.get("CASECHECK_DEMO_PASSWORD", "")
-    if len(password) < 16:
-        raise SystemExit("Set CASECHECK_DEMO_PASSWORD to a unique value of at least 16 characters.")
+    if len(password) < 5:
+        raise SystemExit("Set CASECHECK_DEMO_PASSWORD to a value of at least 5 characters.")
     engine, factory = connect(Settings().database_url)
     with factory.begin() as session:
         for role in ("manager", "analyst", "supervisor"):

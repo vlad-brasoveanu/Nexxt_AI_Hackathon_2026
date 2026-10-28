@@ -7,6 +7,7 @@ from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, Response, UploadFile
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import Field
 from pwdlib import PasswordHash
 from sqlalchemy import select, update
@@ -108,7 +109,7 @@ def create_app(settings: Settings | None = None):
     async def origin_and_headers(request, call_next):
         if request.method not in {"GET", "HEAD", "OPTIONS"}:
             origin = request.headers.get("origin")
-            if origin and origin.rstrip("/") != str(request.base_url).rstrip("/"):
+            if origin and origin.rstrip("/") not in {str(request.base_url).rstrip("/"), *settings.allowed_origins}:
                 return Response(status_code=403, content="Cross-origin mutation denied")
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
@@ -308,4 +309,6 @@ def create_app(settings: Settings | None = None):
         run, _ = visible_run(run_id, identity, session)
         return run.result["trace"]
 
+    if settings.frontend_dir:
+        app.mount("/", StaticFiles(directory=settings.frontend_dir, html=True), name="frontend")
     return app
