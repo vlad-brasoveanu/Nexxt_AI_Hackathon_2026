@@ -13,7 +13,7 @@ import { Empty, HudLabel, Kbd, Tag } from "./hud";
 
 type Decision = { action: "accept" | "reject" | "correct"; value?: string };
 
-export function ReviewBatch({ run, caseId, canReview, docNames }: { run: AgentRun; caseId: string; canReview: boolean; docNames: Record<string, string> }) {
+export function ReviewBatch({ run, caseId, canReview, docNames, onFocus }: { run: AgentRun; caseId: string; canReview: boolean; docNames: Record<string, string>; onFocus?: (fact: ReviewFact) => void }) {
   const qc = useQueryClient();
   const facts = run.board.facts;
   const [cursor, setCursor] = useState(0);
@@ -58,7 +58,7 @@ export function ReviewBatch({ run, caseId, canReview, docNames }: { run: AgentRu
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
-  useEffect(() => { list.current?.querySelector(`[data-index="${cursor}"]`)?.scrollIntoView({ block: "nearest" }); }, [cursor]);
+  useEffect(() => { list.current?.querySelector(`[data-index="${cursor}"]`)?.scrollIntoView({ block: "nearest" }); const f = sorted[cursor]; if (f) onFocus?.(f); }, [cursor, sorted]);
 
   if (!facts.length) return <Empty>Agenții nu au publicat încă fapte de revizuit.</Empty>;
   const pct = Math.round((done / facts.length) * 100);
@@ -69,58 +69,54 @@ export function ReviewBatch({ run, caseId, canReview, docNames }: { run: AgentRu
         <div className="min-w-[240px] flex-1 space-y-2">
           <div className="flex items-baseline justify-between">
             <HudLabel>Revizie {done}/{facts.length}</HudLabel>
-            <span className="num text-xs text-muted-foreground">{pct === 100 ? "inbox zero" : `${pct}%`}</span>
+            <span className="num text-xs text-muted-foreground">{pct === 100 ? "Complet" : `${pct}%`}</span>
           </div>
           <div className="h-1.5 border bg-surface-2"><div className="h-full bg-human transition-[width] duration-300" style={{ width: `${pct}%` }} /></div>
         </div>
-        <div className="flex flex-wrap items-center gap-2 text-[11.5px] text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground">
           <Kbd>J</Kbd><Kbd>K</Kbd> navighează <Kbd>A</Kbd> acceptă <Kbd>R</Kbd> respinge <Kbd>E</Kbd> corectează
         </div>
         {editable && (
           <div className="flex gap-2">
             <button onClick={() => sendAll(true)} disabled={submit.isPending}
-              className="inline-flex items-center gap-2 border-2 border-human bg-human px-3 py-1.5 text-[13px] font-medium text-human-foreground disabled:opacity-50">
+              className="inline-flex items-center gap-2 border-2 border-human bg-human px-3 py-1.5 text-[15px] font-medium text-human-foreground disabled:opacity-50">
               <CheckCheck className="h-4 w-4" />Acceptă toate verificate ({bulk.length}) <Kbd>⇧A</Kbd>
             </button>
             {Object.keys(local).length > 0 && (
-              <button onClick={() => sendAll(false)} disabled={submit.isPending} className="border border-border-strong px-3 py-1.5 text-[13px] hover:bg-surface-2">
+              <button onClick={() => sendAll(false)} disabled={submit.isPending} className="border border-border-strong px-3 py-1.5 text-[15px] hover:bg-surface-2">
                 Trimite {Object.keys(local).length} decizii
               </button>
             )}
           </div>
         )}
       </div>
-      {!canReview && <p className="text-[12.5px] text-muted-foreground">Revizia faptelor o face analistul de operațiuni (rolul analyst); decidentul nu poate fi și revizor.</p>}
+      {!canReview && <p className="text-[14px] text-muted-foreground">Revizia faptelor o face analistul de operațiuni (rolul analyst); decidentul nu poate fi și revizor.</p>}
       <div ref={list} className="divide-y border bg-card" role="listbox" aria-label="Fapte extrase">
         {sorted.map((f, i) => {
           const s = state(f);
           return (
             <div key={f.id} data-index={i} role="option" aria-selected={i === cursor} onClick={() => setCursor(i)}
-              className={cn("grid cursor-pointer grid-cols-[22px_minmax(180px,1.3fr)_1fr_1.4fr_auto] items-center gap-3 px-4 py-2.5",
+              className={cn("grid cursor-pointer grid-cols-[22px_minmax(0,1.4fr)_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3",
                 i === cursor && "bg-surface-2 outline outline-1 -outline-offset-1 outline-human", f.conflict && "border-l-2 border-l-danger")}>
               <span className="flex h-4 w-4 items-center justify-center border">
                 {s === "accept" && <Check className="h-3 w-3 text-success" />}{s === "reject" && <X className="h-3 w-3 text-danger" />}{s === "correct" && <Pencil className="h-3 w-3 text-warning" />}
               </span>
               <div className="min-w-0">
-                <div className="truncate text-[13px]">{f.label}</div>
-                <div className="hud-label mt-1 text-[9.5px] text-muted-foreground">{agentShort(f.agent)}{f.conflict && <span className="ml-2 text-danger">conflict</span>}</div>
+                <div className="truncate text-[15px]">{f.label}</div>
+                <div className="hud-label mt-1 text-[12px] text-muted-foreground">{agentShort(f.agent)}{f.conflict && <span className="ml-2 text-danger">conflict</span>}</div>
               </div>
               <div>
                 {editing === f.id ? (
-                  <input autoFocus defaultValue={f.value} className="num w-full border border-human bg-surface-1 px-2 py-1 text-[13px] outline-none"
+                  <input autoFocus defaultValue={f.value} className="num w-full border border-human bg-surface-1 px-2 py-1 text-[15px] outline-none"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") { setLocal((l) => ({ ...l, [f.id]: { action: "correct", value: (e.target as HTMLInputElement).value } })); setEditing(null); }
                       if (e.key === "Escape") setEditing(null);
                     }} />
                 ) : (
-                  <span className={cn("num text-[13.5px]", s === "reject" && "line-through text-muted-foreground")}>{local[f.id]?.value ?? f.value}</span>
+                  <span className={cn("num text-[15px]", s === "reject" && "line-through text-muted-foreground")}>{local[f.id]?.value ?? f.value}</span>
                 )}
               </div>
-              <div className="min-w-0 text-[11.5px] text-muted-foreground">
-                <div className="truncate" title={docNames[f.evidence.document_id]}>{docNames[f.evidence.document_id] ?? kindLabel("")} · p. {f.evidence.page}</div>
-                {f.note && <div className="truncate" title={f.note}>{f.note}</div>}
-              </div>
-              <Tag tone={f.verified ? "success" : "danger"}>{f.verified ? "citat verificat" : "neverificat"}</Tag>
+              <Tag tone={f.verified ? "success" : "danger"}>{f.verified ? "găsit în document" : "negăsit"}</Tag>
             </div>
           );
         })}

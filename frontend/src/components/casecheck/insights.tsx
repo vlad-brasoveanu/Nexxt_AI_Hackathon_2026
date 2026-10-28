@@ -17,21 +17,21 @@ export function MemoView({ run }: { run: AgentRun }) {
     <div className="grid gap-5 xl:grid-cols-[1fr_300px]">
       <Panel eyebrow="Notă de credit · cu referințe la sursă" title="Nota pentru decident"
         actions={<><Tag tone={memoBoard.unverified.length ? "danger" : "success"}><CheckCircle2 className="h-3 w-3" />{memoBoard.verified_numbers} cifre verificate · {memoBoard.unverified.length} neverificate</Tag><ModelChip model={memoBoard.model} /></>}>
-        <article className="max-w-[78ch] whitespace-pre-wrap text-[14px] leading-[1.75]">
+        <article className="max-w-[78ch] whitespace-pre-wrap text-[16px] leading-[1.75]">
           {parts.map((p, i) => {
             const m = p.match(/^\[([^\]]+)\]$/);
             if (!m) return <span key={i}>{p}</span>;
-            return <sup key={i} className="num mx-0.5 border border-agent-border px-1 text-[10px] text-agent-text" title={m[1]}>{refs.indexOf(m[1]!) + 1}</sup>;
+            return <sup key={i} className="num mx-0.5 border border-agent-border px-1 text-[12px] text-agent-text" title={m[1]}>{refs.indexOf(m[1]!) + 1}</sup>;
           })}
         </article>
-        {!memoBoard.model && <p className="mt-4 border-t pt-3 text-[11.5px] text-muted-foreground">Notă generată din șablon determinist (fără model sau după respingerea unei variante cu cifre fără sursă).</p>}
+        {!memoBoard.model && <p className="mt-4 border-t pt-3 text-[13px] text-muted-foreground">Notă generată din șablon determinist (fără model sau după respingerea unei variante cu cifre fără sursă).</p>}
       </Panel>
       <Panel eyebrow="Referințe" title={`${refs.length} surse citate`}>
         <ol className="space-y-1.5">
           {refs.map((r, i) => {
             const metric = run.board.metrics.find((m) => m.id === r);
             return (
-              <li key={r} className="flex gap-2 text-[12px]">
+              <li key={r} className="flex gap-2 text-[14px]">
                 <span className="num w-5 shrink-0 text-agent-text">{i + 1}</span>
                 <span className="min-w-0"><span className="num">{r}</span>{metric && <span className="block truncate text-muted-foreground">{metric.label}: {metric.display}</span>}</span>
               </li>
@@ -52,11 +52,11 @@ const GroupBox = memo(function GroupBox({ data }: NodeProps<GNode>) {
       <Handle type="target" position={Position.Top} className="!h-1.5 !w-1.5 !min-h-0 !min-w-0 !border-0 !bg-border-strong" />
       <div className="flex items-center gap-2">
         {n.type === "person" ? <UserIcon className="h-3.5 w-3.5 text-muted-foreground" /> : <Building2 className={cn("h-3.5 w-3.5", affiliate ? "text-warning" : "text-muted-foreground")} />}
-        <span className="truncate text-[12.5px] font-medium">{n.label}</span>
+        <span className="truncate text-[14px] font-medium">{n.label}</span>
       </div>
       <div className="mt-1.5 flex flex-wrap gap-1">
-        {n.flags.map((f) => <span key={f} className={cn("hud-label border px-1 py-0.5 text-[9px]", f === "afiliat" ? "border-warning/60 text-warning" : "border-border text-muted-foreground")}>{f}</span>)}
-        {n.exposure != null && <span className="num text-[10.5px] text-muted-foreground">expunere {fmtInt(n.exposure)}</span>}
+        {n.flags.map((f) => <span key={f} className={cn("hud-label border px-1 py-0.5 text-[12px]", f === "afiliat" ? "border-warning/60 text-warning" : "border-border text-muted-foreground")}>{f}</span>)}
+        {n.exposure != null && <span className="num text-[12px] text-muted-foreground">expunere {fmtInt(n.exposure)}</span>}
       </div>
       <Handle type="source" position={Position.Bottom} className="!h-1.5 !w-1.5 !min-h-0 !min-w-0 !border-0 !bg-border-strong" />
     </div>
@@ -93,20 +93,20 @@ export function GroupView({ run }: { run: AgentRun }) {
       </Panel>
       <div className="space-y-5">
         <Panel eyebrow="Expunere de grup" title={fmtRon(kyb.group_exposure)}>
-          <p className="text-[12.5px] text-muted-foreground">Limitele aprobate la Banca Demo pentru entitățile aflate sub control comun (≥ 50%).</p>
+          <p className="text-[14px] text-muted-foreground">Limitele aprobate la Banca Demo pentru entitățile aflate sub control comun (≥ 50%).</p>
           <ul className="mt-3 space-y-1.5">
-            {kyb.ubo.map((u) => <li key={u.name} className="flex justify-between text-[13px]"><span>{u.name}</span><span className="num text-muted-foreground">{u.share_pct}% · {u.via}</span></li>)}
+            {kyb.ubo.map((u) => <li key={u.name} className="flex justify-between text-[15px]"><span>{u.name}</span><span className="num text-muted-foreground">{u.share_pct}% · {u.via}</span></li>)}
           </ul>
         </Panel>
         <Panel eyebrow="KYC reutilizat din onboarding" title="Verificări">
           <ul className="space-y-2">
             {kyb.kyc_checks.map((c) => (
-              <li key={c.rule_id} className="text-[12.5px]">
+              <li key={c.rule_id} className="text-[14px]">
                 <div className="flex items-center gap-2"><span className="num">{c.rule_id}</span><Tag tone={c.outcome === "PASS" ? "success" : c.outcome === "FAIL" ? "danger" : "warning"}>{c.outcome}</Tag></div>
                 <div className="mt-0.5 text-muted-foreground">{c.detail}</div>
               </li>
             ))}
-            <li className="flex items-center gap-2 text-[12.5px]"><span className="num">SANCȚIUNI</span><Tag tone={kyb.sanctions_hits ? "danger" : "success"}>{kyb.sanctions_hits} potriviri</Tag></li>
+            <li className="flex items-center gap-2 text-[14px]"><span className="num">SANCȚIUNI</span><Tag tone={kyb.sanctions_hits ? "danger" : "success"}>{kyb.sanctions_hits} potriviri</Tag></li>
           </ul>
         </Panel>
       </div>
@@ -132,11 +132,11 @@ export function CashflowView({ run }: { run: AgentRun }) {
                 </div>
                 <div className="w-1/3 bg-surface-3 outline outline-1 -outline-offset-1 outline-border-strong" style={{ height: `${(m.outflow / max) * 100}%` }} title={`Ieșiri ${fmtRon(m.outflow)}`} />
               </div>
-              <span className="num text-[9.5px] text-muted-foreground">{m.month.slice(0, 2)}</span>
+              <span className="num text-[12px] text-muted-foreground">{m.month.slice(0, 2)}</span>
             </div>
           ))}
         </div>
-        <div className="mt-3 flex flex-wrap gap-4 text-[11.5px] text-muted-foreground">
+        <div className="mt-3 flex flex-wrap gap-4 text-[13px] text-muted-foreground">
           <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 bg-agent" />încasări operaționale</span>
           <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 bg-border-strong" />alte intrări (intragrup, asociați, dobânzi)</span>
           <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 border border-border-strong bg-surface-3" />ieșiri</span>
@@ -148,7 +148,7 @@ export function CashflowView({ run }: { run: AgentRun }) {
           <div className="mt-4 space-y-2">
             {cf.classes.map((c) => (
               <div key={c.key}>
-                <div className="flex justify-between text-[12px]"><span>{c.label}</span><span className="num">{fmtPct(c.share_pct)}</span></div>
+                <div className="flex justify-between text-[14px]"><span>{c.label}</span><span className="num">{fmtPct(c.share_pct)}</span></div>
                 <div className="mt-1 h-1.5 bg-surface-2"><div className={cn("h-full", c.key === "operating" ? "bg-agent" : c.key === "intragroup" ? "bg-warning" : "bg-border-strong")} style={{ width: `${c.share_pct}%` }} /></div>
               </div>
             ))}
@@ -157,7 +157,7 @@ export function CashflowView({ run }: { run: AgentRun }) {
         <Panel eyebrow="Concentrare" title="Clienți principali">
           <ul className="space-y-1.5">
             {cf.top_clients.map((c, i) => (
-              <li key={c.name} className="flex items-center justify-between gap-3 text-[12.5px]">
+              <li key={c.name} className="flex items-center justify-between gap-3 text-[14px]">
                 <span className={cn("truncate", i === 0 && "font-medium")}>{c.name}</span>
                 <span className={cn("num shrink-0", i === 0 && c.share_pct > 34 && "text-warning")}>{fmtPct(c.share_pct)}</span>
               </li>

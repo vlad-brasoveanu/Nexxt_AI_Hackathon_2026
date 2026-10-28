@@ -43,13 +43,13 @@ export function HoldToSign({ label, disabled, onSigned, tone = "human" }: { labe
       onKeyDown={(e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); begin(); } }}
       onKeyUp={(e) => { if (e.key === " " || e.key === "Enter") stop(); }}
       aria-label={`${label} — ține apăsat 1,5 secunde pentru a semna`}
-      className={cn("relative h-14 w-full select-none overflow-hidden border-2 text-[15px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+      className={cn("relative h-14 w-full select-none overflow-hidden border-2 text-[16px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40",
         tone === "danger" ? "border-danger text-danger" : "border-human text-foreground")}>
       <span className={cn("absolute inset-y-0 left-0", tone === "danger" ? "bg-danger" : "bg-human")} style={{ width: `${progress * 100}%` }} aria-hidden />
       <span className={cn("relative z-10 flex items-center justify-center gap-2.5", progress > 0.5 && (tone === "danger" ? "text-destructive-foreground" : "text-human-foreground"))}>
         <Fingerprint className="h-5 w-5" />
         {progress >= 1 ? "Semnat" : progress > 0 ? "Ține apăsat…" : label}
-        {progress === 0 && <span className="hud-label text-[9.5px] opacity-70">ține apăsat</span>}
+        {progress === 0 && <span className="hud-label text-[12px] opacity-70">ține apăsat</span>}
       </span>
     </button>
   );

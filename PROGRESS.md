@@ -149,11 +149,41 @@ The pitch is now framed as an SME credit file prepared from application to human
 - **Scans:** local OCR with Tesseract and the Romanian language pack (no cloud). OCR text is marked as transcribed.
 - **Agent stack:** we keep our own orchestrator and `InferenceProvider`, not the OpenAI Agents SDK/Bedrock from Florin Iacob's plan. The principles match: the orchestrator is code, sub-agents are tools, calculations are deterministic, every claim has a source, the human decides.
 
+## Theme refinement (2026-10-28, branch `codex/theme-contrast`)
+
+- [x] Dark theme lifted from near-black to layered anthracite (`#202329` canvas, `#292e35` cards), with clearer borders and secondary text.
+- [x] Light theme uses a warm grey/ivory/olive palette instead of stark white; sidebar, panels, fields and status colours have distinct contrast.
+- [x] Graph edges, decision-gauge strokes and the sidebar logo use contrasting theme tokens, keeping the bright agent accent for filled actions.
+- [x] Initial HTML backgrounds and OS-preference fallback match the updated palettes.
+- Validation: `npm run build --prefix frontend` passes (Vite + TypeScript). Eleven opaque text/background token pairs per theme measured at least 5.30:1; this is a token check, not a full accessibility audit. Browser checked theme switching, task queue and credit-case analysis using the existing mock frontend at `http://127.0.0.1:5175/`; no backend calls or credit decisions were made.
+- Existing uncommitted frontend work was preserved. No commit or push for this theme refinement; user visual review remains pending.
+
+## Frontend layout decision (2026-10-28)
+
+The user rejected the `codex/employee-workspace` redesign and selected the previous layout with text/information-only refinements. The delivery target is `codex/agentic-workflow`, as explicitly requested.
+
+- Restored task cards plus the full queue, full sidebar/commands, five-step case bar, four original case tabs, visible agent graph/timeline, original fact-review layout, decision gauge/terms panels, company/cash-flow views and the combined statistics/market screen.
+- Retained the accepted anthracite/light contrast palette, earlier larger typography and side-by-side source document review. Removed the new summary component and compact icon-sidebar redesign.
+- Retained the frontend pending-facts guard: partial review is not treated as completed. Backend remains paused and unchanged; its all-required-facts gate/queue consistency still needs verification by the backend owner.
+- Only small copy changes remain (shorter explanations/labels and optional suspicious-document text). Any further content simplification must preserve the restored screen structure.
+- Existing frontend work from before the redesign is retained, including the consolidated statistics route. The unrelated `fixtures/demo_pdfs.zip` remains outside this delivery.
+- Validation is recorded in LOG.md. No AI authorship/trailers; use the verified user's Git identity. Regular push only; no history rewrite.
+
 ## To do (priority order)
 
 - **Backend paused (2026-10-28 evening, the user's decision):** someone else takes over the backend from the frontend screens. Until then I work on the frontend only.
   - Done before the pause: OCR for scans in `ingestion/parsing.py` (pdftoppm + Tesseract `ron+eng`, local), plus the `documents.ocr_pages` column and migration `d7a3b1c0e5f2`. Tests: 117 passed. No test with a real scan yet.
   - Contract for the backend: `frontend/src/lib/agent-types.ts` (JSON shapes) + `docs/openapi.json` (routes). New screens are built first on mock data (`npm run dev:mock`); each field the backend must supply is marked in the contract.
+- **Frontend restructured for readability (2026-10-28, build passes, not yet checked in the browser):**
+  - Text 15–16 px, labels 12 px in sans, higher contrast.
+  - The home page is "Sarcinile mele", with tasks by role.
+  - The case page has a 5-step flow bar, a single "Ce ai de făcut acum" box and 4 tabs:
+    - Analiza agenților;
+    - Verificarea faptelor, with the source document alongside;
+    - Decizie, with rules and memo;
+    - Profilul firmei.
+  - Removed the duplicates: the separate History, Evidence and Memo tabs and the KPI strip.
+  - Metrici and Piață are now a single page, "Statistici și piață".
 - **Still to do in the backend (from the list below):** points 2–4 (document type check, rules from the folder with citations, news agent). The frontend will show them on mock data.
 - **List:**
   1. Scanned-page ingestion: textless pages are OCR'd with Tesseract (ron), marked as transcribed.

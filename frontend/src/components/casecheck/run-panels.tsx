@@ -34,13 +34,13 @@ export function PlanPanel({ run }: { run: AgentRun }) {
       {items.map((p, i) => {
         const Icon = p.status === "done" ? CircleCheck : p.status === "running" ? Loader2 : p.status === "pending" ? CircleDot : CircleSlash;
         return (
-          <li key={`${p.task}-${i}`} className="flex items-start gap-2 text-[12.5px]">
+          <li key={`${p.task}-${i}`} className="flex items-start gap-2 text-[14px]">
             <Icon className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", p.status === "done" && "text-success", p.status === "running" && "animate-spin text-agent-text",
               p.status === "pending" && "text-muted-foreground", (p.status === "skipped" || p.status === "refused") && "text-danger")} />
             <div className="min-w-0">
-              <span className="num text-[11.5px]">{p.task}</span>
+              <span className="num text-[13px]">{p.task}</span>
               <span className="ml-2 text-muted-foreground">{agentShort(p.agent)}</span>
-              {p.why && <div className="truncate text-[11.5px] text-muted-foreground" title={p.why}>{p.why}</div>}
+              {p.why && <div className="truncate text-[13px] text-muted-foreground" title={p.why}>{p.why}</div>}
             </div>
           </li>
         );
@@ -69,22 +69,22 @@ export function RequestCard({ run, caseId, canAct }: { run: AgentRun; caseId: st
       actions={<Tag tone={waiting ? "warning" : "success"}>{waiting ? "Așteaptă clientul" : "Răspuns primit"}</Tag>}>
       <ul className="space-y-2">
         {request.items.map((item) => (
-          <li key={item.code} className="flex gap-2.5 text-[13px]">
+          <li key={item.code} className="flex gap-2.5 text-[15px]">
             <span className={cn("mt-1.5 h-1.5 w-1.5 shrink-0", waiting ? "bg-warning" : "bg-success")} />
-            <div><div>{item.title}</div><div className="mt-0.5 text-[11.5px] text-muted-foreground">{item.reason}</div></div>
+            <div><div>{item.title}</div><div className="mt-0.5 text-[13px] text-muted-foreground">{item.reason}</div></div>
           </li>
         ))}
       </ul>
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-[11.5px] text-muted-foreground">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-[13px] text-muted-foreground">
         <span className="num">{request.channel} · trimisă {fmtClockTime(request.sent_at)}</span>
         {waiting && canAct && (
           <button onClick={() => simulate.mutate()} disabled={simulate.isPending}
-            className="inline-flex items-center gap-2 border border-agent-border bg-agent-soft px-3 py-1.5 text-[12.5px] text-agent-text hover:bg-agent hover:text-agent-foreground disabled:opacity-60">
+            className="inline-flex items-center gap-2 border border-agent-border bg-agent-soft px-3 py-1.5 text-[14px] text-agent-text hover:bg-agent hover:text-agent-foreground disabled:opacity-60">
             {simulate.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}Simulează răspunsul clientului
           </button>
         )}
       </div>
-      <details className="mt-2 text-[12px] text-muted-foreground">
+      <details className="mt-2 text-[14px] text-muted-foreground">
         <summary className="hud-label py-1">Mesajul trimis</summary>
         <p className="mt-1 whitespace-pre-line border-l-2 border-border pl-3">{request.message}</p>
       </details>
@@ -103,10 +103,10 @@ export function IssuesList({ issues }: { issues: Issue[] }) {
         <li key={i.id} className={cn("py-2.5", i.status === "resolved" && "opacity-60")}>
           <div className="flex flex-wrap items-center gap-2">
             <Tag tone={i.status === "resolved" ? "success" : SEVERITY_TONE[i.severity]}>{i.status === "resolved" ? "rezolvat" : i.status === "requested" ? "cerut clientului" : i.severity === "blocking" ? "blocant" : "atenție"}</Tag>
-            <span className="hud-label text-[9.5px] text-muted-foreground">{agentShort(i.agent)}</span>
+            <span className="hud-label text-[12px] text-muted-foreground">{agentShort(i.agent)}</span>
           </div>
-          <div className="mt-1 text-[13px]">{i.title}</div>
-          <div className="mt-0.5 text-[12px] text-muted-foreground">{i.resolution ?? i.detail}</div>
+          <div className="mt-1 text-[15px]">{i.title}</div>
+          <div className="mt-0.5 text-[14px] text-muted-foreground">{i.resolution ?? i.detail}</div>
         </li>
       ))}
     </ul>
@@ -121,13 +121,13 @@ export function RulesTable({ rules }: { rules: RuleResult[] }) {
     <div className="divide-y border">
       {rules.map((r) => (
         <div key={r.rule_id} className="grid grid-cols-[64px_1fr_auto] items-center gap-3 px-3 py-2">
-          <span className="num text-[11.5px] text-muted-foreground">{r.rule_id}</span>
+          <span className="num text-[13px] text-muted-foreground">{r.rule_id}</span>
           <div className="min-w-0">
-            <div className="truncate text-[13px]">{r.title}</div>
-            <div className="truncate text-[11.5px] text-muted-foreground" title={r.detail}>{r.detail}</div>
+            <div className="truncate text-[15px]">{r.title}</div>
+            <div className="truncate text-[13px] text-muted-foreground" title={r.detail}>{r.detail}</div>
           </div>
           <div className="flex items-center gap-2">
-            {r.value && <span className="num text-[12.5px]">{r.value}</span>}
+            {r.value && <span className="num text-[14px]">{r.value}</span>}
             {r.threshold && <span className="num text-[11px] text-muted-foreground">{r.threshold}</span>}
             <Tag tone={RULE_TONE[r.outcome]}>{OUTCOME_RULE_LABEL[r.outcome]}</Tag>
           </div>

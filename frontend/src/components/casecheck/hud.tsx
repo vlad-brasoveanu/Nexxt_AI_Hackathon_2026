@@ -39,7 +39,7 @@ export function Panel({ eyebrow, title, actions, children, className, bodyClassN
         <header className="flex items-start justify-between gap-3 border-b px-4 py-3">
           <div className="min-w-0 space-y-1">
             {eyebrow && <HudLabel className={agent ? "text-agent-text" : undefined}>{eyebrow}</HudLabel>}
-            {title && <h3 className="truncate text-[15px] font-medium leading-tight">{title}</h3>}
+            {title && <h3 className="truncate text-[16px] font-medium leading-tight">{title}</h3>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
@@ -63,7 +63,7 @@ export function Stat({ label, value, sub, tone, big }: { label: ReactNode; value
 export function TierBadge({ tier }: { tier: Tier }) {
   const meta = TIER_META[tier];
   return (
-    <span title={meta.label} className={cn("hud-label inline-flex items-center gap-1 border px-1 py-0.5 text-[9.5px]",
+    <span title={meta.label} className={cn("hud-label inline-flex items-center gap-1 border px-1 py-0.5 text-[12px]",
       tier === "large" ? "border-agent-border text-agent-text" : tier === "small" ? "border-cyan/50 text-cyan" : "border-border-strong text-muted-foreground")}>
       <Cpu className="h-2.5 w-2.5" />{meta.short}
     </span>
@@ -73,7 +73,7 @@ export function TierBadge({ tier }: { tier: Tier }) {
 export function ModelChip({ model }: { model: ModelUse | null }) {
   if (!model) return null;
   return (
-    <span className="num inline-flex items-center gap-1 text-[11px] text-muted-foreground" title={`${model.provider} · ${model.model}`}>
+    <span className="num inline-flex items-center gap-1 text-[13px] text-muted-foreground" title={`${model.provider} · ${model.model}`}>
       <TierBadge tier={model.tier} />
       {model.mode === "deterministic" ? "determinist" : shortModel(model.model)}
       {model.error && <span className="text-danger">· eroare</span>}
@@ -88,7 +88,7 @@ export function Actor({ human }: { human?: boolean }) {
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="num inline-flex h-5 min-w-5 items-center justify-center border border-border-strong bg-surface-2 px-1 text-[10.5px] text-muted-foreground">{children}</kbd>;
+  return <kbd className="num inline-flex h-5 min-w-5 items-center justify-center border border-border-strong bg-surface-2 px-1 text-[12px] text-muted-foreground">{children}</kbd>;
 }
 
 export function Empty({ children, className }: { children: ReactNode; className?: string }) {

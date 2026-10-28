@@ -54,21 +54,21 @@ export function Timeline({ steps, compact, limit }: { steps: AgentStep[]; compac
                 <Icon className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", ACCENT[t])} />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <span className={cn("hud-label text-[9.5px]", ACCENT[t])}>{STEP_KIND_LABEL[step.kind]}</span>
-                    <span className="hud-label text-[9.5px] text-muted-foreground">{agentShort(step.agent)}</span>
+                    <span className={cn("hud-label text-[12px]", ACCENT[t])}>{STEP_KIND_LABEL[step.kind]}</span>
+                    <span className="hud-label text-[12px] text-muted-foreground">{agentShort(step.agent)}</span>
                     {!compact && <ModelChip model={step.model} />}
-                    <span className="num ml-auto text-[10.5px] text-muted-foreground">
+                    <span className="num ml-auto text-[12px] text-muted-foreground">
                       {step.duration_ms != null && step.kind !== "dispatch" && <>{fmtMs(step.duration_ms)} · </>}{fmtClockTime(step.created_at)}
                     </span>
                   </div>
-                  <div className={cn("mt-0.5 text-[13px] leading-snug", t === "dispatch" ? "text-muted-foreground" : "text-foreground")}>{step.title}</div>
+                  <div className={cn("mt-0.5 text-[15px] leading-snug", t === "dispatch" ? "text-muted-foreground" : "text-foreground")}>{step.title}</div>
                   {step.thought && !compact && t !== "dispatch" && (
-                    <p className="num mt-1 text-[11.5px] leading-relaxed text-muted-foreground">{step.thought}</p>
+                    <p className="num mt-1 text-[13px] leading-relaxed text-muted-foreground">{step.thought}</p>
                   )}
                 </div>
               </div>
               {t === "refused" && (
-                <span className={cn("hud-label pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 border-2 border-danger px-2 py-1 text-[10px] text-danger", !reduced && "animate-stamp")}>
+                <span className={cn("hud-label pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 border-2 border-danger px-2 py-1 text-[12px] text-danger", !reduced && "animate-stamp")}>
                   Blocat de politică
                 </span>
               )}

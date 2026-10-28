@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Activity, Command as CommandIcon, Cpu, FolderSearch, Gauge, LineChart, LogOut, Moon, Sun } from "lucide-react";
+import { Activity, Command as CommandIcon, Cpu, FolderSearch, Gauge, LogOut, Moon, Sun } from "lucide-react";
 import { api } from "@/lib/api";
 import { healthQ, sessionQ } from "@/lib/queries";
 import { roleLabel } from "@/lib/labels";
@@ -22,9 +22,8 @@ export function useUser(): User {
 }
 
 const NAV = [
-  { to: "/", label: "Coada de lucru", icon: Activity, exact: true },
-  { to: "/piata", label: "Piață și politică", icon: LineChart, exact: false },
-  { to: "/metrici", label: "Metrici", icon: Gauge, exact: false },
+  { to: "/", label: "Sarcinile mele", icon: Activity, exact: true },
+  { to: "/statistici", label: "Statistici și piață", icon: Gauge, exact: false },
   { to: "/kyc", label: "Dosare KYC", icon: FolderSearch, exact: false },
 ] as const;
 
@@ -82,35 +81,35 @@ function Layout() {
       <aside className="sticky top-0 flex h-screen w-[220px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
         <Link to="/" className="flex items-center gap-2.5 border-b border-sidebar-border px-4 py-4">
           <span className="relative flex h-8 w-8 items-center justify-center border border-sidebar-foreground/70">
-            <svg viewBox="0 0 28 28" className="h-5 w-5" aria-hidden><path d="M7 14.5l4.5 4.5L21 9" stroke="var(--agent)" strokeWidth="3.2" fill="none" /></svg>
+            <svg viewBox="0 0 28 28" className="h-5 w-5" aria-hidden><path d="M7 14.5l4.5 4.5L21 9" stroke="var(--sidebar-ring)" strokeWidth="3.2" fill="none" /></svg>
           </span>
           <span className="leading-tight">
             <span className="block font-[family-name:var(--font-display)] text-[17px] font-bold tracking-tight">CaseCheck</span>
-            <span className="hud-label text-[9.5px] text-sidebar-muted">camera de control</span>
+            <span className="hud-label text-[12px] text-sidebar-muted">camera de control</span>
           </span>
         </Link>
         <nav className="flex-1 space-y-0.5 px-2 py-3">
           {NAV.map(({ to, label, icon: Icon, exact }) => (
             <Link key={to} to={to} activeOptions={{ exact }}
-              className="group flex items-center gap-2.5 border-l-2 border-transparent px-3 py-2 text-[13.5px] text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground"
+              className="group flex items-center gap-2.5 border-l-2 border-transparent px-3 py-2 text-[15px] text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground"
               activeProps={{ className: "!border-agent !text-sidebar-foreground bg-sidebar-accent" }}>
               <Icon className="h-4 w-4" />{label}
             </Link>
           ))}
           <button onClick={() => window.dispatchEvent(new Event("casecheck-palette"))}
-            className="mt-3 flex w-full items-center gap-2.5 px-3 py-2 text-[13px] text-sidebar-muted hover:text-sidebar-foreground">
+            className="mt-3 flex w-full items-center gap-2.5 px-3 py-2 text-[15px] text-sidebar-muted hover:text-sidebar-foreground">
             <CommandIcon className="h-4 w-4" />Comenzi<span className="ml-auto flex gap-0.5"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
           </button>
         </nav>
         <div className="space-y-2 border-t border-sidebar-border p-3">
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
-              <div className="num truncate text-[13px]">{user.username}</div>
-              <div className="hud-label mt-1 text-[9.5px] text-agent-text">{roleLabel(user.role)}</div>
+              <div className="num truncate text-[15px]">{user.username}</div>
+              <div className="hud-label mt-1 text-[12px] text-agent-text">{roleLabel(user.role)}</div>
             </div>
             <ThemeToggle />
           </div>
-          <button onClick={logout} className="flex w-full items-center gap-2 px-1 py-1 text-[12.5px] text-sidebar-muted hover:text-sidebar-foreground">
+          <button onClick={logout} className="flex w-full items-center gap-2 px-1 py-1 text-[14px] text-sidebar-muted hover:text-sidebar-foreground">
             <LogOut className="h-3.5 w-3.5" /> Deconectare
           </button>
         </div>

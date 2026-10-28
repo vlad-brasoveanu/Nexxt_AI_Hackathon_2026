@@ -3,7 +3,7 @@ import { Command } from "cmdk";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Activity, FolderSearch, Gauge, LineChart, Moon, Sun } from "lucide-react";
+import { Activity, FolderSearch, Gauge, Moon, Sun } from "lucide-react";
 import { creditCasesQ } from "@/lib/queries";
 import { currentTheme, toggleTheme } from "@/lib/theme";
 import { fmtRon } from "@/lib/format";
@@ -39,13 +39,12 @@ export function CommandPalette() {
     <Command.Dialog open={open} onOpenChange={setOpen} label="Comenzi"
       overlayClassName="fixed inset-0 z-50 bg-[var(--scrim)]"
       contentClassName="fixed left-1/2 top-[18vh] z-50 w-[min(560px,92vw)] -translate-x-1/2 border border-border-strong bg-popover hud-cut">
-      <Command.Input placeholder="Caută un dosar sau o comandă…" className="w-full border-b bg-transparent px-4 py-3.5 text-[15px] outline-none placeholder:text-muted-foreground" />
+      <Command.Input placeholder="Caută un dosar sau o comandă…" className="w-full border-b bg-transparent px-4 py-3.5 text-[16px] outline-none placeholder:text-muted-foreground" />
       <Command.List className="max-h-[52vh] overflow-y-auto py-2">
         <Command.Empty className="px-4 py-6 text-center text-sm text-muted-foreground">Niciun rezultat.</Command.Empty>
         <Command.Group heading="Ecrane" className="[&_[cmdk-group-heading]]:hud-label [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-muted-foreground">
-          <Command.Item className={item} onSelect={() => go(() => nav({ to: "/" }))}><Activity className="h-4 w-4" />Coada de lucru</Command.Item>
-          <Command.Item className={item} onSelect={() => go(() => nav({ to: "/piata" }))}><LineChart className="h-4 w-4" />Piață și politică</Command.Item>
-          <Command.Item className={item} onSelect={() => go(() => nav({ to: "/metrici" }))}><Gauge className="h-4 w-4" />Metrici</Command.Item>
+          <Command.Item className={item} onSelect={() => go(() => nav({ to: "/" }))}><Activity className="h-4 w-4" />Sarcinile mele</Command.Item>
+          <Command.Item className={item} onSelect={() => go(() => nav({ to: "/statistici" }))}><Gauge className="h-4 w-4" />Statistici și piață</Command.Item>
           <Command.Item className={item} onSelect={() => go(() => nav({ to: "/kyc" }))}><FolderSearch className="h-4 w-4" />Dosare KYC</Command.Item>
           <Command.Item className={item} onSelect={() => go(toggleTheme)}>
             {currentTheme() === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}Schimbă tema

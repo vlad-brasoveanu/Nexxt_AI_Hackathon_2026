@@ -1517,7 +1517,9 @@ export function creditCaseDetail(id: string): CaseDetail | null {
   return {
     id: st.id, title: st.title, revision: 1, owner_id: "u-credit-analyst", created_at: st.created_at,
     documents: st.allDocs.filter((d) => st.visible.has(d.id)).map((d) => structuredClone(d)),
-  };
+    // Same shape as the real API's case meta (backend: Case.meta).
+    meta: { company: st.company, cui: st.cui, caen: st.caen, channel: st.channel, ...st.profile.requested },
+  } as CaseDetail;
 }
 
 export function creditDocPages(docId: string): string[] | null {

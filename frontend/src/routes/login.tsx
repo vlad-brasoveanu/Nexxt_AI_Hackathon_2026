@@ -45,7 +45,7 @@ function Login() {
         <div className="space-y-2">
           <span className="hud-label text-agent-text">Camera de control a agentului</span>
           <h1 className="text-[40px] font-bold leading-none tracking-tight">CaseCheck</h1>
-          <p className="text-[13px] text-muted-foreground">Agenții pregătesc dosarele de credit IMM. Oamenii decid.</p>
+          <p className="text-[15px] text-muted-foreground">Agenții pregătesc dosarele de credit IMM. Oamenii decid.</p>
         </div>
         <form onSubmit={submit} className="hud-cut space-y-4 border bg-card p-6">
           <div className="space-y-1.5">
@@ -58,7 +58,7 @@ function Login() {
           </div>
           {err && <p className="text-sm text-danger">{err}</p>}
           <Button type="submit" className="h-11 w-full rounded-none" disabled={busy || !u || !p}>{busy ? "Se autentifică…" : "Autentificare"}</Button>
-          <div className="border border-dashed px-3 py-2 text-[11.5px] leading-relaxed text-muted-foreground">
+          <div className="border border-dashed px-3 py-2 text-[13px] leading-relaxed text-muted-foreground">
             Conturi demo, parola <span className="num text-foreground">12345</span>:<br />
             <span className="num">manager · analyst · credit_analyst · risk_officer · committee_a · committee_b · supervisor</span>
           </div>

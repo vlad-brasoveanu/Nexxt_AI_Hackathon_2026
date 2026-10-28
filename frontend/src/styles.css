@@ -101,45 +101,45 @@
   color-scheme: dark;
   --radius: 2px;
 
-  --background: #0a0a0b;
-  --foreground: #ededed;
-  --surface-1: #111113;
-  --surface-2: #17171a;
-  --surface-3: #1e1e22;
+  --background: #202329;
+  --foreground: #f1f3ee;
+  --surface-1: #292e35;
+  --surface-2: #323840;
+  --surface-3: #3c434c;
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
   --popover: var(--surface-2);
   --popover-foreground: var(--foreground);
 
-  --border: #26262b;
-  --border-strong: #3a3a42;
-  --input: #6b6b75;
+  --border: #505b68;
+  --border-strong: #778596;
+  --input: #8290a0;
 
   --muted: var(--surface-2);
-  --muted-foreground: #8a8a93;
+  --muted-foreground: #c0c8d1;
   --secondary: var(--surface-3);
   --secondary-foreground: var(--foreground);
   --accent: var(--surface-3);
   --accent-foreground: #ffffff;
 
-  /* Human actions: high-contrast white on black. */
+  /* Neutral human actions stay distinct from the agent accent. */
   --human: #ffffff;
-  --human-foreground: #0a0a0b;
+  --human-foreground: #202329;
   --primary: var(--human);
   --primary-foreground: var(--human-foreground);
 
   /* The one accent: acid lime = agent activity. Text on lime is near-black. */
   --agent: #c6ff3d;
-  --agent-foreground: #0a0a0b;
+  --agent-foreground: #202329;
   --agent-text: #c6ff3d;
   --agent-soft: color-mix(in srgb, #c6ff3d 11%, transparent);
   --agent-border: color-mix(in srgb, #c6ff3d 48%, transparent);
 
-  --success: #3ddc97;
-  --warning: #ffb224;
-  --danger: #ff4d4d;
-  --violet: #a78bfa;
-  --cyan: #4cc9f0;
+  --success: #65e0a7;
+  --warning: #ffc15c;
+  --danger: #ff8585;
+  --violet: #c0a8ff;
+  --cyan: #7bd5f2;
   --success-soft: color-mix(in srgb, var(--success) 12%, transparent);
   --warning-soft: color-mix(in srgb, var(--warning) 12%, transparent);
   --danger-soft: color-mix(in srgb, var(--danger) 12%, transparent);
@@ -148,7 +148,7 @@
   --neutral: var(--muted-foreground);
   --neutral-soft: var(--surface-3);
   --destructive: var(--danger);
-  --destructive-foreground: #0a0a0b;
+  --destructive-foreground: #202329;
   --highlight: color-mix(in srgb, #c6ff3d 24%, transparent);
 
   --ring: #c6ff3d;
@@ -157,110 +157,122 @@
   --scrim: rgb(0 0 0 / 0.62);
   --cut-bg: var(--background);
 
-  --sidebar: #0d0d0f;
-  --sidebar-foreground: #ededed;
-  --sidebar-muted: #8a8a93;
+  --sidebar: #252a31;
+  --sidebar-foreground: #f1f3ee;
+  --sidebar-muted: #c0c8d1;
   --sidebar-primary: #c6ff3d;
-  --sidebar-primary-foreground: #0a0a0b;
-  --sidebar-accent: #17171a;
+  --sidebar-primary-foreground: #202329;
+  --sidebar-accent: #323840;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #26262b;
+  --sidebar-border: #505b68;
   --sidebar-ring: #c6ff3d;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
 
-  --background: #f5f5f2;
-  --foreground: #0e0e10;
-  --surface-1: #ffffff;
-  --surface-2: #f0f0ec;
-  --surface-3: #e6e6e1;
-  --popover: #ffffff;
+  /* A warm grey canvas and distinct ivory/olive panels retain the accent's context. */
+  --background: #e7e9df;
+  --foreground: #222b24;
+  --surface-1: #f8f9f3;
+  --surface-2: #edf0e5;
+  --surface-3: #d9dfce;
+  --popover: #f8f9f3;
 
-  --border: #d3d3cc;
-  --border-strong: #b4b4ac;
-  --input: #7f7f88;
-
-  --muted-foreground: #5a5a63;
-  --accent-foreground: #0e0e10;
-
-  --human: #0e0e10;
+  --border: #a0ab97;
+  --border-strong: #6f7e65;
+  --input: #6b795f;
+  --muted-foreground: #4d5b48;
+  --accent-foreground: #222b24;
+  --human: #29352c;
   --human-foreground: #ffffff;
 
   --agent: #c6ff3d;
-  --agent-foreground: #0a0a0b;
-  --agent-text: #3f6500;
-  --agent-soft: color-mix(in srgb, #3f6500 10%, transparent);
-  --agent-border: color-mix(in srgb, #3f6500 55%, transparent);
-
-  --success: #066a3f;
-  --warning: #7a4d00;
-  --danger: #b01919;
-  --violet: #5a34d4;
-  --cyan: #075c7b;
+  --agent-foreground: #202329;
+  --agent-text: #466600;
+  --agent-soft: color-mix(in srgb, #466600 10%, transparent);
+  --agent-border: #708743;
+  --success: #196343;
+  --warning: #795000;
+  --danger: #b42332;
+  --violet: #6041b0;
+  --cyan: #0d6279;
   --success-soft: color-mix(in srgb, var(--success) 10%, transparent);
   --warning-soft: color-mix(in srgb, var(--warning) 10%, transparent);
   --danger-soft: color-mix(in srgb, var(--danger) 10%, transparent);
   --violet-soft: color-mix(in srgb, var(--violet) 10%, transparent);
   --cyan-soft: color-mix(in srgb, var(--cyan) 10%, transparent);
   --destructive-foreground: #ffffff;
-  --highlight: #ddf58a;
+  --highlight: #dae996;
 
-  --ring: #3f6500;
-  --grid: rgb(0 0 0 / 0.06);
-  --grid-strong: rgb(0 0 0 / 0.11);
-  --scrim: rgb(14 14 16 / 0.45);
+  --ring: #466600;
+  --grid: rgb(34 43 36 / 0.035);
+  --grid-strong: rgb(34 43 36 / 0.12);
+  --scrim: rgb(25 33 27 / 0.48);
 
-  --sidebar: #ecece7;
-  --sidebar-foreground: #0e0e10;
-  --sidebar-muted: #5a5a63;
+  --sidebar: #d2d8c9;
+  --sidebar-foreground: #222b24;
+  --sidebar-muted: #45533f;
   --sidebar-primary: #c6ff3d;
-  --sidebar-primary-foreground: #0a0a0b;
-  --sidebar-accent: #e1e1db;
-  --sidebar-accent-foreground: #0e0e10;
-  --sidebar-border: #d3d3cc;
-  --sidebar-ring: #3f6500;
+  --sidebar-primary-foreground: #202329;
+  --sidebar-accent: #c2ccb5;
+  --sidebar-accent-foreground: #222b24;
+  --sidebar-border: #94a187;
+  --sidebar-ring: #466600;
 }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     color-scheme: light;
 
-    --background: #f5f5f2;
-    --foreground: #0e0e10;
-    --surface-1: #ffffff;
-    --surface-2: #f0f0ec;
-    --surface-3: #e6e6e1;
-    --popover: #ffffff;
-    --border: #d3d3cc;
-    --border-strong: #b4b4ac;
-    --input: #7f7f88;
-    --muted-foreground: #5a5a63;
-    --accent-foreground: #0e0e10;
-    --human: #0e0e10;
+    /* A warm grey canvas and distinct ivory/olive panels retain the accent's context. */
+    --background: #e7e9df;
+    --foreground: #222b24;
+    --surface-1: #f8f9f3;
+    --surface-2: #edf0e5;
+    --surface-3: #d9dfce;
+    --popover: #f8f9f3;
+
+    --border: #a0ab97;
+    --border-strong: #6f7e65;
+    --input: #6b795f;
+    --muted-foreground: #4d5b48;
+    --accent-foreground: #222b24;
+    --human: #29352c;
     --human-foreground: #ffffff;
-    --agent-text: #3f6500;
-    --agent-soft: color-mix(in srgb, #3f6500 10%, transparent);
-    --agent-border: color-mix(in srgb, #3f6500 55%, transparent);
-    --success: #066a3f;
-    --warning: #7a4d00;
-    --danger: #b01919;
-    --violet: #5a34d4;
-    --cyan: #075c7b;
+
+    --agent: #c6ff3d;
+    --agent-foreground: #202329;
+    --agent-text: #466600;
+    --agent-soft: color-mix(in srgb, #466600 10%, transparent);
+    --agent-border: #708743;
+    --success: #196343;
+    --warning: #795000;
+    --danger: #b42332;
+    --violet: #6041b0;
+    --cyan: #0d6279;
+    --success-soft: color-mix(in srgb, var(--success) 10%, transparent);
+    --warning-soft: color-mix(in srgb, var(--warning) 10%, transparent);
+    --danger-soft: color-mix(in srgb, var(--danger) 10%, transparent);
+    --violet-soft: color-mix(in srgb, var(--violet) 10%, transparent);
+    --cyan-soft: color-mix(in srgb, var(--cyan) 10%, transparent);
     --destructive-foreground: #ffffff;
-    --highlight: #ddf58a;
-    --ring: #3f6500;
-    --grid: rgb(0 0 0 / 0.06);
-    --grid-strong: rgb(0 0 0 / 0.11);
-    --scrim: rgb(14 14 16 / 0.45);
-    --sidebar: #ecece7;
-    --sidebar-foreground: #0e0e10;
-    --sidebar-muted: #5a5a63;
-    --sidebar-accent: #e1e1db;
-    --sidebar-accent-foreground: #0e0e10;
-    --sidebar-border: #d3d3cc;
-    --sidebar-ring: #3f6500;
+    --highlight: #dae996;
+
+    --ring: #466600;
+    --grid: rgb(34 43 36 / 0.035);
+    --grid-strong: rgb(34 43 36 / 0.12);
+    --scrim: rgb(25 33 27 / 0.48);
+
+    --sidebar: #d2d8c9;
+    --sidebar-foreground: #222b24;
+    --sidebar-muted: #45533f;
+    --sidebar-primary: #c6ff3d;
+    --sidebar-primary-foreground: #202329;
+    --sidebar-accent: #c2ccb5;
+    --sidebar-accent-foreground: #222b24;
+    --sidebar-border: #94a187;
+    --sidebar-ring: #466600;
   }
 }
 
@@ -277,8 +289,8 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 15px;
+    line-height: 1.55;
     font-feature-settings: "cv11", "ss03";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -339,11 +351,11 @@
 
 /* Small uppercase wide-tracked label: "AGENT", "OM", "BLOCAT". */
 @utility hud-label {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.14em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 

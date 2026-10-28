@@ -11,6 +11,7 @@ import { fmtInt, fmtIsoDate, fmtNum, fmtPct, fmtRon, fmtX } from "@/lib/format";
 import { latestRunKey, whatIfQ } from "@/lib/queries";
 import type { User } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { isReviewed } from "./flow";
 import { HoldToSign } from "./hold-to-sign";
 import { Empty, HudLabel, Panel, Stat, Tag } from "./hud";
 
@@ -32,7 +33,7 @@ export function DscrGauge({ value, stressed, threshold = 1.2 }: { value: number;
       <path d={arc(threshold, max, 80)} stroke="var(--success)" strokeOpacity="0.55" strokeWidth="10" fill="none" />
       <line x1={tx1} y1={ty1} x2={tx2} y2={ty2} stroke="var(--foreground)" strokeWidth="2" />
       {stressed != null && (() => { const [sx, sy] = point(stressed, 80); return <circle cx={sx} cy={sy} r="4" fill="var(--warning)" />; })()}
-      <line x1="100" y1="100" x2={nx} y2={ny} stroke={pass ? "var(--agent)" : "var(--danger)"} strokeWidth="3" />
+      <line x1="100" y1="100" x2={nx} y2={ny} stroke={pass ? "var(--agent-text)" : "var(--danger)"} strokeWidth="3" />
       <circle cx="100" cy="100" r="5" fill="var(--foreground)" />
       <text x="100" y="86" textAnchor="middle" className="num" fontSize="20" fill="currentColor">{fmtX(value)}</text>
       <text x="22" y="114" fontSize="8" fill="var(--muted-foreground)" className="num">0,5x</text>
@@ -79,7 +80,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
   if (!rec) return <Empty>Recomandarea apare după ce Agentul Politică evaluează dosarul.</Empty>;
 
   const decision = run.decision;
-  const reviewed = run.steps.some((s) => s.agent === "human" && s.title.startsWith("Revizie"));
+  const reviewed = isReviewed(run);
   const override = action === "MODIFY" || (action === "REJECT" && rec.decision !== "DECLINE") || (action === "APPROVE" && rec.decision === "DECLINE");
   const requiredLevel: Level = action === "REJECT" ? "L1" : action === "MODIFY" ? ((whatIf.data?.level as Level | undefined) ?? "L3")
     : rec.decision === "DECLINE" ? "L3" : rec.level;
@@ -89,15 +90,14 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
   if (run.status !== "AWAITING_DECISION") blockers.push(run.status === "DECIDED" ? "Dosarul a fost decis." : "Agenții lucrează încă la dosar.");
   if (rec.decision === "NEEDS_INFORMATION") blockers.push("Dosarul este incomplet: se așteaptă clientul.");
   if (!reviewed) blockers.push("Faptele extrase nu au fost revizuite de analist (tab-ul Revizie).");
-  if (!rank) blockers.push(`Rolul ${roleLabel(user.role)} nu poate semna decizii de credit.`);
-  else if (rank < LEVEL_RANK[requiredLevel]) blockers.push(`Decizia necesită nivelul ${requiredLevel} (${LEVEL_ROLE[requiredLevel].label}).`);
+  if (rank && rank < LEVEL_RANK[requiredLevel]) blockers.push(`Decizia necesită nivelul ${requiredLevel} (${LEVEL_ROLE[requiredLevel].label}).`);
   if (preparer) blockers.push("Regula celor patru ochi: ai pregătit dosarul, nu îl poți decide.");
   if (override && reason.trim().length < 10) blockers.push("Motivul este obligatoriu (min. 10 caractere) când decizia diferă de recomandare.");
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1.25fr_1fr]">
       <div className="space-y-5">
-        <Panel agent eyebrow={`Recomandarea agenților · ${rec.policy_version}`} title={<span className="flex items-center gap-2"><Tag tone={REC_TONE[rec.decision]}>{REC_LABEL[rec.decision]}</Tag>{rec.superseded && <Tag tone="warning">înlocuită</Tag>}</span>}
+        <Panel agent eyebrow="Recomandare" title={<span className="flex items-center gap-2"><Tag tone={REC_TONE[rec.decision]}>{REC_LABEL[rec.decision]}</Tag>{rec.superseded && <Tag tone="warning">înlocuită</Tag>}</span>}
           actions={<Tag tone="human"><Scale className="h-3 w-3" />{rec.level} · {LEVEL_ROLE[rec.level].label}</Tag>}>
           <div className="grid gap-6 md:grid-cols-[auto_1fr]">
             {proposed ? <DscrGauge value={proposed.dscr} stressed={proposed.dscr_stressed} /> : (
@@ -115,18 +115,18 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
           </div>
           <div className="mt-4 space-y-2">
             {rec.reasons.map((r) => (
-              <div key={r.code} className="flex gap-2.5 text-[13px]">
-                <span className="num shrink-0 border border-border-strong px-1.5 py-0.5 text-[10.5px] text-muted-foreground">{r.code}</span><span>{r.text}</span>
+              <div key={r.code} className="flex gap-2.5 text-[15px]">
+                <span>{r.text}</span>
               </div>
             ))}
           </div>
           {rec.conditions.length > 0 && (
             <div className="mt-4 border-t pt-3">
               <HudLabel>Condiții propuse</HudLabel>
-              <ul className="mt-2 space-y-1.5">{rec.conditions.map((c) => <li key={c} className="flex gap-2 text-[12.5px]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-agent-text" />{c}</li>)}</ul>
+              <ul className="mt-2 space-y-1.5">{rec.conditions.map((c) => <li key={c} className="flex gap-2 text-[14px]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-agent-text" />{c}</li>)}</ul>
             </div>
           )}
-          <p className="mt-4 border-t pt-3 text-[11.5px] text-muted-foreground">
+          <p className="mt-4 border-t pt-3 text-[13px] text-muted-foreground">
             {rec.level_reason} · Piață: {rec.market.index} {fmtPct(rec.market.value_pct, 2)} la {fmtIsoDate(rec.market.as_of)}, {rec.market.source}
           </p>
         </Panel>
@@ -142,7 +142,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
               <div className="flex flex-wrap items-center gap-3">
                 <HudLabel>Durata</HudLabel>
                 {[36, 48, 60, 72, 84].map((m) => (
-                  <button key={m} onClick={() => setTerm(m)} className={cn("num border px-2.5 py-1 text-[12px]", term === m ? "border-human bg-human text-human-foreground" : "border-border hover:border-border-strong")}>{m} luni</button>
+                  <button key={m} onClick={() => setTerm(m)} className={cn("num border px-2.5 py-1 text-[14px]", term === m ? "border-human bg-human text-human-foreground" : "border-border hover:border-border-strong")}>{m} luni</button>
                 ))}
               </div>
               <WhatIfRow data={whatIf.data} loading={whatIf.isFetching} />
@@ -152,12 +152,12 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
 
         {run.board.analyst && (
           <Panel eyebrow="Analist financiar · date istorice sintetice" title="Sector și precedente">
-            <p className="text-[13px] text-muted-foreground">{run.board.analyst.summary}</p>
+            <p className="text-[15px] text-muted-foreground">{run.board.analyst.summary}</p>
             <div className="mt-4 grid gap-4 lg:grid-cols-2">
               <div className="space-y-2.5">
                 {run.board.analyst.benchmarks.map((b) => (
                   <div key={b.metric}>
-                    <div className="flex items-baseline justify-between text-[12px]"><span>{b.label}</span><span className="num">{fmtNum(b.value)} · p{b.percentile}</span></div>
+                    <div className="flex items-baseline justify-between text-[14px]"><span>{b.label}</span><span className="num">{fmtNum(b.value)} · p{b.percentile}</span></div>
                     <div className="relative mt-1 h-2 border bg-surface-2">
                       <div className="absolute inset-y-0 bg-border-strong" style={{ left: `${pos(b.p25, b)}%`, width: `${Math.max(1, pos(b.p75, b) - pos(b.p25, b))}%` }} />
                       <div className="absolute inset-y-[-3px] w-0.5 bg-agent" style={{ left: `${pos(b.value, b)}%` }} />
@@ -165,7 +165,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
                   </div>
                 ))}
               </div>
-              <table className="w-full text-[12px]">
+              <table className="w-full text-[14px]">
                 <thead><tr className="hud-label text-muted-foreground"><th className="py-1 text-left">Caz</th><th className="text-right">DSCR</th><th className="text-right">Decizie</th><th className="text-right">24 luni</th></tr></thead>
                 <tbody>
                   {run.board.analyst.precedents.map((p) => (
@@ -184,22 +184,26 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
       </div>
 
       <div className="space-y-5">
-        {decision ? <DecisionResult run={run} /> : (
+        {decision ? <DecisionResult run={run} /> : !rank ? (
+          <Panel title="Decizia o ia un decident de credit">
+            <p className="text-[15px] text-muted-foreground">Rolul tău ({roleLabel(user.role)}) poate vedea recomandarea, dar nu poate semna. Dosarul necesită {LEVEL_ROLE[requiredLevel].label} ({requiredLevel}).</p>
+          </Panel>
+        ) : (
           <Panel eyebrow="Decizie umană" title="Analistul uman decide" className="border-human">
             <div className="grid grid-cols-3 gap-px border bg-border" role="radiogroup" aria-label="Acțiune">
               {(["APPROVE", "MODIFY", "REJECT"] as HumanAction[]).map((a) => (
                 <button key={a} role="radio" aria-checked={action === a} onClick={() => setAction(a)}
-                  className={cn("py-3 text-[14px] font-medium", action === a ? (a === "REJECT" ? "bg-danger text-destructive-foreground" : "bg-human text-human-foreground") : "bg-card hover:bg-surface-2")}>
+                  className={cn("py-3 text-[16px] font-medium", action === a ? (a === "REJECT" ? "bg-danger text-destructive-foreground" : "bg-human text-human-foreground") : "bg-card hover:bg-surface-2")}>
                   {ACTION_LABEL[a]}
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-[12.5px] text-muted-foreground">
+            <p className="mt-3 text-[14px] text-muted-foreground">
               {action === "APPROVE" && (rec.decision === "DECLINE" ? `Aprobi suma solicitată (${fmtRon(rec.requested.amount)}) împotriva recomandării: excepție, comitet.` : `Accepți termenii propuși de agenți${proposed ? `: ${fmtRon(proposed.amount)}, ${proposed.term_months} luni` : ""}.`)}
               {action === "MODIFY" && `Aprobi cu termenii din simulare: ${fmtRon(amount)}, ${term} luni${whatIf.data ? (whatIf.data.passes ? " (respectă politica)" : " (încalcă politica: excepție)") : ""}.`}
               {action === "REJECT" && (rec.decision === "DECLINE" ? "Confirmi respingerea recomandată de agenți." : "Respingi un dosar pe care agenții îl recomandă: motivul este obligatoriu.")}
             </p>
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px]">
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-[14px]">
               <Tag tone={rank && rank >= LEVEL_RANK[requiredLevel] ? "success" : "danger"}><Lock className="h-3 w-3" />Necesită {requiredLevel}</Tag>
               <Tag tone={preparer ? "danger" : "success"}><Eye className="h-3 w-3" />Patru ochi{run.prepared_by ? ` · pregătit de ${run.prepared_by}` : ""}</Tag>
               {requiredLevel === "L3" && <Tag tone="violet"><Users className="h-3 w-3" />2 voturi</Tag>}
@@ -208,12 +212,12 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
             <label className="mt-4 block">
               <HudLabel>Motivare {override ? "(obligatorie)" : "(opțională)"}</HudLabel>
               <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3}
-                className="mt-1.5 w-full border border-border bg-surface-1 p-2.5 text-[13px] outline-none focus:border-human"
+                className="mt-1.5 w-full border border-border bg-surface-1 p-2.5 text-[15px] outline-none focus:border-human"
                 placeholder={override ? "De ce decizia diferă de recomandarea agenților…" : "Observații pentru dosar…"} />
             </label>
             {blockers.length > 0 && (
               <ul className="mt-3 space-y-1">
-                {blockers.map((b) => <li key={b} className="flex gap-2 text-[12px] text-warning"><AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />{b}</li>)}
+                {blockers.map((b) => <li key={b} className="flex gap-2 text-[14px] text-warning"><AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />{b}</li>)}
               </ul>
             )}
             <div className="mt-4">
@@ -243,7 +247,7 @@ function WhatIfRow({ data, loading }: { data: WhatIf | undefined; loading: boole
       <Stat label="Rată" value={fmtInt(data.monthly_payment)} sub={`${fmtPct(data.rate_pct, 2)} / an`} />
       <div className="space-y-1.5">
         <HudLabel>Politică</HudLabel>
-        <div className="flex items-center gap-1.5 text-[13px]">
+        <div className="flex items-center gap-1.5 text-[15px]">
           {data.passes ? <CheckCircle2 className="h-4 w-4 text-success" /> : <XCircle className="h-4 w-4 text-danger" />}{data.passes ? "trece" : "nu trece"}
         </div>
         {data.level && <div className="num text-[11px] text-muted-foreground">nivel {data.level}</div>}
@@ -265,15 +269,15 @@ function DecisionResult({ run }: { run: AgentRun }) {
           <Stat label="DSCR" value={fmtX(d.terms.dscr)} />
         </div>
       )}
-      <ul className="space-y-1.5 text-[12.5px]">
+      <ul className="space-y-1.5 text-[14px]">
         {d.votes.map((v) => <li key={v.username} className="flex items-center gap-2"><Users className="h-3.5 w-3.5 text-muted-foreground" /><span className="num">{v.username}</span><span className="text-muted-foreground">{roleLabel(v.role)} · {ACTION_LABEL[v.action]}</span></li>)}
       </ul>
-      {d.reason && <p className="mt-3 border-l-2 border-border-strong pl-3 text-[12.5px]">{d.reason}</p>}
-      {d.human_seconds != null && <p className="num mt-3 text-[11.5px] text-muted-foreground">Timp uman activ: {Math.round(d.human_seconds)} s</p>}
+      {d.reason && <p className="mt-3 border-l-2 border-border-strong pl-3 text-[14px]">{d.reason}</p>}
+      {d.human_seconds != null && <p className="num mt-3 text-[13px] text-muted-foreground">Timp uman activ: {Math.round(d.human_seconds)} s</p>}
       {d.letter && (
         <details className="mt-3" open={final}>
           <summary className="hud-label py-1 text-muted-foreground">Ciornă scrisoare către client</summary>
-          <pre className="mt-2 whitespace-pre-wrap border bg-surface-2 p-3 font-[family-name:var(--font-sans)] text-[12.5px] leading-relaxed">{d.letter}</pre>
+          <pre className="mt-2 whitespace-pre-wrap border bg-surface-2 p-3 font-[family-name:var(--font-sans)] text-[14px] leading-relaxed">{d.letter}</pre>
         </details>
       )}
     </Panel>

@@ -33,14 +33,14 @@ const AgentBox = memo(function AgentBox({ data }: NodeProps<AgentNode>) {
       data.human && "border-human bg-surface-2")}>
       <Handle type="target" position={Position.Top} className="!h-1.5 !w-1.5 !min-h-0 !min-w-0 !border-0 !bg-border-strong" />
       <div className="flex items-center justify-between gap-2">
-        <span className={cn("truncate text-[12.5px] font-medium", running && "text-agent-text")}>{data.human ? "Analist uman" : agentShort(data.id)}</span>
+        <span className={cn("truncate text-[14px] font-medium", running && "text-agent-text")}>{data.human ? "Analist uman" : agentShort(data.id)}</span>
         {data.card && !data.human && <TierBadge tier={data.card.tier} />}
       </div>
-      <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+      <div className="mt-1.5 flex items-center gap-1.5 text-[13px] text-muted-foreground">
         <Icon className={cn("h-3 w-3", running && "animate-spin text-agent-text", state === "done" && "text-success", state === "stale" && "text-warning",
           (state === "failed" || state === "blocked") && "text-danger", data.human && "text-foreground")} />
-        <span className="hud-label text-[9.5px]">{data.human ? data.humanState : AGENT_STATE_LABEL[state]}</span>
-        {data.card && data.card.runs > 0 && <span className="num ml-auto text-[10.5px]">×{data.card.runs}</span>}
+        <span className="hud-label text-[12px]">{data.human ? data.humanState : AGENT_STATE_LABEL[state]}</span>
+        {data.card && data.card.runs > 0 && <span className="num ml-auto text-[12px]">×{data.card.runs}</span>}
       </div>
       <Handle type="source" position={Position.Bottom} className="!h-1.5 !w-1.5 !min-h-0 !min-w-0 !border-0 !bg-border-strong" />
     </div>
@@ -73,7 +73,7 @@ export function AgentGraph({ run }: { run: AgentRun }) {
   }, [cards, activeId, run]);
 
   const edges: Edge[] = useMemo(() => {
-    const accent = "var(--agent)";
+    const accent = "var(--agent-text)";
     const quiet = "var(--border-strong)";
     const e: Edge[] = [{ id: "o-a", source: "orchestrator", target: "analyst", animated: run.status === "RUNNING", style: { stroke: run.status === "RUNNING" ? accent : quiet, strokeWidth: 1.4 } }];
     for (const id of SPECIALISTS) {
