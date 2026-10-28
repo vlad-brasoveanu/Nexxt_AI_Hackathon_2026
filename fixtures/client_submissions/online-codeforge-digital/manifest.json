@@ -1,0 +1,85 @@
+{
+  "synthetic": "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ · date fictive generate pentru demonstrație",
+  "client": {
+    "denumire": "Codeforge Digital SRL",
+    "cui": "46270185"
+  },
+  "canal": "online",
+  "cerere": "ONL-2026-104718",
+  "primit_la": "2026-10-22T21:14:07+03:00",
+  "primit_de": "portal onboarding IMM",
+  "date_structurate": "formular-online.json",
+  "identificare_reprezentant": {
+    "metoda": "video-identificare",
+    "sesiune": "VID-7731-2026",
+    "rezultat": "reușită",
+    "verificare_viata": "trecută",
+    "potrivire_fata_document": 0.97,
+    "document_citit": "OCR + MRZ",
+    "persoana": "Vlad-Ștefan Ionescu"
+  },
+  "semnatura": {
+    "tip": "electronică calificată",
+    "furnizor": "TrustSign Demo QTSP (fictiv)",
+    "semnatar": "Vlad-Ștefan Ionescu"
+  },
+  "status": "PRIMIT – în așteptarea verificării operatorului",
+  "documente": [
+    {
+      "fisier": "confirmare-cerere-online.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "generat de portal, semnat QES",
+      "sha256": "2aed42dfb7e94bcc8af8c732e368ea67155ea27db8c02fcdb33f53bedf79f01f"
+    },
+    {
+      "fisier": "certificat-constatator-onrc.pdf",
+      "tip_document": "company_extract",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client (descărcat din ONRC online)",
+      "sha256": "1177c7a6f49eadac3e08a4a53b9d3977f3a327bf2fd15d26c7c7d05c09ea3567"
+    },
+    {
+      "fisier": "act-constitutiv.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client",
+      "sha256": "43e8e2f589b2a0454444a65bbedc8474d15508bc1f79f2d268df558e2b16b9b2"
+    },
+    {
+      "fisier": "situatii-financiare-2025.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client",
+      "sha256": "9d2c717e2c2e69e5ea5cfb13f788fed9ac9608302843748c27ebb26e56ab002a"
+    },
+    {
+      "fisier": "imputernicire-semnata-qes.pdf",
+      "tip_document": "mandate",
+      "media_type": "application/pdf",
+      "sursa": "încărcat de client, semnat QES",
+      "sha256": "fb2865900f01310264eab84b3308f11f5dfbe1a0fa5f148ca577062feb64894e"
+    },
+    {
+      "fisier": "ci-vlad-stefan-ionescu-foto.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "fotografie încărcată de client",
+      "sha256": "76ebefe1a22afb591630a1fe91dc155feb2b367892c72711e5e162b77f932913"
+    },
+    {
+      "fisier": "ci-ana-maria-georgescu-foto.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "fotografie încărcată de client",
+      "sha256": "714b950a0cc4be14e203dc6225c437a61457d3cd751419fcc3ee8220c460d9b5"
+    },
+    {
+      "fisier": "ci-cristina-radu-foto.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "fotografie încărcată de client",
+      "sha256": "791f05fda5e0115332a31a3dff083dc51e09df3eca2f751e13af2ca7d11bf163"
+    }
+  ]
+}

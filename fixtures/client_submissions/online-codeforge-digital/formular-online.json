@@ -1,0 +1,148 @@
+{
+  "synthetic": "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ · date fictive generate pentru demonstrație",
+  "cerere": "ONL-2026-104718",
+  "trimis_la": "2026-10-22T21:14:07+03:00",
+  "precompletat_din": {
+    "onrc": [
+      "denumire",
+      "nr_orc",
+      "euid",
+      "sediu_social",
+      "caen_principal",
+      "asociati"
+    ],
+    "anaf": [
+      "cui",
+      "platitor_tva"
+    ]
+  },
+  "formular": {
+    "societate": {
+      "denumire": "Codeforge Digital SRL",
+      "forma_juridica": "SRL",
+      "cui": "46270185",
+      "nr_orc": "J40/18342/2021",
+      "euid": "ROONRC.J40/18342/2021",
+      "sediu_social": "Bd. Dimitrie Pompeiu nr. 6A, et. 3, Sector 2, București, 020337",
+      "caen_principal": "6201 – Activități de realizare a soft-ului la comandă (software orientat client)",
+      "data_infiintarii": "2021-11-08",
+      "capital_social_ron": "1.000",
+      "telefon": "0726 418 902",
+      "email": "finance@codeforge.ro"
+    },
+    "reprezentanti_legali": [
+      {
+        "nume": "Vlad-Ștefan Ionescu",
+        "functie": "Administrator",
+        "cnp": "1910522400190",
+        "act_identitate": "CI RX 905317",
+        "valabil_pana_la": "2033-05-22",
+        "domiciliu": "Str. Avrig nr. 31, ap. 12, Sector 2, București"
+      }
+    ],
+    "asociati": [
+      {
+        "nume": "Vlad-Ștefan Ionescu",
+        "tip": "persoană fizică",
+        "cota_procent": 50
+      },
+      {
+        "nume": "Ana-Maria Georgescu",
+        "tip": "persoană fizică",
+        "cota_procent": 50
+      }
+    ],
+    "beneficiari_reali": [
+      {
+        "nume": "Vlad-Ștefan Ionescu",
+        "cnp": "1910522400190",
+        "procent": 50,
+        "mod_control": "deținere directă"
+      },
+      {
+        "nume": "Ana-Maria Georgescu",
+        "cnp": "2940901400278",
+        "procent": 50,
+        "mod_control": "deținere directă"
+      }
+    ],
+    "persoane_autorizate_cont": [
+      {
+        "nume": "Vlad-Ștefan Ionescu",
+        "calitate": "Administrator",
+        "cnp": "1910522400190",
+        "tip_semnatura": "individuală"
+      },
+      {
+        "nume": "Cristina Radu",
+        "calitate": "Împuternicit",
+        "cnp": "2881212400315",
+        "tip_semnatura": "individuală, limită 250.000 RON/tranzacție"
+      }
+    ],
+    "profil_relatie": {
+      "scop": "Încasări din contracte de dezvoltare software, plata salariilor și a furnizorilor de servicii cloud",
+      "produse_solicitate": [
+        "Cont curent RON",
+        "Cont curent EUR",
+        "Cont curent USD",
+        "Internet & mobile banking",
+        "Carduri business (5)",
+        "Depozit overnight"
+      ],
+      "surse_fonduri": "Venituri din contracte de dezvoltare software cu clienți din UE și SUA",
+      "rulaj_lunar_intrari_ron": "650.000",
+      "rulaj_lunar_iesiri_ron": "600.000",
+      "operatiuni_numerar": "NU",
+      "numerar_lunar_estimat_ron": "0",
+      "tari_tranzactii": [
+        "România",
+        "Germania",
+        "Olanda",
+        "Statele Unite ale Americii"
+      ],
+      "principali_clienti": [
+        "Hanse Logistik GmbH (DE)",
+        "Polder Retail B.V. (NL)",
+        "Brightlane Inc. (US)"
+      ],
+      "principali_furnizori": [
+        "furnizori servicii cloud (UE)",
+        "colaboratori PFA (RO)"
+      ],
+      "cifra_afaceri_2025_ron": "7.900.000",
+      "numar_salariati": 34
+    },
+    "fatca_crs": {
+      "rezidenta_fiscala": "România",
+      "cod_fiscal": "46270185",
+      "statut_crs": "Entitate nefinanciară activă (ENF activă)",
+      "persoana_sua_fatca": "NU"
+    },
+    "pep": [
+      {
+        "nume": "Vlad-Ștefan Ionescu",
+        "este_pep": "NU",
+        "membru_familie_pep": "NU",
+        "asociat_apropiat_pep": "NU"
+      },
+      {
+        "nume": "Cristina Radu",
+        "este_pep": "NU",
+        "membru_familie_pep": "NU",
+        "asociat_apropiat_pep": "NU"
+      },
+      {
+        "nume": "Ana-Maria Georgescu",
+        "este_pep": "NU",
+        "membru_familie_pep": "NU",
+        "asociat_apropiat_pep": "NU"
+      }
+    ],
+    "consimtaminte": {
+      "informare_gdpr_v": "3.1",
+      "conditii_generale_v": "2026.2",
+      "notificare_modificari": true
+    }
+  }
+}

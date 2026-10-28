@@ -1,0 +1,112 @@
+{
+  "synthetic": "DOCUMENT SINTETIC — FĂRĂ VALOARE JURIDICĂ · date fictive generate pentru demonstrație",
+  "client": {
+    "denumire": "Atelier Ceramica Horezu SRL",
+    "cui": "38412670"
+  },
+  "canal": "sucursală",
+  "cerere": "SUC-RV-2026-0388",
+  "primit_la": "2026-10-23T10:30:00+03:00",
+  "primit_de": {
+    "operator": "A. Marinescu",
+    "marca": "10482",
+    "unitate": "Sucursala Râmnicu Vâlcea"
+  },
+  "date_structurate": null,
+  "identificare_reprezentant": {
+    "metoda": "față în față",
+    "persoane": [
+      "Nicolae Vlăduțu",
+      "Maria Vlăduțu"
+    ],
+    "original_vazut": true
+  },
+  "semnatura": {
+    "tip": "olografă",
+    "semnatari": [
+      "Nicolae Vlăduțu",
+      "Maria Vlăduțu"
+    ]
+  },
+  "observatii_operator": "Clientul a adus originalele; formularele au fost completate de mână în sucursală. Datele nu sunt încă introduse în sistem.",
+  "status": "PRIMIT – în așteptarea introducerii și verificării datelor",
+  "documente": [
+    {
+      "fisier": "formular-cerere-scanat.pdf",
+      "tip_document": "application",
+      "media_type": "application/pdf",
+      "sursa": "formular completat de mână, scanat la ghișeu",
+      "sha256": "94b1720c89fd1b5a7730d2c4351b3064135ec03f2b123f277fcbc12b4cbf1ec8"
+    },
+    {
+      "fisier": "formular-chestionar-scanat.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "formular completat de mână, scanat la ghișeu",
+      "sha256": "7e13cba397c51771672f9f4cd7e7ee84ed5d1a090a551a8f246b7522b775678e"
+    },
+    {
+      "fisier": "formular-beneficiar-scanat.pdf",
+      "tip_document": "ownership",
+      "media_type": "application/pdf",
+      "sursa": "formular completat de mână, scanat la ghișeu",
+      "sha256": "88eaf606ae67d3d6280c23d25d272bd8b3117cde48fe472037cbc3150e52f3a3"
+    },
+    {
+      "fisier": "formular-pep-scanat.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "formular completat de mână, scanat la ghișeu",
+      "sha256": "daf4b4e923e256e0326682ca7437fb1081230e9f30bd5313800d46a6f26c0d5d"
+    },
+    {
+      "fisier": "formular-fatca-scanat.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "formular completat de mână, scanat la ghișeu",
+      "sha256": "860a677e194d1a7cfdc6a01c8e7b4b0a185d777274a808501411a2173d2446ee"
+    },
+    {
+      "fisier": "formular-semnaturi-scanat.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "formular completat de mână, scanat la ghișeu",
+      "sha256": "7e1ddad905bafa473f66bebb4e580d6ee2b341ccfdd773d0d8bfaecfb6f2df68"
+    },
+    {
+      "fisier": "certificat-constatator-copie.pdf",
+      "tip_document": "company_extract",
+      "media_type": "application/pdf",
+      "sursa": "copie după original adus de client",
+      "sha256": "97c9aac75f890c74b4db0244142b16ff720e1181e5be2c1486d98478727b4af3"
+    },
+    {
+      "fisier": "act-constitutiv-copie.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "copie după original adus de client",
+      "sha256": "977b9d1c34490704ac05231989fe7a6596944514fa1698ec150b1866a7a3c244"
+    },
+    {
+      "fisier": "situatii-financiare-2025-copie.pdf",
+      "tip_document": "declaration",
+      "media_type": "application/pdf",
+      "sursa": "copie după original adus de client",
+      "sha256": "2d9709d8e4a1ee92b2798a07a93d39edeefc73bb7a674ff3c349819d5f2c0d1a"
+    },
+    {
+      "fisier": "ci-nicolae-vladutu-copie.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "copie conformă cu originalul, făcută de operator",
+      "sha256": "5086c767d295350a9041e1c44be1ec7031354a4f70d7334d7138e3e8e4c53bc8"
+    },
+    {
+      "fisier": "ci-maria-vladutu-copie.pdf",
+      "tip_document": "identity",
+      "media_type": "application/pdf",
+      "sursa": "copie conformă cu originalul, făcută de operator",
+      "sha256": "fff9bd60ef4e5624d07d60788d43536f20e6f83b0b3e99411dded5cf5e48ca74"
+    }
+  ]
+}

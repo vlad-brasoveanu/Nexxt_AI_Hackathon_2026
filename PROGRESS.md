@@ -95,7 +95,21 @@ Demo logins are static: all three use password `12345` (demo only).
   - Backend: runs now include `created_at`, used by the timeline.
   - Verified in the browser against the preview for all three roles (details in LOG.md). 30/30 tests pass.
 
+- [x] **Client submission mockups** (branch `codex/client-submissions`, `scripts/demo/submissions.py` → `fixtures/client_submissions/`). These are the files as the bank receives them, on two channels, for two existing demo companies:
+  - **Online (Codeforge Digital):**
+    - `formular-online.json` holds the portal's structured payload, with fields prefilled from ONRC/ANAF marked as such.
+    - A portal confirmation PDF combines the application, KYC questionnaire, beneficial-owner, PEP and FATCA/CRS declarations and the signatories list, signed with a fictional qualified e-signature.
+    - Client uploads: registry certificate, articles of association, 2025 financials, mandate, and 3 ID photos.
+  - **Branch (Ceramica Horezu):**
+    - 6 paper forms filled in by hand (handwriting font) and scanned at the counter.
+    - Officer-certified copies of the IDs, registry certificate, articles of association and financials.
+    - No structured payload exists, so the operator must key in or extract the data.
+  - Each folder's `manifest.json` is the intake envelope: channel, received at/by, identification method (video-ID or in person), signature type, status, and every file with its document kind and sha256.
+  - Not yet loadable in the app: there is no seeder, UI inbox or channel field. The new forms carry no machine-readable `label: value` lines, and the online ID photos lack `identity_expiry:`, so VAL-01 needs AI or manual extraction for them.
+
 ## To do (priority order)
+
+0. **Client submissions in the app:** load `fixtures/client_submissions` through the API (a seeder reading `manifest.json`), add the channel and intake metadata to cases, and decide which declared answers (purpose, cash, PEP, FATCA/CRS) feed new checks.
 
 1. **Extraction robustness:** Featherless/Qwen-32B sometimes returns malformed JSON at temperature 0, and one bad document fails the whole proposal. Retry parse failures per document, or record that document as rejected. Workaround: start the preview with `CASECHECK_AI_MODEL=Qwen/Qwen2.5-14B-Instruct` (a sibling session measured 32B at 0/10 correct and 14B at 10/10 on 2026-10-28).
 2. **Remaining 9 checks:** VAL-02, CON-01, CON-03, CON-04, BUS-01–04, EXT-01. Add a fixture for each.

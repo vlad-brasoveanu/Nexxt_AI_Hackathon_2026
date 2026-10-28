@@ -44,3 +44,15 @@ Dated, append-only record of work, decisions and validation evidence. Newest ent
   - `.venv/bin/pytest -q`: 30 passed.
 
 - 2026-10-28: Restarted the preview with `CASECHECK_AI_MODEL=Qwen/Qwen2.5-14B-Instruct` (env only; code default unchanged) after a sibling session reported corrupted 32B output. `/health` reports the 14B model. A test extraction on Nordic Timber returned COMPLETED in 10.3 s, 4 facts correct (CUIs 45182753/45182735 differ, as designed), 0 rejected.
+
+- 2026-10-28: Branch `codex/client-submissions` (from `codex/lovable-frontend`). Added `scripts/demo/submissions.py`, which renders synthetic client submissions into `fixtures/client_submissions/`.
+  - Online channel, Codeforge Digital: a portal JSON payload, a 3-page confirmation PDF with a fictional QES block, and 7 uploaded PDFs.
+  - Branch channel, Ceramica Horezu: 6 hand-filled forms (application, KYC questionnaire, beneficial owner, PEP, FATCA/CRS, signatories) plus 5 officer copies.
+  - Each folder has a `manifest.json` intake envelope.
+  - Validation:
+    - all 19 PDFs pass `app.ingestion.parse_document` (text-extractable, 1–3 pages);
+    - the manifest sha256 values match the files;
+    - the handwritten values come out of text extraction;
+    - the questionnaire and online ID photo were checked visually;
+    - `pytest -q`: 30 passed (no backend changes).
+  - Not loaded into the app: no seeder or UI yet.
