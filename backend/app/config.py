@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     ai_timeout_seconds: float = 90
     # Multi-agent credit workflow.
     fixtures_dir: str = "fixtures"
+    history_path: str = "fixtures/credit/history/historical_cases.db"
     agent_budget: int = 16                 # dispatched tasks per segment (start or resume)
     agent_deadline_seconds: float = 300
     agent_sync: bool = False               # run agents inline (tests) instead of in a background thread

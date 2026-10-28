@@ -11,7 +11,7 @@ Original frontend retained. Backend work resumed by the user. Delivery order: PD
 
 - [x] `codex/pdf-credit-workflow`: PDF text validation, explicit scan error, document type/company/year/currency/unit checks for supported demo templates, source-sensitive review, complete-review decision gate, missing-bureau guard, client request drafts/manual send/manual reanalysis.
 - [x] Validation: 123 pytest tests pass, including real PDF upload through the API, human decision workflow, partial review rejection, scan rejection, and source-review invalidation. No live model calls in this validation.
-- [ ] Historical SQLite adapter (6,000 synthetic EUR cases; 3,726 RO), reproducible comparable selection and stress/capacity planner. No personalized default probability.
+- [x] Historical SQLite adapter (6,000 synthetic EUR cases; 3,726 RO), reproducible comparable selection and stress/capacity planner. No personalized default probability. Risk reports persist their inputs, dataset hash, policy, market and run revision. Validation: 125 tests pass, including leakage resistance, RO/product isolation, missing indicators, review gate, stress and API access.
 - [ ] Case officer, risk reviewer, administrator; separate authority levels, audited demo-only self-approval, user/policy administration and session revocation.
 - [ ] Original frontend API integration, Risk Planner and administration tabs; live API browser smoke and build.
 - [ ] Reproducible demo script and measured operational metrics. Production/local model validation remains future work.

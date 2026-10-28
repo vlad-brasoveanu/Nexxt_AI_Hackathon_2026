@@ -53,6 +53,7 @@ def board_view(board, refused):
         "cashflow": {k: v for k, v in board["cashflow"].items() if k in {"period", "monthly", "classes", "top_clients"}} if board.get("cashflow") else None,
         "kyb": board.get("kyb"),
         "analyst": board.get("analyst"),
+        "historical_context": board.get("historical_context"),
         "memo": board.get("memo"),
         "security": {"injections": board["security"]["injections"], "refused_actions": refused},
     }

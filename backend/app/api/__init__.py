@@ -28,6 +28,7 @@ def create_app(settings: Settings | None = None, inference=None, models: ModelRo
     app.state.inference = inference if inference is not None else build_provider(settings)
     app.state.models = models if models is not None else build_router(settings)
     app.state.sources = Sources(settings.fixtures_dir)
+    app.state.sources.history_path = settings.history_path
     app.state.orchestrator = Orchestrator(factory, settings, app.state.sources, app.state.models, storage)
 
     @app.middleware("http")

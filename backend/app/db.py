@@ -203,3 +203,13 @@ def connect(url):
             connection.execute("PRAGMA journal_mode=WAL")
             connection.execute("PRAGMA busy_timeout=5000")
     return engine, sessionmaker(engine, expire_on_commit=False)
+
+
+class RiskReport(Base):
+    __tablename__ = 'risk_reports'
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    run_id: Mapped[str] = mapped_column(ForeignKey('agent_runs.id'), index=True)
+    case_id: Mapped[str] = mapped_column(ForeignKey('cases.id'), index=True)
+    actor_id: Mapped[str] = mapped_column(ForeignKey('users.id'))
+    report: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)

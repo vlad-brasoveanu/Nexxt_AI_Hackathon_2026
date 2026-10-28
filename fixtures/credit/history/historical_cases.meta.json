@@ -1,0 +1,9 @@
+{
+  "version": "historical-cases-eur-v1",
+  "synthetic": true,
+  "financial_currency": "EUR",
+  "credit_currency": "EUR",
+  "provenance": "User supplied historical_cases.db; synthetic and EUR confirmed by user on 2026-10-29.",
+  "sha256": "e88e20d0aed0051a20cffc42449c1b4e9e5e37c8b41cb9811bd1f89d190b1076",
+  "observation_horizon": "Not uniform; outcomes are descriptive, not a calibrated probability."
+}
