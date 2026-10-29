@@ -153,4 +153,7 @@ Validation:
 - Verified the usual port through API and browser: exactly three distinct CUIs, all runs absent, 20 documents, no duplicate Codeforge cases. Fresh login is required after the database switch; account names/passwords are unchanged.
 - Evidence: ignored `.runtime/live-agent-validation.json`, `.runtime/live-tests.log`, `.runtime/live-build.log`, `.runtime/live-agents.png`, `.runtime/live-decision-style.png`, `.runtime/reseed-backup.json`.
 
-Remaining: user testing and visual feedback, broader assistive-technology/device validation, and the existing production/local-inference work above. This follow-up has not been pushed.
+Remaining: user testing and visual feedback, broader assistive-technology/device validation, and the existing production/local-inference work above. Published on `origin/codex/live-agent-workspace` at the user's request; implementation commit `5d2197b` was verified against the remote branch.
+
+
+Publication confirmed on 2026-10-29: `codex/live-agent-workspace` includes all prior evidence-review work plus the live execution/controls follow-up. Author and committer remain Vlad Brasoveanu, without AI trailers. Local reseed data, credentials, backups and the unrelated PDF ZIP are not committed. No merge or pull request was created.
