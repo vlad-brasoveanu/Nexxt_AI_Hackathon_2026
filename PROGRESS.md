@@ -51,7 +51,7 @@ Commits use Vlad Brasoveanu's configured identity, without AI co-author/signatur
 
 1. **Broader AI evaluation:** the first cloud end-to-end scenario is verified; extend live checks to the other synthetic cases and measure variability/memo quality. Keep model errors and actual processing mode visible.
 2. **Operational evidence:** have a person measure the manual baseline and assisted review time. The human baseline remains unmeasured; do not claim time saved or profit improvement from automated test duration.
-3. **Frontend follow-up:** user visual review of the professional refresh; broader browser/device and assistive-technology testing before production. The delivered refresh is available locally; no push or merge of this feature has been performed.
+3. **Frontend follow-up:** user visual review of the professional refresh; broader browser/device and assistive-technology testing before production. The delivered refresh is available locally and published on `codex/evidence-review`; no merge has been performed.
 4. **Bank validation:** mentor review of financial definitions, supported products, source reliability, approval authority and policies. CFADS = EBITDA − tax is a visible demo approximation. Policy and data are fictional; no compliance certification is claimed.
 5. **Deployment:** verify PostgreSQL concurrency, worker/restart behavior, bank identity/SSO and real integration adapters before production claims. Current local background execution is suitable for demo, not an enterprise job queue.
 6. **Prospecting module (deferred):** obtain a separate company source and current-client CUI list, then add configurable filters and human-approved contact drafts. Historical anonymous rows cannot identify prospects.
@@ -91,7 +91,7 @@ Validation performed in this refresh:
 - Eleven core foreground/background token pairs pass 4.5:1 contrast. Keyboard tab selection and visible focus checked in browser; reduced-motion override reviewed in CSS. OS-level reduced-motion emulation and full screen-reader/mobile-device testing were not performed.
 - Latest inspected browser session had no console errors. Temporary status/viewport harness pages are validation artifacts, removed from the served build after checks; reports remain ignored in `.runtime/` (`ui-state-validation.json`, `ui-contrast-validation.json`, `ui-build.log`).
 
-Remaining: user visual feedback, broader accessibility/device validation, and the unchanged backend/product work listed above. This feature has not been pushed. The unrelated `fixtures/demo_pdfs.zip` is preserved.
+Remaining: user visual feedback, broader accessibility/device validation, and the unchanged backend/product work listed above. This refresh is included in the published `codex/evidence-review` snapshot. The unrelated `fixtures/demo_pdfs.zip` is preserved.
 
 
 ## Dossier navigation, exact evidence and review UX — 2026-10-29
@@ -114,4 +114,13 @@ Validation evidence:
 - Browser: clicked all seven dossier rows successfully; tested an old KYC-style credit URL redirect. Verified highlights in financial statements, application, ONRC certificate, identity and valuation PDFs; zoom kept the citation visible; moving to another page removed the marker. Expanded PDF viewer and JSON/CSV markers worked (JSON `800000`, CSV `364865,50`). Fresh browser console had no errors. No loan decision, document change or inference run was triggered for these checks.
 - Actual screenshots and ignored validation reports are in `.runtime/`: `dossiers-ui.png`, `evidence-review.png`, `evidence-validation.json`, `evidence-tests.log`, `evidence-build.log`. Existing fixture ZIP remains untouched. PDF.js adds no reported audit issue; the existing Vite development dependency audit warning remains a separate tooling follow-up.
 
-Remaining: user visual feedback, broader document-layout/browser and screen-reader checks; production/local-inference items above remain open. Changes are local and have not been pushed.
+Remaining: user visual feedback, broader document-layout/browser and screen-reader checks; production/local-inference items above remain open. Changes are published on `origin/codex/evidence-review`.
+
+
+## GitHub publication — 2026-10-29
+
+- User requested publishing the current work before any further changes.
+- Implementation commit **`173b36b`** published to **`origin/codex/evidence-review`**; the remote hash was verified with `git ls-remote`.
+- Author and committer: Vlad Brasoveanu `<brasoveanu.vlad24@gmail.com>`. No AI author/co-author trailer was added; signing settings were preserved.
+- Included the professional UI refresh, dossier navigation fixes, exact source viewer, dependency lockfile, six evidence tests and project records. Ignored credentials/runtime artifacts and unrelated `fixtures/demo_pdfs.zip` were excluded.
+- Duplicate Codeforge cases are still present in the local demo database. Their cleanup was discussed but has not been performed. No default/delivery branch merge or pull request was created.
