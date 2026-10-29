@@ -1,6 +1,5 @@
 // Evidence lens: every metric with the literal spans it was derived from, next to the stored document version.
 // PDFs open at the cited page; text sources (bank export, agent lookups) show the quoted span highlighted.
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, FileText, ShieldAlert } from "lucide-react";
 import type { AgentRun, Metric } from "@/lib/agent-types";
@@ -8,21 +7,15 @@ import type { Evidence } from "@/lib/types";
 import { agentShort, kindLabel, shortSha } from "@/lib/labels";
 import { documentQ } from "@/lib/queries";
 import { cn } from "@/lib/utils";
+import { lazy, Suspense } from "react";
+const PdfDocument = lazy(() => import("./pdf-document").then(m=>({default:m.PdfDocument})));
+import { evidenceSpan } from "@/lib/evidence-highlight";
 import { Empty, HudLabel, Panel, Tag } from "./hud";
 
 export type CaseDoc = { id: string; kind: string; filename: string; sha256: string; pages: string[]; media_type?: string; source?: string };
 
-export function PdfFrame({ doc, page }: { doc: CaseDoc; page: number }) {
-  const blob = useQuery(documentQ(doc.id));
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (!blob.data) return;
-    const u = URL.createObjectURL(blob.data);
-    setUrl(u);
-    return () => URL.revokeObjectURL(u);
-  }, [blob.data]);
-  if (!url) return <Empty>Se încarcă documentul…</Empty>;
-  return <iframe key={`${doc.id}-${page}`} title={doc.filename} src={`${url}#page=${page}&navpanes=0&view=FitH`} className="h-[64vh] w-full border bg-white" />;
+export function PdfFrame({ doc, page, ev }: { doc: CaseDoc; page: number; ev?: Evidence | null }) {
+  return <Suspense fallback={<Empty>Se încarcă vizualizatorul…</Empty>}><PdfDocument doc={doc} page={page} evidence={ev} /></Suspense>;
 }
 
 export function TextFrame({ doc, ev }: { doc: CaseDoc; ev: Evidence | null }) {
@@ -30,12 +23,11 @@ export function TextFrame({ doc, ev }: { doc: CaseDoc; ev: Evidence | null }) {
   useEffect(() => { mark.current?.scrollIntoView({ block: "center" }); }, [ev]);
   const page = doc.pages[(ev?.page ?? 1) - 1] ?? "";
   if (!ev || ev.document_id !== doc.id) return <pre className="num h-[64vh] overflow-auto border bg-surface-1 p-3 text-[13px] leading-relaxed">{page.slice(0, 20000)}</pre>;
-  const from = Math.max(0, ev.start - 4000), to = Math.min(page.length, ev.end + 4000);
-  return (
-    <pre className="num h-[64vh] overflow-auto border bg-surface-1 p-3 text-[13px] leading-relaxed">
-      {from > 0 && "…\n"}{page.slice(from, ev.start)}<mark ref={mark}>{page.slice(ev.start, ev.end)}</mark>{page.slice(ev.end, to)}{to < page.length && "\n…"}
-    </pre>
-  );
+  const span = ev.sha256 === doc.sha256 ? evidenceSpan(page,ev) : null;
+  if (!span) return <div><p role="alert" className="mb-3 text-sm text-warning">Fragmentul nu corespunde acestei versiuni a documentului. Verifică sursa înainte de confirmare.</p><pre className="source-text">{page}</pre></div>;
+  const from = Math.max(0, span.start - 4000), to = Math.min(page.length, span.end + 4000);
+  return <pre className="source-text">{from>0&&"…\n"}{page.slice(from,span.start)}<mark ref={mark} data-source-highlight="true">{page.slice(span.start,span.end)}</mark>{page.slice(span.end,to)}{to<page.length&&"\n…"}</pre>;
+
 }
 
 export function EvidenceLens({ run, docs }: { run: AgentRun; docs: CaseDoc[] }) {
@@ -80,10 +72,10 @@ export function EvidenceLens({ run, docs }: { run: AgentRun; docs: CaseDoc[] }) 
           {doc ? (
             <>
               <div className="flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground">
-                <Tag>{kindLabel(doc.kind)}</Tag><span className="num">sha256 {shortSha(doc.sha256)}…</span>
+                <Tag>{kindLabel(doc.kind)}</Tag><details><summary>Versiunea sursei</summary><span className="break-all">SHA256: {doc.sha256}</span></details>
                 {ev && ev.document_id === doc.id && <span className="num">· p. {ev.page} · „{ev.quote}”</span>}
               </div>
-              {isText(doc) ? <TextFrame doc={doc} ev={ev} /> : <PdfFrame doc={doc} page={ev?.document_id === doc.id ? ev.page : 1} />}
+              {isText(doc) ? <TextFrame doc={doc} ev={ev} /> : <PdfFrame doc={doc} page={ev?.document_id === doc.id ? ev.page : 1} ev={ev} />}
             </>
           ) : <Empty>Niciun document în dosar.</Empty>}
         </div>

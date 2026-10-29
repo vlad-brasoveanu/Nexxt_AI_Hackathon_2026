@@ -34,7 +34,7 @@ export function DscrGauge({ value, stressed, threshold = 1.2 }: { value: number;
       <path d={arc(threshold, max, 80)} stroke="var(--success)" strokeOpacity="0.55" strokeWidth="10" fill="none" />
       <line x1={tx1} y1={ty1} x2={tx2} y2={ty2} stroke="var(--foreground)" strokeWidth="2" />
       {stressed != null && (() => { const [sx, sy] = point(stressed, 80); return <circle cx={sx} cy={sy} r="4" fill="var(--warning)" />; })()}
-      <line x1="100" y1="100" x2={nx} y2={ny} stroke={pass ? "var(--agent-text)" : "var(--danger)"} strokeWidth="3" />
+      <line x1="100" y1="100" x2={nx} y2={ny} stroke={pass ? "var(--success)" : "var(--danger)"} strokeWidth="3" />
       <circle cx="100" cy="100" r="5" fill="var(--foreground)" />
       <text x="100" y="86" textAnchor="middle" className="num" fontSize="20" fill="currentColor">{fmtX(value)}</text>
       <text x="22" y="114" fontSize="8" fill="var(--muted-foreground)" className="num">0,5x</text>
@@ -93,7 +93,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
   const blockers: string[] = [];
   if (run.status !== "AWAITING_DECISION") blockers.push(run.status === "DECIDED" ? "Dosarul a fost decis." : "Agenții lucrează încă la dosar.");
   if (rec.decision === "NEEDS_INFORMATION") blockers.push("Dosarul este incomplet: se așteaptă clientul.");
-  if (!reviewed) blockers.push("Faptele extrase nu au fost revizuite de analist (tab-ul Revizie).");
+  if (!reviewed) blockers.push("Datele extrase nu au fost verificate integral. Deschide „Verifică datele”.");
   if (rank && rank < LEVEL_RANK[requiredLevel]) blockers.push(`Decizia necesită nivelul ${requiredLevel} (${LEVEL_ROLE[requiredLevel].label}).`);
   if (decision?.status==="PENDING_SECOND_VOTE" && decision.votes.some(v=>v.username===user.username) && !demoException) blockers.push("Ai votat deja. Al doilea vot trebuie dat de altă persoană.");
   if (!run.is_current) blockers.push("Analiza nu mai este actuală; reanalizează dosarul.");
@@ -108,16 +108,16 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
           actions={<Tag tone="human"><Scale className="h-3 w-3" />{rec.level} · {LEVEL_ROLE[rec.level].label}</Tag>}>
           <div className="grid gap-6 md:grid-cols-[auto_1fr]">
             {proposed ? <DscrGauge value={proposed.dscr} stressed={proposed.dscr_stressed} /> : (
-              <div className="flex h-[118px] w-[220px] items-center justify-center border border-dashed text-sm text-muted-foreground">Fără termeni propuși</div>
+              <div className="flex h-[118px] w-[160px] items-center justify-center rounded-lg bg-surface-2"><Scale className="h-8 w-8 text-muted-foreground" aria-hidden /></div>
             )}
             <div className="grid grid-cols-2 gap-x-6 gap-y-4">
               <Stat label="Solicitat" value={fmtInt(rec.requested.amount)} sub={`RON · ${rec.requested.term_months} luni`} />
-              <Stat label={rec.decision === "COUNTER_OFFER" ? "Propus de agenți" : "Termeni"} value={proposed ? fmtInt(proposed.amount) : "—"} tone="agent"
-                sub={proposed ? `RON · ${proposed.term_months} luni` : undefined} />
-              <Stat label="Dobândă" value={proposed ? fmtPct(proposed.rate_pct, 2) : "—"}
-                sub={proposed ? `${proposed.index} ${fmtPct(proposed.index_value_pct, 2)} + ${fmtPct(proposed.margin_pct, 2)}` : `${rec.market.index} ${fmtPct(rec.market.value_pct, 2)}`} />
-              <Stat label="Rată lunară" value={proposed ? fmtInt(proposed.monthly_payment) : "—"}
-                sub={proposed ? `stres ${fmtX(proposed.dscr_stressed)}${proposed.ltv_pct != null ? ` · LTV ${fmtPct(proposed.ltv_pct)}` : ""}` : undefined} />
+              {proposed ? <>
+                <Stat label={rec.decision === "COUNTER_OFFER" ? "Propus" : "Termeni"} value={fmtInt(proposed.amount)} tone="agent" sub={`RON · ${proposed.term_months} luni`} />
+                <Stat label="Dobândă" value={fmtPct(proposed.rate_pct, 2)} sub={`${proposed.index} ${fmtPct(proposed.index_value_pct, 2)} + ${fmtPct(proposed.margin_pct, 2)}`} />
+                <Stat label="Rată lunară" value={fmtInt(proposed.monthly_payment)} sub={`DSCR în stres ${fmtX(proposed.dscr_stressed)}`} />
+              </> : <div className="col-span-2 rounded-lg bg-warning-soft p-3"><p className="flex items-center gap-2 font-medium text-warning"><AlertTriangle className="h-4 w-4" />Termenii nu sunt disponibili</p><p className="mt-1 text-sm text-muted-foreground">{rec.decision === "DECLINE" ? "Cererea nu respectă condițiile de creditare. Consultă motivele de mai jos." : "Datele trebuie completate și verificate înainte de calcularea unei oferte."}</p></div>}
+
             </div>
           </div>
           <div className="mt-4 space-y-2">
@@ -127,19 +127,19 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
               </div>
             ))}
           </div>
-          {rec.conditions.length > 0 && (
+          {rec.conditions.length > 0 && proposed && (
             <div className="mt-4 border-t pt-3">
               <HudLabel>Condiții propuse</HudLabel>
-              <ul className="mt-2 space-y-1.5">{rec.conditions.map((c) => <li key={c} className="flex gap-2 text-[14px]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-agent-text" />{c}</li>)}</ul>
+              <ul className="mt-2 space-y-1.5">{rec.conditions.map((c) => <li key={c} className="flex gap-2 text-[14px]"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-agent-text" />{c.replace("conturile Banca Demo", "conturile băncii")}</li>)}</ul>
             </div>
           )}
-          <p className="mt-4 border-t pt-3 text-[13px] text-muted-foreground">
+          <details className="technical-details"><summary>Condiții de aprobare și date de piață</summary><p>
             {rec.level_reason} · Piață: {rec.market.index} {fmtPct(rec.market.value_pct, 2)} la {fmtIsoDate(rec.market.as_of)}, {rec.market.source}
-          </p>
+          </p></details>
         </Panel>
 
         {canPrice && (
-          <Panel eyebrow="Simulare (determinist, fără model)" title="Ce-ar fi dacă — suma și durata">
+          <details className="rounded-xl border bg-card p-4" open={action === "MODIFY" || undefined}><summary className="text-lg font-medium">Ajustează suma și durata</summary>
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <input type="range" min={Math.round((rec.requested.amount * 0.3) / 10000) * 10000} max={rec.requested.amount} step={10000}
@@ -154,11 +154,11 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
               </div>
               <WhatIfRow data={whatIf.data} loading={whatIf.isFetching} />
             </div>
-          </Panel>
+          </details>
         )}
 
         {run.board.analyst && run.board.analyst.precedents.length > 0 && (
-          <Panel eyebrow="Analist financiar · date istorice sintetice" title="Sector și precedente">
+          <Panel title="Sector și precedente">
             <p className="text-[15px] text-muted-foreground">{run.board.analyst.summary}</p>
             <div className="mt-4 grid gap-4 lg:grid-cols-2">
               <div className="space-y-2.5">
@@ -197,12 +197,13 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
             <p className="text-[15px] text-muted-foreground">Rolul tău ({roleLabel(user.role)}) poate vedea recomandarea, dar nu poate semna. Dosarul necesită {LEVEL_ROLE[requiredLevel].label} ({requiredLevel}).</p>
           </Panel>
         ) : (
-          <Panel eyebrow="Decizie umană" title="Analistul uman decide" className="border-human">
-            {demoAllowed && <label className="mb-4 flex gap-2 border border-warning bg-warning-soft p-3 text-sm"><input type="checkbox" checked={demoException} onChange={e=>setDemoException(e.target.checked)}/>Excepție explicită DEMO: pot semna propriul dosar și fără al doilea vot. Decizia va fi marcată demonstrativă și auditată.</label>}
+          <Panel eyebrow="Decizie umană" title="Decizia ta" className="border-human">
+            {demoAllowed && <details className="mb-4 rounded-lg border p-3 text-sm"><summary className="text-muted-foreground">Unelte administrative de test</summary><label className="mt-3 flex gap-2 rounded-lg border border-warning bg-warning-soft p-3"><input type="checkbox" checked={demoException} onChange={e=>setDemoException(e.target.checked)}/>Excepție explicită DEMO: pot semna propriul dosar și fără al doilea vot. Decizia va fi marcată demonstrativă și auditată.</label></details>}
+
             <div className="grid grid-cols-3 gap-px border bg-border" role="radiogroup" aria-label="Acțiune">
               {(["APPROVE", "MODIFY", "REJECT"] as HumanAction[]).map((a) => (
                 <button key={a} role="radio" aria-checked={action === a} onClick={() => setAction(a)}
-                  className={cn("py-3 text-[16px] font-medium", action === a ? (a === "REJECT" ? "bg-danger text-destructive-foreground" : "bg-human text-human-foreground") : "bg-card hover:bg-surface-2")}>
+                  className={cn("py-3 text-[16px] font-medium", action === a ? (a === "REJECT" ? "bg-destructive text-white" : a === "APPROVE" ? "bg-[#15803d] text-white" : "bg-human text-human-foreground") : "bg-card hover:bg-surface-2")}>
                   {ACTION_LABEL[a]}
                 </button>
               ))}
@@ -216,7 +217,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
               <Tag tone={rank && rank >= LEVEL_RANK[requiredLevel] ? "success" : "danger"}><Lock className="h-3 w-3" />Necesită {requiredLevel}</Tag>
               <Tag tone={preparer ? "danger" : "success"}><Eye className="h-3 w-3" />Patru ochi{run.prepared_by ? ` · pregătit de ${run.prepared_by}` : ""}</Tag>
               {requiredLevel === "L3" && <Tag tone="violet"><Users className="h-3 w-3" />2 voturi</Tag>}
-              {override && <Tag tone="warning">override</Tag>}
+              {override && <Tag tone="warning">Abatere motivată</Tag>}
             </div>
             <label className="mt-4 block">
               <HudLabel>Motivare {override ? "(obligatorie)" : "(opțională)"}</HudLabel>
@@ -230,7 +231,7 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
               </ul>
             )}
             <div className="mt-4">
-              <HoldToSign label={`${ACTION_LABEL[action]} · semnează ca ${user.username}`} tone={action === "REJECT" ? "danger" : "human"}
+              <HoldToSign label={`${ACTION_LABEL[action]} · semnează ca ${user.username}`} tone={action === "REJECT" ? "danger" : action === "APPROVE" ? "success" : "human"}
                 disabled={blockers.length > 0 || decide.isPending} onSigned={() => decide.mutate()} />
             </div>
             <p className="mt-2 text-center text-[11px] text-muted-foreground">Agenții nu pot aproba sau respinge credite: doar această semnătură poate.</p>
@@ -247,12 +248,12 @@ function pos(v: number, b: { p25: number; p75: number; value: number }) {
 }
 
 function WhatIfRow({ data, loading }: { data: WhatIf | undefined; loading: boolean }) {
-  if (!data) return <div className="text-sm text-muted-foreground">{loading ? "Calculez…" : "—"}</div>;
+  if (!data) return <div className="text-sm text-muted-foreground">{loading ? "Calculez…" : "Calculul nu este disponibil. Reîncearcă după actualizarea analizei."}</div>;
   return (
     <div className={cn("grid grid-cols-2 gap-4 border p-3 md:grid-cols-5", data.passes ? "border-success/50" : "border-danger/60", loading && "opacity-60")}>
-      <Stat label="DSCR" value={fmtX(data.dscr)} tone={data.dscr >= 1.2 ? "success" : "danger"} />
+      <Stat label={<span title="Flux disponibil pentru rambursare / serviciul datoriei">DSCR</span>} value={fmtX(data.dscr)} tone={data.dscr >= 1.2 ? "success" : "danger"} />
       <Stat label="Stres" value={fmtX(data.dscr_stressed)} />
-      <Stat label="LTV" value={data.ltv_pct != null ? fmtPct(data.ltv_pct) : "—"} tone={data.ltv_pct != null && data.ltv_pct > 70 ? "danger" : undefined} />
+      <Stat label={<span title="Valoarea creditului raportată la valoarea garanției">LTV</span>} value={data.ltv_pct != null ? fmtPct(data.ltv_pct) : "Fără garanție"} tone={data.ltv_pct != null && data.ltv_pct > 70 ? "danger" : undefined} />
       <Stat label="Rată" value={fmtInt(data.monthly_payment)} sub={`${fmtPct(data.rate_pct, 2)} / an`} />
       <div className="space-y-1.5">
         <HudLabel>Politică</HudLabel>
@@ -269,22 +270,22 @@ function DecisionResult({ run }: { run: AgentRun }) {
   const d = run.decision!;
   const final = d.status === "FINAL";
   return (
-    <Panel eyebrow="Decizie umană" title={<span className="flex items-center gap-2">{final ? ACTION_DONE_LABEL[d.action] : "Vot 1 din 2 în comitet"}{d.override && <Tag tone="warning">override</Tag>}</span>}
-      className={final ? "border-human" : "border-violet"} actions={<Tag tone={final ? "human" : "violet"}>{d.level}</Tag>}>
+    <Panel eyebrow="Decizie umană" title={<span className="flex items-center gap-2">{final ? ACTION_DONE_LABEL[d.action] : "Vot 1 din 2 în comitet"}{d.override && <Tag tone="warning">Abatere motivată</Tag>}</span>}
+      className={final ? d.action === "REJECT" ? "border-danger" : "border-success" : "border-warning"} actions={<Tag tone={final ? d.action === "REJECT" ? "danger" : "success" : "warning"}>{d.level}</Tag>}>
       {d.terms && d.action !== "REJECT" && (
         <div className="mb-4 grid grid-cols-3 gap-4">
           <Stat label="Sumă" value={fmtInt(d.terms.amount)} sub="RON" />
           <Stat label="Durată" value={`${d.terms.term_months}`} sub="luni" />
-          <Stat label="DSCR" value={fmtX(d.terms.dscr)} />
+          <Stat label={<span title="Flux disponibil pentru rambursare / serviciul datoriei">DSCR</span>} value={fmtX(d.terms.dscr)} />
         </div>
       )}
       <ul className="space-y-1.5 text-[14px]">
         {d.votes.map((v) => <li key={v.username} className="flex items-center gap-2"><Users className="h-3.5 w-3.5 text-muted-foreground" /><span className="num">{v.username}</span><span className="text-muted-foreground">{roleLabel(v.role)} · {ACTION_LABEL[v.action]}</span></li>)}
       </ul>
       {d.reason && <p className="mt-3 border-l-2 border-border-strong pl-3 text-[14px]">{d.reason}</p>}
-      {d.human_seconds != null && <p className="num mt-3 text-[13px] text-muted-foreground">Timp uman activ: {Math.round(d.human_seconds)} s</p>}
+      <details className="technical-details"><summary>Detalii de audit</summary>{d.demo_exception && <p className="text-warning">Decizie demonstrativă cu excepție administrativă.</p>}{d.human_seconds != null && <p>Timp activ: {Math.round(d.human_seconds)} s</p>}</details>
       {d.letter && (
-        <details className="mt-3" open={final}>
+        <details className="mt-3">
           <summary className="hud-label py-1 text-muted-foreground">Ciornă scrisoare către client</summary>
           <pre className="mt-2 whitespace-pre-wrap border bg-surface-2 p-3 font-[family-name:var(--font-sans)] text-[14px] leading-relaxed">{d.letter}</pre>
         </details>

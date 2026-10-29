@@ -171,12 +171,12 @@ function state(): Map<string, CaseState> {
     st.proposal = makeProposal(st, t(1));
     if (s.id !== "case-transport") {
       st.detail.revision = 2;
-      st.facts = { revision: 2, facts: st.proposal.facts };
+      st.facts = { revision: 2, facts: st.proposal.facts! };
       if (s.id === "case-nordic") {
         // older stale run on revision 2, then revision bumped by re-confirmation
         st.runs.unshift(makeRun(st, t(2).slice(0, 10), t(2)));
         st.detail.revision = 3;
-        st.facts = { revision: 3, facts: st.proposal.facts };
+        st.facts = { revision: 3, facts: st.proposal.facts! };
       }
       st.runs.unshift(makeRun(st, "2026-10-27", t(3)));
     }

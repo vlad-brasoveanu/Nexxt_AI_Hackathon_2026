@@ -14,7 +14,7 @@ npm run build --prefix frontend
 .venv/bin/python scripts/demo/credit_seed.py
 ```
 
-Open http://127.0.0.1:8000. The preview migrates SQLite and seeds demo accounts. Rebuild the frontend and reload the browser after changes. The default page is the original interface, with minimal controls for backend verification; final design is deferred.
+Open http://127.0.0.1:8000. The preview migrates SQLite and seeds demo accounts. Rebuild the frontend and reload the browser after changes. The frontend uses the graphite/blue workspace with the real local API. The Dosare list opens credit and KYC cases in their corresponding workflows. Source review renders PDFs locally with Mozilla PDF.js and highlights validated citations; text/CSV/JSON sources retain exact-span text highlighting. No OCR or document upload to a third-party viewer is used.
 
 | Demo user | Role | Password |
 | --- | --- | --- |
@@ -77,3 +77,6 @@ PostgreSQL deployment uses Docker Compose (`docker compose up --build -d`) with 
 Key additions: `POST /api/v1/agent-runs/{id}/risk-planner`, `GET /api/v1/cases/{id}/risk-reports`, manual request `/send`, and `/api/v1/admin/{users,audit,policies}`. Full contract: `docs/openapi.json`.
 
 Prospecting is deferred: a separate company source and an existing-client list keyed by CUI are needed. The anonymous historical database cannot identify new companies to contact.
+
+
+Frontend tooling requires Node.js 22.13+ (validated with 22.23.1). Run `npm run test:evidence --prefix frontend` for citation matching regressions (repeated amounts, ambiguous context, incorrect spans, Unicode and split PDF text). If a PDF citation cannot be uniquely positioned, the viewer displays an explicit warning instead of marking a different value.

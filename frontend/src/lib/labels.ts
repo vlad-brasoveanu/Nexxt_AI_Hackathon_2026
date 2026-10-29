@@ -44,10 +44,10 @@ export const DISPOSITION: Record<string, { label: string; tone: Tone }> = {
 export const dispKey = (d: Disposition | undefined) => d ?? "NONE";
 
 export const OUTCOME: Record<Outcome, { label: string; tone: Tone }> = {
-  FAIL: { label: "FAIL", tone: "danger" },
-  UNKNOWN: { label: "UNKNOWN", tone: "warning" },
-  PASS: { label: "PASS", tone: "success" },
-  NOT_APPLICABLE: { label: "N/A", tone: "neutral" },
+  FAIL: { label: "Neconform", tone: "danger" },
+  UNKNOWN: { label: "De verificat", tone: "warning" },
+  PASS: { label: "Conform", tone: "success" },
+  NOT_APPLICABLE: { label: "Nu se aplică", tone: "neutral" },
 };
 export const OUTCOME_ORDER: Outcome[] = ["FAIL", "UNKNOWN", "PASS", "NOT_APPLICABLE"];
 
@@ -72,16 +72,16 @@ export type PillTone = Tone | "info" | "violet" | "agent" | "human";
 export const AGENT_META: Record<AgentId, { name: string; short: string }> = {
   orchestrator: { name: "Orchestrator", short: "Orchestrator" },
   analyst: { name: "Analist financiar complex", short: "Analist financiar" },
-  completeness: { name: "Agent Completitudine", short: "Completitudine" },
+  completeness: { name: "Verificarea documentelor", short: "Documente" },
   financials: { name: "Agent Situații financiare", short: "Situații financiare" },
   cashflow: { name: "Agent Fluxuri de numerar", short: "Fluxuri de numerar" },
-  kyb: { name: "Agent KYB/Diligență", short: "KYB / Diligență" },
+  kyb: { name: "Verificarea companiei", short: "Verificarea companiei" },
   policy: { name: "Agent Politică", short: "Politică" },
-  memo: { name: "Agent Memo", short: "Memo" },
-  critic: { name: "Agent Critic", short: "Critic" },
+  memo: { name: "Nota de credit", short: "Nota de credit" },
+  critic: { name: "Controlul analizei", short: "Controlul analizei" },
   guard: { name: "Gardă de acțiuni", short: "Gardă" },
   human: { name: "Analist uman", short: "Analist uman" },
-  client: { name: "Client (portal simulat)", short: "Client" },
+  client: { name: "Client", short: "Client" },
 };
 export const agentName = (id: AgentId) => AGENT_META[id]?.name ?? id;
 export const agentShort = (id: AgentId) => AGENT_META[id]?.short ?? id;
@@ -104,7 +104,7 @@ export const AGENT_STATE_LABEL: Record<AgentState, string> = {
 export const RUN_STATUS_META: Record<RunStatus, { label: string; tone: PillTone }> = {
   RUNNING: { label: "Agenții lucrează", tone: "agent" },
   WAITING_CLIENT: { label: "Așteaptă clientul", tone: "warning" },
-  AWAITING_DECISION: { label: "Așteaptă decizia", tone: "human" },
+  AWAITING_DECISION: { label: "Așteaptă decizia", tone: "warning" },
   DECIDED: { label: "Decis", tone: "success" },
   FAILED: { label: "Eșuat", tone: "danger" },
 };
@@ -141,7 +141,7 @@ export const REC_TONE: Record<RecommendationKind, PillTone> = {
   APPROVE_WITH_CONDITIONS: "success",
   COUNTER_OFFER: "warning",
   DECLINE: "danger",
-  NEEDS_INFORMATION: "info",
+  NEEDS_INFORMATION: "warning",
 };
 
 export const ACTION_LABEL: Record<HumanAction, string> = { APPROVE: "Aprobă", MODIFY: "Modifică", REJECT: "Respinge" };
@@ -168,7 +168,7 @@ export const WAITING_FOR_LABEL: Record<string, string> = {
 };
 
 export const ISSUE_SEVERITY_LABEL = { info: "info", warning: "atenție", blocking: "blocant" } as const;
-export const OUTCOME_RULE_LABEL = { PASS: "TRECE", FAIL: "NU TRECE", UNKNOWN: "NECUNOSCUT", WARN: "ATENȚIE" } as const;
+export const OUTCOME_RULE_LABEL = { PASS: "Conform", FAIL: "Neconform", UNKNOWN: "De verificat", WARN: "Atenție" } as const;
 
 export const CASH_CLASS_LABEL: Record<string, string> = {
   operational: "Operațional",

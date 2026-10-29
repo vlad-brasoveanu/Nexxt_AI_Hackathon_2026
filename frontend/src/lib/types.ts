@@ -8,17 +8,17 @@ export type DocKind =
   | "application" | "company_extract" | "identity" | "ownership" | "declaration" | "mandate"
   // credit workflow
   | "credit_application" | "financial_statements" | "bank_statement" | "collateral_valuation" | "bureau_report" | "other";
-export type Doc = { id: string; kind: DocKind; filename: string; sha256: string; pages: string[] };
-export type CaseSummary = { id: string; title: string; revision: number; owner_id: string; created_at: string };
+export type Doc = { id: string; kind: DocKind; filename: string; sha256: string; pages: string[]; media_type?: string };
+export type CaseSummary = { id: string; title: string; revision: number; owner_id: string; created_at: string; kind?: "credit" | "kyc"; meta?: Record<string,unknown> };
 export type CaseDetail = CaseSummary & { documents: Doc[] };
 export type Rejected = { document_id: string; kind: DocKind; field: string; value: string; reason: string };
 export type Proposal = {
   id: string; case_revision: number; is_current: boolean; status: "COMPLETED" | "FAILED";
   provider: string; model: string; mode: string; label: string; prompt_version: string; latency_ms: number;
-  facts: FactSet; rejected: Rejected[]; calls: { document_id: string; kind: DocKind; latency_ms: number }[];
+  facts: FactSet | null; rejected: Rejected[]; calls: { document_id: string; kind: DocKind; latency_ms: number }[];
   error: string | null; created_at: string;
 };
-export type FactsResp = { revision: number; is_current: boolean; facts: FactSet };
+export type FactsResp = { revision: number; is_current: boolean; facts: FactSet | null };
 export type Outcome = "PASS" | "FAIL" | "UNKNOWN" | "NOT_APPLICABLE";
 export type Finding = {
   rule_id: string; module_id: string; outcome: Outcome; severity: string; explanation: string;

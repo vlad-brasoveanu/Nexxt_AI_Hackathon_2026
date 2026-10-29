@@ -1,109 +1,79 @@
-// Live agent hierarchy: Orchestrator → Analist financiar → seven specialists → Analist uman.
-// Node state comes from the run's agent cards; edges into the running agent animate in the agent accent.
-import { Background, Handle, Position, ReactFlow, type Edge, type Node, type NodeProps } from "@xyflow/react";
-import { memo, useMemo } from "react";
-import { AlertTriangle, CheckCircle2, CircleDashed, Loader2, Lock, RefreshCw, User as UserIcon, XCircle } from "lucide-react";
-import type { AgentCard, AgentId, AgentRun } from "@/lib/agent-types";
-import { AGENT_STATE_LABEL, agentShort } from "@/lib/labels";
+import { useEffect, useState } from "react";
+import { AlertTriangle, ArrowUpRight, CheckCircle2, CircleDashed, FileText, Loader2, Lock, RefreshCw, Workflow, XCircle } from "lucide-react";
+import type { Evidence } from "@/lib/types";
+import type { AgentId, AgentRun, AgentState } from "@/lib/agent-types";
+import { activitySummary } from "@/lib/activity-copy";
 import { cn } from "@/lib/utils";
-import { TierBadge } from "./hud";
+import { Panel, Tag } from "./hud";
+import { Timeline } from "./timeline";
+import { MemoView } from "./insights";
+import { RulesTable } from "./run-panels";
 
-type NodeData = { id: AgentId; card?: AgentCard; human?: boolean; humanState?: string; active: boolean };
-type AgentNode = Node<NodeData, "agent">;
+const GROUPS: { title: string; agents: AgentId[] }[] = [
+  { title: "Documente și verificări", agents: ["completeness", "financials", "cashflow", "kyb"] },
+  { title: "Analiză și recomandare", agents: ["analyst", "policy", "memo", "critic"] },
+];
+const NAMES: Partial<Record<AgentId, string>> = {
+  completeness: "Verificarea documentelor", financials: "Situații financiare", cashflow: "Fluxuri de numerar", kyb: "Verificarea companiei",
+  analyst: "Analist financiar", policy: "Reguli de credit", memo: "Nota de credit", critic: "Controlul analizei",
+};
+const metricLabel = (label:string) => label.replace("la Banca Demo", "la bancă");
+const ICON = { idle: CircleDashed, running: Loader2, done: CheckCircle2, stale: RefreshCw, failed: XCircle, blocked: Lock };
+const LABEL: Record<AgentState, string> = { idle: "În așteptare", running: "În lucru", done: "Finalizat", stale: "Necesită actualizare", failed: "Procesare eșuată", blocked: "Blocat" };
+const TONE = { idle: "neutral", running: "agent", done: "success", stale: "warning", failed: "danger", blocked: "danger" } as const;
 
-const SPECIALISTS: AgentId[] = ["completeness", "financials", "cashflow", "kyb", "policy", "memo", "critic"];
-const W = 178;
+/** Presentation only: the server remains the source of status, chronology and results. */
+export function AgentGraph({ run, docNames = {}, onSource, onRisk, onEvidence }: { run: AgentRun; docNames?: Record<string, string>; onSource?: (factId: string) => void; onRisk?: () => void; onEvidence?: (ev:Evidence,label:string)=>void }) {
+  const [selected, setSelected] = useState<AgentId | null>(null);
+  useEffect(()=>{if(selected)document.getElementById("agent-result")?.scrollIntoView({block:"nearest"});},[selected]);
+  const ids = GROUPS.flatMap(g => g.agents);
+  const completed = run.agents.filter(a => ids.includes(a.id) && a.status === "done").length;
+  const running = run.agents.filter(a => a.status === "running");
+  const card = run.agents.find(a => a.id === selected);
+  const steps = run.steps.filter(s => s.agent === selected);
+  const issues = run.board.issues.filter(i => i.agent === selected && i.status !== "resolved");
+  const facts = run.board.facts.filter(f => f.agent === selected);
+  const metrics = run.board.metrics.filter(m => m.agent === selected);
 
-const STATE_ICON = {
-  idle: CircleDashed, running: Loader2, done: CheckCircle2, stale: RefreshCw, failed: XCircle, blocked: Lock,
-} as const;
-
-const AgentBox = memo(function AgentBox({ data }: NodeProps<AgentNode>) {
-  const state = data.card?.status ?? "idle";
-  const Icon = data.human ? UserIcon : STATE_ICON[state];
-  const running = state === "running";
-  return (
-    <div className={cn("relative w-[178px] border bg-card px-3 py-2.5 text-left transition-colors",
-      running && "scanline border-agent bg-agent-soft",
-      state === "done" && "border-border-strong",
-      state === "stale" && "border-dashed border-warning/60",
-      state === "failed" && "border-danger",
-      state === "blocked" && "border-danger/70",
-      state === "idle" && "border-border opacity-70",
-      data.human && "border-human bg-surface-2")}>
-      <Handle type="target" position={Position.Top} className="!h-1.5 !w-1.5 !min-h-0 !min-w-0 !border-0 !bg-border-strong" />
-      <div className="flex items-center justify-between gap-2">
-        <span className={cn("truncate text-[14px] font-medium", running && "text-agent-text")}>{data.human ? "Analist uman" : agentShort(data.id)}</span>
-        {data.card && !data.human && <TierBadge tier={data.card.tier} />}
-      </div>
-      <div className="mt-1.5 flex items-center gap-1.5 text-[13px] text-muted-foreground">
-        <Icon className={cn("h-3 w-3", running && "animate-spin text-agent-text", state === "done" && "text-success", state === "stale" && "text-warning",
-          (state === "failed" || state === "blocked") && "text-danger", data.human && "text-foreground")} />
-        <span className="hud-label text-[12px]">{data.human ? data.humanState : AGENT_STATE_LABEL[state]}</span>
-        {data.card && data.card.runs > 0 && <span className="num ml-auto text-[12px]">×{data.card.runs}</span>}
-      </div>
-      <Handle type="source" position={Position.Bottom} className="!h-1.5 !w-1.5 !min-h-0 !min-w-0 !border-0 !bg-border-strong" />
+  const coordination = run.status === "RUNNING" ? "Coordonare în curs" : run.status === "FAILED" ? "Analiză întreruptă" : !run.is_current ? "Analiză de actualizat" : "Coordonare încheiată";
+  return <div className="space-y-6">
+    <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card px-5 py-4">
+      <div className="flex items-center gap-3"><Workflow className="h-5 w-5 text-agent-text" aria-hidden /><div><h2 className="font-medium">{coordination}</h2><p className="text-sm text-muted-foreground">{running.length ? running.map(a => NAMES[a.id] ?? a.title).join(" · ") : "Agenții verifică documentele și pregătesc recomandarea."}</p></div></div>
+      <span className="num text-sm text-muted-foreground">{completed} din {ids.length} verificări finalizate</span>
     </div>
-  );
-});
+    {run.status === "FAILED" && <p role="alert" className="flex items-start gap-2 rounded-lg border border-danger bg-danger-soft p-4 text-danger"><XCircle className="mt-1 h-4 w-4 shrink-0" />Procesarea a eșuat. Datele nu sunt considerate verificate. Consultă eroarea și reia analiza.</p>}
+    {GROUPS.map(group => <section key={group.title} aria-label={group.title} className="space-y-3">
+      <h2 className="text-lg font-medium">{group.title}</h2>
+      <div className="agent-cards">{group.agents.map(id => {
+        const a = run.agents.find(a => a.id === id);
+        const state = a?.status ?? "idle";
+        const Icon = ICON[state];
+        const openIssues = run.board.issues.filter(i => i.agent === id && i.status !== "resolved");
+        const blocking = openIssues.some(i => i.severity === "blocking");
+        const attention = openIssues.some(i => i.severity === "warning");
+        const stale = !run.is_current && state === "done";
+        const tone = stale ? "warning" : state === "done" && blocking ? "danger" : state === "done" && attention ? "warning" : TONE[state];
+        const summary = activitySummary(id, a?.last_summary ?? null, state);
+        return <button key={id} className="agent-card flex flex-col gap-3" id={`agent-card-${id}`} aria-expanded={selected === id} aria-controls="agent-result" onClick={() => setSelected(selected === id ? null : id)}>
+          <span className="flex w-full items-start justify-between gap-2"><span className="text-base font-semibold leading-snug">{NAMES[id]}</span><ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden /></span>
+          <Tag tone={tone}><Icon className={cn("h-3.5 w-3.5", state === "running" && "animate-spin")} aria-hidden />{stale ? "Necesită actualizare" : LABEL[state]}</Tag>
+          <span className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">{summary}</span>
+          {openIssues.length > 0 && <span className={cn("mt-auto flex items-center gap-1.5 text-sm", blocking ? "text-danger" : "text-warning")}><AlertTriangle className="h-3.5 w-3.5 shrink-0" />{openIssues.length} {openIssues.length === 1 ? "aspect de verificat" : "aspecte de verificat"}</span>}
+        </button>;
+      })}</div>
+    </section>)}
+    {selected && <section id="agent-result" aria-label={`Rezultat: ${NAMES[selected]}`} className="agent-detail space-y-4">
+      <div className="flex items-start justify-between gap-3"><div><h2 className="text-xl font-medium">{NAMES[selected]}</h2><p className="mt-2 leading-relaxed">{activitySummary(selected, card?.last_summary ?? null, card?.status)}</p></div><button onClick={() => {document.getElementById(`agent-card-${selected}`)?.focus();setSelected(null);}} className="shrink-0 px-3 py-2 text-sm text-muted-foreground">Închide</button></div>
+      {issues.map(i => <div key={i.id} className={cn("rounded-lg border p-3", i.severity === "blocking" ? "border-danger bg-danger-soft" : "border-warning bg-warning-soft")}><p className="flex items-center gap-2 font-medium"><AlertTriangle className="h-4 w-4 shrink-0" />{i.title}</p><p className="mt-1 text-sm text-muted-foreground">{i.detail}</p></div>)}
+      {metrics.length > 0 && <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{metrics.map(m => <div key={m.id} className="rounded-lg bg-surface-2 p-3"><dt className="text-sm text-muted-foreground">{metricLabel(m.label)}</dt><dd className="num mt-1 font-medium">{m.display}</dd></div>)}</dl>}
+      {facts.length > 0 && <details><summary className="font-medium">Date și documente sursă ({facts.length})</summary><ul className="mt-3 space-y-3">{facts.map(f => <li key={f.id} className="rounded-lg border p-3"><div className="flex flex-wrap items-center justify-between gap-2"><span>{f.label}</span><button className="inline-flex items-center gap-2 px-2 py-1 text-sm text-agent-text" onClick={() => onSource?.(f.id)}><FileText className="h-4 w-4" />{docNames[f.evidence.document_id] ?? "Document sursă"} · p. {f.evidence.page}</button></div><p className="mt-1 text-sm text-muted-foreground">„{f.evidence.quote}”</p></li>)}</ul></details>}
+      {selected === "analyst" && onRisk && <button className="border px-3 py-2 text-agent-text" onClick={onRisk}>Vezi cazurile istorice și scenariile</button>}
+      {selected === "policy" && <details><summary>Regulile evaluate</summary><RulesTable rules={run.board.rules} /></details>}
+      {selected === "memo" && run.board.memo && <details><summary>Nota de credit completă</summary><MemoView run={run} /></details>}
+      {metrics.some(m => m.sources.length) && <details><summary>Sursele calculelor</summary><div className="mt-3 space-y-3">{metrics.filter(m=>m.sources.length).map(m=><details key={m.id} className="rounded-lg border px-4 py-2"><summary className="text-sm font-medium">{metricLabel(m.label)} · {m.display}</summary><ul className="my-2 space-y-2">{m.sources.map((source,i)=><li key={i}><button className="text-left text-sm text-agent-text underline" onClick={()=>onEvidence?.(source,metricLabel(m.label))}>{docNames[source.document_id] ?? "Document"} · p. {source.page} · „{source.quote}”</button></li>)}</ul></details>)}</div></details>}
 
-const nodeTypes = { agent: AgentBox };
-
-function humanState(run: AgentRun) {
-  if (run.status === "DECIDED") return "a decis";
-  if (run.status === "AWAITING_DECISION") return `decide · ${run.recommendation?.level ?? ""}`;
-  return "așteaptă";
-}
-
-export function AgentGraph({ run }: { run: AgentRun }) {
-  const cards = useMemo(() => Object.fromEntries(run.agents.map((a) => [a.id, a])) as Partial<Record<AgentId, AgentCard>>, [run.agents]);
-  const lastDispatch = [...run.steps].reverse().find((s) => s.kind === "dispatch");
-  const activeId = run.status === "RUNNING" ? (Object.values(cards).find((c) => c?.status === "running")?.id ?? null) : null;
-
-  const nodes: AgentNode[] = useMemo(() => {
-    const total = SPECIALISTS.length * (W + 16) - 16;
-    const mid = total / 2 - W / 2;
-    const list: AgentNode[] = [
-      { id: "orchestrator", type: "agent", position: { x: mid, y: 0 }, data: { id: "orchestrator", card: cards.orchestrator, active: false } },
-      { id: "analyst", type: "agent", position: { x: mid, y: 110 }, data: { id: "analyst", card: cards.analyst, active: activeId === "analyst" } },
-      ...SPECIALISTS.map((id, i) => ({ id, type: "agent" as const, position: { x: i * (W + 16), y: 240 }, data: { id, card: cards[id], active: activeId === id } })),
-      { id: "human", type: "agent", position: { x: mid, y: 380 }, data: { id: "human", human: true, humanState: humanState(run), active: run.status === "AWAITING_DECISION" } },
-    ];
-    return list;
-  }, [cards, activeId, run]);
-
-  const edges: Edge[] = useMemo(() => {
-    const accent = "var(--agent-text)";
-    const quiet = "var(--border-strong)";
-    const e: Edge[] = [{ id: "o-a", source: "orchestrator", target: "analyst", animated: run.status === "RUNNING", style: { stroke: run.status === "RUNNING" ? accent : quiet, strokeWidth: 1.4 } }];
-    for (const id of SPECIALISTS) {
-      const on = activeId === id;
-      e.push({ id: `a-${id}`, source: "analyst", target: id, animated: on, style: { stroke: on ? accent : quiet, strokeWidth: on ? 2 : 1 } });
-    }
-    for (const id of ["policy", "memo", "critic"] as AgentId[]) {
-      const on = run.status === "AWAITING_DECISION" || run.status === "DECIDED";
-      e.push({ id: `${id}-h`, source: id, target: "human", style: { stroke: on ? "var(--foreground)" : quiet, strokeWidth: on ? 1.4 : 1, strokeDasharray: on ? undefined : "4 4" } });
-    }
-    return e;
-  }, [activeId, run.status]);
-
-  return (
-    <div className="relative h-[470px] w-full" aria-label="Graful agenților">
-      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView fitViewOptions={{ padding: 0.12 }}
-        nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} panOnDrag={false} zoomOnScroll={false}
-        zoomOnPinch={false} zoomOnDoubleClick={false} preventScrolling={false} proOptions={{ hideAttribution: true }}>
-        <Background gap={24} size={1} color="var(--grid-strong)" />
-      </ReactFlow>
-      {lastDispatch && run.status === "RUNNING" && (
-        <div className="hud-label pointer-events-none absolute left-3 top-3 flex items-center gap-1.5 text-agent-text">
-          <span className="h-1.5 w-1.5 animate-[blink_1.1s_steps(1)_infinite] bg-agent" />{lastDispatch.title}
-        </div>
-      )}
-      {run.status === "FAILED" && (
-        <div className="absolute inset-x-3 top-3 flex items-center gap-2 border border-danger bg-danger-soft px-3 py-2 text-sm text-danger">
-          <AlertTriangle className="h-4 w-4" />Procesare eșuată — dosarul nu este considerat verificat.
-        </div>
-      )}
-    </div>
-  );
+      <details className="technical-details"><summary>Detalii tehnice și execuții</summary><p className="py-2">Mod de procesare înregistrat: {run.mode_label}</p><p>{card?.runs ?? 0} execuții în această analiză</p><p className="my-2">{card?.last_summary}</p><Timeline steps={steps} technical /></details>
+    </section>}
+    <Panel title="Activitate recentă"><Timeline steps={run.steps} compact limit={5} /><details className="technical-details"><summary>Istoric complet și detalii tehnice ({run.steps.length})</summary><p className="py-2">Mod de procesare înregistrat: {run.mode_label}</p><Timeline steps={run.steps} technical /></details></Panel>
+  </div>;
 }

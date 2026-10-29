@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const HOLD_MS = 1500;
 
-export function HoldToSign({ label, disabled, onSigned, tone = "human" }: { label: string; disabled?: boolean; onSigned: () => void; tone?: "human" | "danger" }) {
+export function HoldToSign({ label, disabled, onSigned, tone = "human" }: { label: string; disabled?: boolean; onSigned: () => void; tone?: "human" | "danger" | "success" }) {
   const [progress, setProgress] = useState(0);
   const start = useRef<number | null>(null);
   const frame = useRef<number | null>(null);
@@ -39,14 +39,14 @@ export function HoldToSign({ label, disabled, onSigned, tone = "human" }: { labe
 
   return (
     <button type="button" disabled={disabled}
-      onPointerDown={begin} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}
+      onPointerDown={begin} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop} onBlur={stop}
       onKeyDown={(e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); begin(); } }}
       onKeyUp={(e) => { if (e.key === " " || e.key === "Enter") stop(); }}
       aria-label={`${label} — ține apăsat 1,5 secunde pentru a semna`}
       className={cn("relative h-14 w-full select-none overflow-hidden border-2 text-[16px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40",
-        tone === "danger" ? "border-danger text-danger" : "border-human text-foreground")}>
-      <span className={cn("absolute inset-y-0 left-0", tone === "danger" ? "bg-danger" : "bg-human")} style={{ width: `${progress * 100}%` }} aria-hidden />
-      <span className={cn("relative z-10 flex items-center justify-center gap-2.5", progress > 0.5 && (tone === "danger" ? "text-destructive-foreground" : "text-human-foreground"))}>
+        tone === "danger" ? "border-danger text-danger bg-danger-soft" : tone === "success" ? "border-success bg-[#15803d] text-white" : "border-human bg-human text-white")}>
+      <span className={cn("absolute inset-y-0 left-0", tone === "danger" ? "bg-destructive" : tone === "success" ? "bg-[#11632f]" : "bg-primary")} style={{ width: `${progress * 100}%` }} aria-hidden />
+      <span className={cn("relative z-10 flex items-center justify-center gap-2.5", progress > 0.5 && "text-white")}>
         <Fingerprint className="h-5 w-5" />
         {progress >= 1 ? "Semnat" : progress > 0 ? "Ține apăsat…" : label}
         {progress === 0 && <span className="hud-label text-[12px] opacity-70">ține apăsat</span>}

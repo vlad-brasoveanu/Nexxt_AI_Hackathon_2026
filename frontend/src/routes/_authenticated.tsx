@@ -24,18 +24,19 @@ export function useUser(): User {
 const NAV = [
   { to: "/", label: "Sarcinile mele", icon: Activity, exact: true },
   { to: "/statistici", label: "Statistici și piață", icon: Gauge, exact: false },
-  { to: "/kyc", label: "Dosare KYC", icon: FolderSearch, exact: false },
+  { to: "/kyc", label: "Dosare", icon: FolderSearch, exact: false },
 ] as const;
 
 function ModeLabel() {
   const { data, isError } = useQuery(healthQ());
   if (!data && !isError) return null;
+  if (isError) return <p role="alert" className="text-warning">Modul de procesare nu poate fi verificat.</p>;
   const on = data?.ai_enabled;
   return (
     <span className="hud-label inline-flex items-center gap-1.5 text-muted-foreground" title="Modul de procesare al agenților">
       <Cpu className={cn("h-3 w-3", on ? "text-agent-text" : "")} />
-      {on ? `${data!.ai.mode === "cloud" ? "Cloud demo" : "Local"} · ${data!.ai.provider} · ${shortModel(data!.ai.model)}` : "Mod determinist · fără AI"}
-      <span className="text-border-strong">·</span> date sintetice
+      {on ? `${data!.ai.mode === "cloud" ? "Cloud" : "Local"} · ${data!.ai.provider} · ${shortModel(data!.ai.model)}` : "Mod determinist · fără AI"}
+
     </span>
   );
 }
@@ -49,7 +50,7 @@ function ThemeToggle() {
   }, []);
   return (
     <button onClick={toggleTheme} aria-label={theme === "dark" ? "Temă luminoasă" : "Temă întunecată"}
-      className="inline-flex h-8 w-8 items-center justify-center border border-border hover:border-border-strong hover:bg-surface-2">
+      className="inline-flex h-11 w-11 items-center justify-center border border-border hover:border-border-strong hover:bg-surface-2">
       {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </button>
   );
@@ -77,22 +78,22 @@ function Layout() {
   }
 
   return (
-    <div className="flex min-h-screen w-full">
-      <aside className="sticky top-0 flex h-screen w-[220px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+    <div className="app-shell w-full">
+      <aside className="app-sidebar sticky top-0 flex h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
         <Link to="/" className="flex items-center gap-2.5 border-b border-sidebar-border px-4 py-4">
-          <span className="relative flex h-8 w-8 items-center justify-center border border-sidebar-foreground/70">
+          <span className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
             <svg viewBox="0 0 28 28" className="h-5 w-5" aria-hidden><path d="M7 14.5l4.5 4.5L21 9" stroke="var(--sidebar-ring)" strokeWidth="3.2" fill="none" /></svg>
           </span>
           <span className="leading-tight">
             <span className="block font-[family-name:var(--font-display)] text-[17px] font-bold tracking-tight">CaseCheck</span>
-            <span className="hud-label text-[12px] text-sidebar-muted">camera de control</span>
+            <span className="hud-label text-[12px] text-sidebar-muted">Credite pentru companii</span>
           </span>
         </Link>
         <nav className="flex-1 space-y-0.5 px-2 py-3">
           {NAV.map(({ to, label, icon: Icon, exact }) => (
             <Link key={to} to={to} activeOptions={{ exact }}
-              className="group flex items-center gap-2.5 border-l-2 border-transparent px-3 py-2 text-[15px] text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground"
-              activeProps={{ className: "!border-agent !text-sidebar-foreground bg-sidebar-accent" }}>
+              className="group flex items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-3 text-[15px] text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground"
+              activeProps={{ className: "!border-transparent !text-agent-text bg-agent-soft" }}>
               <Icon className="h-4 w-4" />{label}
             </Link>
           ))}
@@ -102,7 +103,7 @@ function Layout() {
             <CommandIcon className="h-4 w-4" />Comenzi<span className="ml-auto flex gap-0.5"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
           </button>
         </nav>
-        <div className="space-y-2 border-t border-sidebar-border p-3">
+        <div className="sidebar-account space-y-2 border-t border-sidebar-border p-3">
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
               <div className="num truncate text-[15px]">{user.username}</div>
@@ -110,17 +111,14 @@ function Layout() {
             </div>
             <ThemeToggle />
           </div>
+          <details className="text-sm text-sidebar-muted"><summary>Detalii tehnice</summary><ModeLabel /></details>
           <button onClick={logout} className="flex w-full items-center gap-2 px-1 py-1 text-[14px] text-sidebar-muted hover:text-sidebar-foreground">
             <LogOut className="h-3.5 w-3.5" /> Deconectare
           </button>
         </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-9 items-center justify-between gap-3 border-b px-6">
-          <span className="hud-label text-warning">Date sintetice · demonstrație, fără valoare juridică</span>
-          <ModeLabel />
-        </div>
-        <main className="hud-grid flex-1 px-6 py-6">
+        <main className="app-main flex-1">
           <Outlet />
         </main>
       </div>

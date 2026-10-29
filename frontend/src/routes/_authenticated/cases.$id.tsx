@@ -3,9 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AlertTriangle, ChevronDown, ChevronLeft, FileText, Loader2, Play, Sparkles, CheckCheck } from "lucide-react";
-import { api, ApiError, isMock } from "@/lib/api";
-import { mockDocPages } from "@/lib/mock";
-import { caseQ, documentQ, factsQ, findingsQ, proposalQ, runsQ, traceQ } from "@/lib/queries";
+import { api, ApiError } from "@/lib/api";
+import { PdfFrame, TextFrame, type CaseDoc } from "@/components/casecheck/evidence";
+import { caseQ, factsQ, findingsQ, proposalQ, runsQ, traceQ } from "@/lib/queries";
 import {
   DISPOSITION, dispKey, fieldLabel, fmtDateTime, KIND_LABEL, OUTCOME, OUTCOME_ORDER, parseTs, ROLE_LABEL, shortSha, todayIso,
 } from "@/lib/labels";
@@ -56,11 +56,14 @@ function CasePage() {
   const c = useQuery(caseQ(id));
   const runs = useQuery(runsQ(id));
   const facts = useQuery(factsQ(id));
+  const [sourceEvidence,setSourceEvidence] = useState<Evidence|null>(null);
+  useEffect(()=>{if(c.data?.kind==="credit")void nav({to:"/credit/$id",params:{id},replace:true});},[c.data?.kind,id]);
   const tab = search.tab ?? "documente";
   const setSearch = (s: Search) => nav({ search: (p) => ({ ...p, ...s }), replace: true });
 
   if (c.isLoading) return <Empty>Se încarcă dosarul…</Empty>;
   if (c.isError || !c.data) return <Empty>Dosarul nu a putut fi încărcat.</Empty>;
+  if(c.data.kind === "credit") return <Empty>Se deschide dosarul de credit…</Empty>;
   const cs = c.data;
   const latest = runs.data?.[0];
 
@@ -89,11 +92,11 @@ function CasePage() {
           <TabsTrigger value="istoric">Istoric</TabsTrigger>
         </TabsList>
         <TabsContent value="documente">
-          <DocumentsTab cs={cs} facts={facts.data?.facts.facts ?? []} docId={search.doc} page={search.page} onSelect={(doc, page) => setSearch({ doc, page })} />
+          <DocumentsTab cs={cs} facts={facts.data?.facts?.facts ?? []} docId={search.doc} page={search.page} onSelect={(doc, page) => setSearch({ doc, page })} selectedEvidence={sourceEvidence} onEvidence={setSourceEvidence} />
         </TabsContent>
         <TabsContent value="extragere"><ExtractionTab cs={cs} user={user} /></TabsContent>
         <TabsContent value="verificari">
-          <ChecksTab cs={cs} user={user} hasFacts={!!facts.data} runs={runs.data ?? []} openEvidence={(e) => setSearch({ tab: "documente", doc: e.document_id, page: e.page })} />
+          <ChecksTab cs={cs} user={user} hasFacts={!!facts.data?.facts} runs={runs.data ?? []} openEvidence={(e) => {setSourceEvidence(e);setSearch({ tab: "documente", doc: e.document_id, page: e.page });}} />
         </TabsContent>
         <TabsContent value="istoric"><HistoryTab cs={cs} runs={runs.data ?? []} factsRev={facts.data?.revision} /></TabsContent>
       </Tabs>
@@ -103,7 +106,7 @@ function CasePage() {
 
 /* ---------------- Documente ---------------- */
 
-function DocumentsTab({ cs, facts, docId, page, onSelect }: { cs: CaseDetail; facts: Fact[]; docId?: string | undefined; page?: number | undefined; onSelect: (doc: string, page?: number) => void }) {
+function DocumentsTab({ cs, facts, docId, page, onSelect, selectedEvidence, onEvidence }: { cs: CaseDetail; facts: Fact[]; docId?: string | undefined; page?: number | undefined; onSelect: (doc: string, page?: number) => void; selectedEvidence:Evidence|null; onEvidence:(e:Evidence)=>void }) {
   const doc = cs.documents.find((d) => d.id === docId) ?? cs.documents[0];
   const docFacts = facts.filter((f) => f.evidence.document_id === doc?.id);
   if (!doc) return <Empty>Niciun document.</Empty>;
@@ -114,17 +117,17 @@ function DocumentsTab({ cs, facts, docId, page, onSelect }: { cs: CaseDetail; fa
           <button key={d.id} onClick={() => onSelect(d.id, undefined)} className={cn("w-full rounded border bg-card px-3 py-2 text-left transition-colors hover:bg-muted", d.id === doc.id && "border-primary ring-1 ring-primary")}>
             <div className="flex items-center gap-1.5 text-sm font-medium"><FileText className="h-3.5 w-3.5 text-muted-foreground" />{KIND_LABEL[d.kind]}</div>
             <div className="truncate text-xs text-muted-foreground">{d.filename}</div>
-            <Mono>{shortSha(d.sha256)}</Mono>
           </button>
         ))}
       </div>
-      <PdfViewer doc={doc} page={page ?? 1} />
+      {doc.media_type === "application/pdf" || doc.filename.toLowerCase().endsWith(".pdf") ? <PdfFrame doc={doc as CaseDoc} page={page ?? 1} ev={selectedEvidence?.document_id===doc.id?selectedEvidence:null}/> : <TextFrame doc={doc as CaseDoc} ev={selectedEvidence?.document_id===doc.id?selectedEvidence:null}/>}
       <Card title="Dovezi" actions={<Mono>{docFacts.length} fapte</Mono>}>
+        <details className="mb-3 text-sm text-muted-foreground"><summary>Versiunea documentului</summary><p className="break-all">SHA256: {doc.sha256}</p></details>
         {docFacts.length === 0 ? <Empty>Nicio dovadă confirmată pentru acest document.</Empty> : (
           <ul className="space-y-2">
             {docFacts.map((f) => (
               <li key={f.id}>
-                <button onClick={() => onSelect(doc.id, f.evidence.page)} className={cn("w-full rounded border p-2.5 text-left hover:bg-muted", page === f.evidence.page && "border-primary/60")}>
+                <button onClick={() => {onEvidence(f.evidence);onSelect(doc.id, f.evidence.page);}} className={cn("w-full rounded border p-2.5 text-left hover:bg-muted", page === f.evidence.page && "border-primary/60")}>
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="text-xs text-muted-foreground">{fieldLabel(f.field)}</span>
                     <Mono>p. {f.evidence.page}</Mono>
@@ -141,39 +144,6 @@ function DocumentsTab({ cs, facts, docId, page, onSelect }: { cs: CaseDetail; fa
   );
 }
 
-function PdfViewer({ doc, page }: { doc: Doc; page: number }) {
-  if (isMock()) {
-    const pages = mockDocPages(doc.id);
-    return (
-      <div className="flex h-[70vh] flex-col rounded-md border bg-muted">
-        <div className="flex items-center justify-between border-b bg-card px-3 py-1.5 text-xs text-muted-foreground">
-          <span>{doc.filename}</span><span>Previzualizare demonstrativă · pagina {page}/{pages.length}</span>
-        </div>
-        <div className="flex-1 overflow-auto p-4">
-          <div className="mx-auto max-w-xl rounded-sm border bg-card p-8 shadow-sm">
-            <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed">{pages[page - 1] ?? "Pagină inexistentă"}</pre>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  return <BlobPdf doc={doc} page={page} />;
-}
-
-function BlobPdf({ doc, page }: { doc: Doc; page: number }) {
-  const blob = useQuery(documentQ(doc.id));
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (!blob.data) return;
-    const u = URL.createObjectURL(blob.data);
-    setUrl(u);
-    return () => URL.revokeObjectURL(u);
-  }, [blob.data]);
-  if (blob.isError) return <div className="flex h-[70vh] items-center justify-center rounded-md border bg-card"><Empty>Documentul nu a putut fi descărcat.</Empty></div>;
-  if (!url) return <div className="flex h-[70vh] items-center justify-center rounded-md border bg-card"><Empty>Se încarcă documentul…</Empty></div>;
-  return <iframe key={`${doc.id}-${page}`} title={doc.filename} src={`${url}#page=${page}&navpanes=0&view=FitH`} className="h-[70vh] w-full rounded-md border bg-card" />;
-}
-
 /* ---------------- Extragere AI ---------------- */
 
 function ExtractionTab({ cs, user }: { cs: CaseDetail; user: User }) {
@@ -187,7 +157,7 @@ function ExtractionTab({ cs, user }: { cs: CaseDetail; user: User }) {
     onError: onErr,
   });
   const confirm = useMutation({
-    mutationFn: () => api.confirmFacts(cs.id, cs.revision, prop.data!.facts),
+    mutationFn: () => {if(!prop.data?.facts)throw new Error("Nu există date extrase de confirmat.");return api.confirmFacts(cs.id, cs.revision, prop.data.facts);},
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ["case", cs.id] });
       qc.invalidateQueries({ queryKey: ["cases"] });
@@ -228,7 +198,7 @@ function ExtractionTab({ cs, user }: { cs: CaseDetail; user: User }) {
             actions={
               <Guarded user={user}>
                 {(ro) => (
-                  <Button size="sm" onClick={() => confirm.mutate()} disabled={ro || confirm.isPending || p.status !== "COMPLETED"}>
+                  <Button size="sm" onClick={() => confirm.mutate()} disabled={ro || confirm.isPending || p.status !== "COMPLETED" || !p.facts}>
                     <CheckCheck className="h-4 w-4" /> Confirmă faptele
                   </Button>
                 )}
@@ -236,31 +206,32 @@ function ExtractionTab({ cs, user }: { cs: CaseDetail; user: User }) {
             }
           >
             <div className="flex flex-wrap items-center gap-2">
-              <Pill tone="neutral">{p.label}</Pill>
-              <Pill tone={p.status === "COMPLETED" ? "success" : "danger"}>{p.status}</Pill>
+
+              <Pill tone={p.status === "COMPLETED" ? "success" : "danger"}>{p.status === "COMPLETED" ? "Finalizat" : p.status === "FAILED" ? "Procesare eșuată" : "În lucru"}</Pill>
               {!p.is_current && <Pill tone="warning"><AlertTriangle className="h-3 w-3" /> Propunere pentru o revizie anterioară (r{p.case_revision})</Pill>}
             </div>
+            {p.error && <p role="alert" className="mt-2 text-sm text-danger">{p.error}</p>}
+            <details className="technical-details"><summary>Detalii tehnice ale extragerii</summary><p>{p.label}</p>
             <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm md:grid-cols-4">
               <Meta k="Model" v={<Mono>{p.model}</Mono>} />
               <Meta k="Latență totală" v={`${(p.latency_ms / 1000).toFixed(1)} s`} />
               <Meta k="Versiune prompt" v={<Mono>{p.prompt_version}</Mono>} />
               <Meta k="Creat" v={fmtDateTime(p.created_at)} />
             </dl>
-            {p.error && <p className="mt-2 text-sm text-danger">{p.error}</p>}
             <div className="mt-3 flex flex-wrap gap-1.5">
               {p.calls.map((c) => (
                 <span key={c.document_id} className="rounded border bg-muted px-2 py-0.5 text-xs">{KIND_LABEL[c.kind]} · <Mono>{ms(c.latency_ms)} ms</Mono></span>
               ))}
-            </div>
+            </div></details>
           </Card>
 
-          <Card title="Fapte propuse" actions={<Mono>{p.facts.facts.length}</Mono>}>
+          <Card title="Fapte propuse" actions={<Mono>{p.facts?.facts.length ?? 0}</Mono>}>
             <table className="w-full text-sm">
               <thead className="text-left text-xs text-muted-foreground">
                 <tr><th className="pb-2 font-medium">Câmp</th><th className="pb-2 font-medium">Valoare</th><th className="pb-2 font-medium">Document</th><th className="pb-2 font-medium">Pag.</th><th className="pb-2 font-medium w-[40%]">Citat</th></tr>
               </thead>
               <tbody>
-                {p.facts.facts.map((f) => {
+                {(p.facts?.facts ?? []).map((f) => {
                   const d = docName(f.evidence.document_id);
                   return (
                     <tr key={f.id} className="border-t align-top">
@@ -432,7 +403,7 @@ function HistoryTab({ cs, runs, factsRev }: { cs: CaseDetail; runs: Run[]; facts
   const events: Ev[] = [];
   events.push({ at: cs.created_at, title: "Dosar creat", detail: <Mono>{cs.id}</Mono>, tone: "neutral" });
   cs.documents.forEach((d) => events.push({ at: cs.created_at, title: `Document încărcat · ${KIND_LABEL[d.kind]}`, detail: <>{d.filename} <Mono>{shortSha(d.sha256)}</Mono></>, tone: "neutral" }));
-  if (prop.data) events.push({ at: prop.data.created_at, title: "Propunere extragere AI", detail: <>{prop.data.model} · {(prop.data.latency_ms / 1000).toFixed(1)} s · {prop.data.facts.facts.length} fapte</>, tone: "neutral" });
+  if (prop.data) events.push({ at: prop.data.created_at, title: "Propunere extragere AI", detail: <>{prop.data.model} · {(prop.data.latency_ms / 1000).toFixed(1)} s · {prop.data.facts?.facts.length ?? 0} fapte</>, tone: "neutral" });
   if (factsRev) events.push({ at: undefined, title: "Fapte confirmate", detail: <>Revizia <Mono>r{factsRev}</Mono></>, tone: "success" });
   runs.forEach((r) => {
     const d = DISPOSITION[dispKey(r.result.disposition)]!;

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowUpRight, Search } from "lucide-react";
 import { creditCasesQ, sessionQ } from "@/lib/queries";
 import { REC_LABEL, REC_TONE, RUN_STATUS_META, WAITING_FOR_LABEL } from "@/lib/labels";
-import { fmtAge, fmtRon } from "@/lib/format";
+import { fmtRon } from "@/lib/format";
 import type { CreditCaseSummary } from "@/lib/agent-types";
 import { NewCreditCase } from "@/components/casecheck/new-credit-case";
 import { Empty, Tag } from "@/components/casecheck/hud";
@@ -28,9 +28,9 @@ function mine(c: CreditCaseSummary, role: string) {
   return preparer ? ["analyst","case_officer"].includes(c.waiting_for ?? "") : c.waiting_for === role;
 }
 function taskLabel(c: CreditCaseSummary) {
-  if (!c.run) return "Pornește agenții";
+  if (!c.run) return "Analizează documentele";
   if (c.run.status === "WAITING_CLIENT") return c.waiting_for==="case_officer" ? "Verifică solicitarea către client" : "Așteaptă răspunsul clientului";
-  if (["analyst","case_officer"].includes(c.waiting_for ?? "")) return "Verifică faptele extrase";
+  if (["analyst","case_officer"].includes(c.waiting_for ?? "")) return "Verifică datele";
   return `Decide dosarul · ${c.run.level ?? ""}`;
 }
 function Queue() {
@@ -62,7 +62,7 @@ function Queue() {
       <section className="space-y-3">
         <h2 className="text-[20px] font-medium">De făcut de tine{todo.length ? ` (${todo.length})` : ""}</h2>
         {todo.length ? <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {todo.map((c) => <Link key={c.id} to="/credit/$id" params={{ id: c.id }} className="group block border-2 border-human bg-card px-4 py-3 hover:bg-surface-2">
+          {todo.map((c) => <Link key={c.id} to="/credit/$id" params={{ id: c.id }} className="group block rounded-xl border border-border hover:border-agent-border bg-card px-4 py-3 hover:bg-surface-2">
             <div className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">{taskLabel(c)}</div>
             <div className="mt-1 flex items-center justify-between gap-2 text-[17px] font-medium">{c.company}<ArrowUpRight className="h-4 w-4 shrink-0" /></div>
             <div className="num mt-0.5 text-[14px] text-muted-foreground">{fmtRon(c.amount)} · {c.term_months} luni</div>
@@ -73,19 +73,18 @@ function Queue() {
       <div className="flex flex-wrap gap-1.5">
         {FILTERS.map((f) => <button key={f.key} onClick={() => setFilter(f.key)} className={cn("hud-label border px-3 py-2 transition-colors", filter === f.key ? "border-human bg-human text-human-foreground" : "border-border bg-surface-1 text-muted-foreground hover:border-border-strong hover:text-foreground")}>{f.label}</button>)}
       </div>
-      <div className="border bg-card">
-        <div className="hud-label grid grid-cols-[minmax(240px,2.2fr)_1fr_1.1fr_1.4fr_1.6fr_70px] gap-4 border-b px-5 py-3 text-muted-foreground">
-          <span>Dosar</span><span>Solicitare</span><span>Stare</span><span>Recomandare agenți</span><span>Rutare</span><span className="text-right">Vechime</span>
+      <div className="overflow-x-auto rounded-xl border bg-card queue-table">
+        <div className="hud-label grid grid-cols-[minmax(220px,2fr)_1fr_1fr_1.1fr_1fr] gap-4 border-b px-5 py-3 text-muted-foreground">
+          <span>Dosar</span><span>Solicitare</span><span>Stare</span><span>Recomandare agenți</span><span>Responsabil</span>
         </div>
         {shown.map((c) => {
           const status = c.run ? RUN_STATUS_META[c.run.status] : null;
-          return <Link key={c.id} to="/credit/$id" params={{ id: c.id }} className="group grid grid-cols-[minmax(240px,2.2fr)_1fr_1.1fr_1.4fr_1.6fr_70px] items-center gap-4 border-b px-5 py-4 last:border-0 hover:bg-surface-2">
+          return <Link key={c.id} to="/credit/$id" params={{ id: c.id }} className="group grid grid-cols-[minmax(220px,2fr)_1fr_1fr_1.1fr_1fr] items-center gap-4 border-b px-5 py-4 last:border-0 hover:bg-surface-2">
             <div className="min-w-0"><div className="flex items-center gap-2 truncate text-[16px] font-medium">{c.company}<ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100" /></div><div className="num mt-1 text-[13px] text-muted-foreground">CUI {c.cui} · {c.channel}</div></div>
             <div><div className="num text-[16px]">{fmtRon(c.amount)}</div><div className="mt-1 text-[13px] text-muted-foreground">{c.term_months} luni</div></div>
             <div>{status ? <Tag tone={status.tone} className={c.run?.status === "RUNNING" ? "animate-pulse" : undefined}>{status.label}</Tag> : <Tag>Neînceput</Tag>}</div>
-            <div className="flex flex-wrap items-center gap-1.5">{c.run?.recommendation ? <Tag tone={REC_TONE[c.run.recommendation]}>{REC_LABEL[c.run.recommendation]}</Tag> : <span className="text-xs text-muted-foreground">—</span>}{c.run?.level && <Tag tone="neutral">{c.run.level}</Tag>}</div>
-            <div className="min-w-0">{c.waiting_for ? <><div className={cn("text-[15px]", mine(c, role) && "text-agent-text")}>→ {WAITING_FOR_LABEL[c.waiting_for] ?? c.waiting_for}{mine(c, role) && " (tu)"}</div>{c.routing_reason && <div className="mt-1 truncate text-[13px] text-muted-foreground" title={c.routing_reason}>{c.routing_reason}</div>}</> : <div className="truncate text-[13px] text-muted-foreground" title={c.run?.last_step ?? undefined}>{c.run?.last_step ?? "Agenții nu au fost porniți"}</div>}</div>
-            <div className="num text-right text-[14px] text-muted-foreground">{fmtAge(c.created_at)}</div>
+            <div className="flex flex-wrap items-center gap-1.5">{c.run?.recommendation ? <Tag tone={REC_TONE[c.run.recommendation]}>{REC_LABEL[c.run.recommendation]}</Tag> : <span className="text-xs text-muted-foreground">În așteptarea analizei</span>}{c.run?.level && <Tag tone="neutral">{c.run.level}</Tag>}</div>
+            <div className="min-w-0">{c.waiting_for ? <><div className={cn("text-[15px]", mine(c, role) && "text-agent-text")}>→ {WAITING_FOR_LABEL[c.waiting_for] ?? c.waiting_for}{mine(c, role) && " (tu)"}</div></> : <div className="truncate text-[13px] text-muted-foreground" title={c.run?.last_step ?? undefined}>{c.run?.status === "DECIDED" ? "Finalizat" : c.run?.status === "RUNNING" ? "Analiză în curs" : c.run?.status === "FAILED" ? "Necesită reluarea analizei" : "Pregătit pentru analiză"}</div>}</div>
           </Link>;
         })}
         {cases.isLoading && <Empty className="m-4">Se încarcă dosarele…</Empty>}

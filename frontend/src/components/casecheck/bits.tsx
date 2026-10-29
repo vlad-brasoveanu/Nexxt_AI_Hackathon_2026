@@ -3,21 +3,12 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { DISPOSITION, dispKey, type Tone } from "@/lib/labels";
 import type { Disposition, User } from "@/lib/types";
+import { Tag } from "./hud";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-const TONE: Record<Tone, string> = {
-  success: "bg-success-soft text-success border-success/30",
-  warning: "bg-warning-soft text-warning border-warning/30",
-  danger: "bg-danger-soft text-danger border-danger/30",
-  neutral: "bg-neutral-soft text-neutral border-neutral/30",
-};
 
 export function Pill({ tone, children, className }: { tone: Tone; children: ReactNode; className?: string }) {
-  return (
-    <span className={cn("inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs font-medium whitespace-nowrap", TONE[tone], className)}>
-      {children}
-    </span>
-  );
+  return <Tag tone={tone} className={className}>{children}</Tag>;
 }
 
 export function DispositionBadge({ d }: { d: Disposition | undefined }) {
@@ -26,7 +17,7 @@ export function DispositionBadge({ d }: { d: Disposition | undefined }) {
 }
 
 export function Mono({ children, className }: { children: ReactNode; className?: string }) {
-  return <span className={cn("font-mono text-xs text-muted-foreground", className)}>{children}</span>;
+  return <span className={cn("num text-sm text-muted-foreground", className)}>{children}</span>;
 }
 
 export const READONLY_TIP = "Rolul de supervizor nu poate modifica dovezile";

@@ -1,6 +1,6 @@
-// HUD primitives for the agent control room: outlined panels with cut corners, mono labels, tone tags.
-import type { ReactNode } from "react";
-import { Bot, Cpu, User as UserIcon } from "lucide-react";
+// Shared surfaces, typography and semantic status badges.
+import { Children, isValidElement, type ReactNode } from "react";
+import { AlertTriangle, CheckCircle2, XCircle, Bot, Cpu, User as UserIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PillTone } from "@/lib/labels";
 import { TIER_META } from "@/lib/labels";
@@ -19,9 +19,10 @@ const TAG: Record<PillTone, string> = {
 };
 
 export function Tag({ tone = "neutral", children, className, title }: { tone?: PillTone; children: ReactNode; className?: string; title?: string }) {
+  const hasIcon = Children.toArray(children).some(child => isValidElement(child) && typeof child.type !== "string");
   return (
-    <span title={title} className={cn("hud-label inline-flex items-center gap-1.5 whitespace-nowrap border px-1.5 py-1", TAG[tone], className)}>
-      {children}
+    <span title={title} className={cn("hud-label inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border px-2 py-1", TAG[tone], className)}>
+      {!hasIcon && (tone === "success" ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden /> : tone === "warning" ? <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden /> : tone === "danger" ? <XCircle className="h-3.5 w-3.5 shrink-0" aria-hidden /> : null)}{children}
     </span>
   );
 }
@@ -39,7 +40,7 @@ export function Panel({ eyebrow, title, actions, children, className, bodyClassN
         <header className="flex items-start justify-between gap-3 border-b px-4 py-3">
           <div className="min-w-0 space-y-1">
             {eyebrow && <HudLabel className={agent ? "text-agent-text" : undefined}>{eyebrow}</HudLabel>}
-            {title && <h3 className="truncate text-[16px] font-medium leading-tight">{title}</h3>}
+            {title && <h3 className="text-[18px] font-medium leading-tight">{title}</h3>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
@@ -55,7 +56,7 @@ export function Stat({ label, value, sub, tone, big }: { label: ReactNode; value
     <div className="min-w-0 space-y-1.5">
       <HudLabel>{label}</HudLabel>
       <div className={cn("num font-medium leading-none tracking-tight", big ? "text-[40px]" : "text-2xl", color)}>{value}</div>
-      {sub && <div className="text-xs text-muted-foreground">{sub}</div>}
+      {sub && <div className="text-sm text-muted-foreground">{sub}</div>}
     </div>
   );
 }
@@ -83,8 +84,8 @@ export function ModelChip({ model }: { model: ModelUse | null }) {
 
 export function Actor({ human }: { human?: boolean }) {
   return human
-    ? <Tag tone="human"><UserIcon className="h-3 w-3" />OM</Tag>
-    : <Tag tone="agent"><Bot className="h-3 w-3" />AGENT</Tag>;
+    ? <Tag tone="human"><UserIcon className="h-3 w-3" />Angajat</Tag>
+    : <Tag tone="agent"><Bot className="h-3 w-3" />Asistent AI</Tag>;
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
@@ -92,7 +93,7 @@ export function Kbd({ children }: { children: ReactNode }) {
 }
 
 export function Empty({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("hatch border border-dashed px-4 py-8 text-center text-sm text-muted-foreground", className)}>{children}</div>;
+  return <div className={cn("rounded-lg border bg-surface-2 px-4 py-8 text-center text-sm text-muted-foreground", className)}>{children}</div>;
 }
 
 /** A thin meter: value / max with a threshold tick. */
@@ -102,7 +103,7 @@ export function Meter({ value, max, tone = "agent", label }: { value: number; ma
   return (
     <div className="space-y-1" aria-label={label} role="meter" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max}>
       <div className="h-1.5 w-full border border-border bg-surface-2">
-        <div className={cn("h-full transition-[width] duration-500", bar)} style={{ width: `${pct}%` }} />
+        <div className={cn("h-full transition-[width] duration-200", bar)} style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

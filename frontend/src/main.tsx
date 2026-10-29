@@ -2,13 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient } from "@tanstack/react-query";
 import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
-// Self-hosted fonts (no CDN): Inter for text, Space Grotesk for display, JetBrains Mono for numbers / IDs / trace.
+// Inter is bundled locally; financial values use tabular figures.
 import "@fontsource-variable/inter";
-import "@fontsource/space-grotesk/500.css";
-import "@fontsource/space-grotesk/700.css";
-import "@fontsource/jetbrains-mono/400.css";
-import "@fontsource/jetbrains-mono/500.css";
-import "@fontsource/jetbrains-mono/700.css";
 import "./styles.css";
 import { routeTree } from "./routeTree.gen";
 

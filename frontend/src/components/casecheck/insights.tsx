@@ -16,7 +16,7 @@ export function MemoView({ run }: { run: AgentRun }) {
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_300px]">
       <Panel eyebrow="Notă de credit · cu referințe la sursă" title="Nota pentru decident"
-        actions={<><Tag tone={memoBoard.unverified.length ? "danger" : "success"}><CheckCircle2 className="h-3 w-3" />{memoBoard.verified_numbers} cifre verificate · {memoBoard.unverified.length} neverificate</Tag><ModelChip model={memoBoard.model} /></>}>
+        actions={<><Tag tone={memoBoard.unverified.length ? "danger" : "success"}><CheckCircle2 className="h-3 w-3" />{memoBoard.verified_numbers} cifre verificate · {memoBoard.unverified.length} neverificate</Tag></>}>
         <article className="max-w-[78ch] whitespace-pre-wrap text-[16px] leading-[1.75]">
           {parts.map((p, i) => {
             const m = p.match(/^\[([^\]]+)\]$/);
@@ -24,7 +24,7 @@ export function MemoView({ run }: { run: AgentRun }) {
             return <sup key={i} className="num mx-0.5 border border-agent-border px-1 text-[12px] text-agent-text" title={m[1]}>{refs.indexOf(m[1]!) + 1}</sup>;
           })}
         </article>
-        {!memoBoard.model && <p className="mt-4 border-t pt-3 text-[13px] text-muted-foreground">Notă generată din șablon determinist (fără model sau după respingerea unei variante cu cifre fără sursă).</p>}
+        <details className="technical-details"><summary>Procesarea notei</summary>{memoBoard.model ? <ModelChip model={memoBoard.model} /> : <p>Șablon determinist, fără model sau după respingerea unei variante fără surse.</p>}</details>
       </Panel>
       <Panel eyebrow="Referințe" title={`${refs.length} surse citate`}>
         <ol className="space-y-1.5">
@@ -83,7 +83,7 @@ export function GroupView({ run }: { run: AgentRun }) {
   if (!kyb) return <Empty>Agentul KYB nu a rulat încă.</Empty>;
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_340px]">
-      <Panel eyebrow="KYB · registrul comerțului (simulat)" title="Asociați, beneficiari reali și entități legate" bodyClassName="p-0">
+      <Panel eyebrow="Structura companiei" title="Asociați, beneficiari reali și entități legate" bodyClassName="p-0">
         <div className="h-[420px]">
           <ReactFlow nodes={graph.nodes} edges={graph.edges} nodeTypes={groupTypes} fitView fitViewOptions={{ padding: 0.2 }}
             nodesDraggable={false} nodesConnectable={false} elementsSelectable={false} zoomOnScroll={false} preventScrolling={false} proOptions={{ hideAttribution: true }}>
@@ -93,20 +93,20 @@ export function GroupView({ run }: { run: AgentRun }) {
       </Panel>
       <div className="space-y-5">
         <Panel eyebrow="Expunere de grup" title={fmtRon(kyb.group_exposure)}>
-          <p className="text-[14px] text-muted-foreground">Limitele aprobate la Banca Demo pentru entitățile aflate sub control comun (≥ 50%).</p>
+          <p className="text-[14px] text-muted-foreground">Limitele aprobate de bancă pentru entitățile aflate sub control comun (≥ 50%).</p>
           <ul className="mt-3 space-y-1.5">
             {kyb.ubo.map((u) => <li key={u.name} className="flex justify-between text-[15px]"><span>{u.name}</span><span className="num text-muted-foreground">{u.share_pct}% · {u.via}</span></li>)}
           </ul>
         </Panel>
-        <Panel eyebrow="KYC reutilizat din onboarding" title="Verificări">
+        <Panel title="Verificarea companiei">
           <ul className="space-y-2">
             {kyb.kyc_checks.map((c) => (
               <li key={c.rule_id} className="text-[14px]">
-                <div className="flex items-center gap-2"><span className="num">{c.rule_id}</span><Tag tone={c.outcome === "PASS" ? "success" : c.outcome === "FAIL" ? "danger" : "warning"}>{c.outcome}</Tag></div>
-                <div className="mt-0.5 text-muted-foreground">{c.detail}</div>
+                <div className="flex items-center gap-2"><span>{({"VAL-01":"Valabilitatea actului", "CON-02":"Identificarea firmei", "BUS-05":"Actualitatea extrasului"} as Record<string,string>)[c.rule_id] ?? "Verificare"}</span><Tag tone={c.outcome === "PASS" ? "success" : c.outcome === "FAIL" ? "danger" : "warning"}>{c.outcome === "PASS" ? "Conform" : c.outcome === "FAIL" ? "Neconform" : "De verificat"}</Tag></div>
+                <details className="mt-1 text-sm text-muted-foreground"><summary>Detalii verificare</summary><p>{c.rule_id} · {c.detail}</p></details>
               </li>
             ))}
-            <li className="flex items-center gap-2 text-[14px]"><span className="num">SANCȚIUNI</span><Tag tone={kyb.sanctions_hits ? "danger" : "success"}>{kyb.sanctions_hits} potriviri</Tag></li>
+            <li className="flex items-center gap-2 text-[14px]"><span className="num">Sancțiuni</span><Tag tone={kyb.sanctions_hits ? "danger" : "success"}>{kyb.sanctions_hits} potriviri</Tag></li>
           </ul>
         </Panel>
       </div>

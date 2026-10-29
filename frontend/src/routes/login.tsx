@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { api, ApiError, isMock } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { sessionQ } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,9 +43,9 @@ function Login() {
     <div className="hud-grid flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="space-y-2">
-          <span className="hud-label text-agent-text">Camera de control a agentului</span>
+          <span className="hud-label text-agent-text">Analiza dosarelor de credit</span>
           <h1 className="text-[40px] font-bold leading-none tracking-tight">CaseCheck</h1>
-          <p className="text-[15px] text-muted-foreground">Agenții pregătesc dosarele de credit IMM. Oamenii decid.</p>
+          <p className="text-[15px] text-muted-foreground">Documente, analiză și decizii într-un singur loc.</p>
         </div>
         <form onSubmit={submit} className="hud-cut space-y-4 border bg-card p-6">
           <div className="space-y-1.5">
@@ -58,12 +58,9 @@ function Login() {
           </div>
           {err && <p className="text-sm text-danger">{err}</p>}
           <Button type="submit" className="h-11 w-full rounded-none" disabled={busy || !u || !p}>{busy ? "Se autentifică…" : "Autentificare"}</Button>
-          <div className="border border-dashed px-3 py-2 text-[13px] leading-relaxed text-muted-foreground">
-            Conturi demo, parola <span className="num text-foreground">12345</span>:<br />
-            <span className="num">{isMock() ? "manager · analyst · risk_officer (mock UI)" : "officer · risk · admin"}</span>
-          </div>
+
         </form>
-        <p className="hud-label text-center text-warning">Date sintetice · fără valoare juridică</p>
+
       </div>
     </div>
   );
