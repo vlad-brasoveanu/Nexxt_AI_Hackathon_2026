@@ -43,7 +43,7 @@ Each stage is stacked on the previous verified stage, starting from the original
 1. `codex/pdf-credit-workflow` — `bd5f4b3`.
 2. `codex/risk-planner` — `3276f35`.
 3. `codex/roles-audit` — `d2c0be9`.
-4. **`codex/credit-workspace-integration`** — contains all stages plus minimal UI and integration hardening; current delivery branch.
+4. **`codex/credit-workspace-integration`** — contains all stages plus minimal UI and integration hardening; integration stage.
 
 Commits use Vlad Brasoveanu's configured identity, without AI co-author/signature. The unrelated `fixtures/demo_pdfs.zip` is preserved outside the delivery. The alternate Lovable-inspired UI remains on its separate prior branch.
 
@@ -58,7 +58,7 @@ Commits use Vlad Brasoveanu's configured identity, without AI co-author/signatur
 7. **OCR (deferred):** add a replaceable OCR adapter and evaluate Romanian scans/tables. Mention it as planned capability, not delivered functionality.
 8. **Final product:** local inference adapter, hardware benchmark and true offline/no-cloud-fallback verification.
 
-The activation/fix follow-up is on **`codex/featherless-demo-validation`**, stacked on the full integration branch.
+The activation/fix follow-up is on **`codex/featherless-demo-validation`**, stacked on the full integration branch. All five stages are now integrated into **`codex/agentic-workflow`**, the delivery branch explicitly requested by the user on 2026-10-29.
 
 ## Practical demo
 
