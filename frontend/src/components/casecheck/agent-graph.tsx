@@ -23,8 +23,8 @@ const LABEL: Record<AgentState, string> = { idle: "În așteptare", running: "Î
 const TONE = { idle: "neutral", running: "agent", done: "success", stale: "warning", failed: "danger", blocked: "danger" } as const;
 
 /** Presentation only: the server remains the source of status, chronology and results. */
-export function AgentGraph({ run, docNames = {}, onSource, onRisk, onEvidence }: { run: AgentRun; docNames?: Record<string, string>; onSource?: (factId: string) => void; onRisk?: () => void; onEvidence?: (ev:Evidence,label:string)=>void }) {
-  const [selected, setSelected] = useState<AgentId | null>(null);
+export function AgentGraph({ run, docNames = {}, onSource, onRisk, onEvidence, initialAgent }: { run: AgentRun; docNames?: Record<string, string>; onSource?: (factId: string) => void; onRisk?: () => void; onEvidence?: (ev:Evidence,label:string)=>void; initialAgent?:AgentId|null }) {
+  const [selected, setSelected] = useState<AgentId | null>(initialAgent??null);
   useEffect(()=>{if(selected)document.getElementById("agent-result")?.scrollIntoView({block:"nearest"});},[selected]);
   const ids = GROUPS.flatMap(g => g.agents);
   const completed = run.agents.filter(a => ids.includes(a.id) && a.status === "done").length;

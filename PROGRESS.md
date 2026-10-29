@@ -123,4 +123,34 @@ Remaining: user visual feedback, broader document-layout/browser and screen-read
 - Implementation commit **`173b36b`** published to **`origin/codex/evidence-review`**; the remote hash was verified with `git ls-remote`.
 - Author and committer: Vlad Brasoveanu `<brasoveanu.vlad24@gmail.com>`. No AI author/co-author trailer was added; signing settings were preserved.
 - Included the professional UI refresh, dossier navigation fixes, exact source viewer, dependency lockfile, six evidence tests and project records. Ignored credentials/runtime artifacts and unrelated `fixtures/demo_pdfs.zip` were excluded.
-- Duplicate Codeforge cases are still present in the local demo database. Their cleanup was discussed but has not been performed. No default/delivery branch merge or pull request was created.
+- At publication time, duplicate Codeforge cases were still present. They have since been preserved in the backup and replaced in the active local preview by the clean reseed described below. No default/delivery branch merge or pull request was created.
+
+
+## Live agent workspace, restrained controls and clean reseed — 2026-10-29
+
+Branch: **`codex/live-agent-workspace`**, based on the published evidence-review branch. User requested the agent-work visualization back, simpler accents/corners and a fresh local demo.
+
+Implemented:
+
+- [x] Restored **Cum lucrează agenții** before a run and during real execution: coordinator, eight agent states, current handoff, dispatch/result history and critic-requested rechecks. **Execuție în timp real** and **Rezultate și surse** are separate views; selecting a specialist opens its result/source details. No simulated timing or fabricated activity.
+- [x] SSE dispatch events now refresh the agent board as well as result events. An unfinished server dispatch identifies the active specialist immediately; the short refresh timer is scoped to its run and cancelled on unmount. Status/counts remain derived from actual API data.
+- [x] Removed curved blue tab underlines, reduced general corner radii, joined the decision choices with straight internal seams, and changed permission metadata to neutral styling. Selected approve/reject choices retain soft semantic colours; the final signing control and all review/authority requirements are preserved. Financial summary now adapts to its own panel width, avoiding overlapping amounts.
+- [x] Backed up the previous preview SQLite database and all **86 stored files** to `.runtime/backups/before-reseed-20261029-085149/` (Europe/Bucharest timestamp). The original database/documents in `/private/tmp/` were retained too. No active run was interrupted.
+- [x] Replaced the active preview on **http://127.0.0.1:8015/** with a newly migrated isolated database, the same three accounts and **three unique companies / three initial cases / 20 intake files / zero agent runs**. Each case is ready for the user's manual analysis. Test outcomes, reviewed facts and decisions were not prefilled.
+
+Current local runtime:
+
+- Database/documents: `.runtime/demo-reseed-20261029-085821/`.
+- Startup profile: ignored `.runtime/current-preview.json`; restart the same preview with `.venv/bin/python .runtime/start-current-preview.py`.
+- Existing `scripts/preview.py` remains the portable default preview on port 8000. Existing `credit_seed.py` appends cases; the clean 8015 environment was seeded once.
+
+Validation:
+
+- Frontend build + TypeScript passed; the existing lazy PDF chunk-size warning remains. Five new execution-state tests plus six citation tests passed (**11 total**); diff whitespace check passed.
+- An isolated server on port 8016 exercised actual Featherless inference and the PDF workflow, including draft/manual request send, a synthetic completion response and manual reanalysis. Browser observed financial-statement and memo agents in progress, critic rechecks, completion and opening a specialist result without a page reload.
+- Isolated final run: **AWAITING_DECISION**, **25 steps**, **53 facts**, **3 successful cloud model records**, **0 model error records**, **1 critic challenge**, memo **0 unverified numbers**. No credit decision was signed. This validation does not consume the clean cases on 8015. The temporary 8016 server was stopped after checks.
+- Light-theme browser checks: selected main tab has **0px bottom border / 4px radius**; decision children have **0px internal radius**, group **6px**. Keyboard left/right selection works, signing remains blocked while review/reason requirements are unmet, amounts no longer overlap. Browser console had no errors.
+- Verified the usual port through API and browser: exactly three distinct CUIs, all runs absent, 20 documents, no duplicate Codeforge cases. Fresh login is required after the database switch; account names/passwords are unchanged.
+- Evidence: ignored `.runtime/live-agent-validation.json`, `.runtime/live-tests.log`, `.runtime/live-build.log`, `.runtime/live-agents.png`, `.runtime/live-decision-style.png`, `.runtime/reseed-backup.json`.
+
+Remaining: user testing and visual feedback, broader assistive-technology/device validation, and the existing production/local-inference work above. This follow-up has not been pushed.

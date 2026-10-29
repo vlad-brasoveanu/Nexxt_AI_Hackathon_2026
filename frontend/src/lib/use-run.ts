@@ -19,26 +19,20 @@ export function useLiveRun(caseId: string) {
   useEffect(() => {
     if (!runId || !live) return;
     const refetch = () => qc.invalidateQueries({ queryKey: latestRunKey(caseId) });
+    let pending: ReturnType<typeof setTimeout> | null = null;
+    const refresh = () => {if(pending)return;pending=setTimeout(()=>{pending=null;refetch();},120);};
     const onStep = (step: AgentStep) => {
       qc.setQueryData<AgentRun | null>(latestRunKey(caseId), (old) => {
         if (!old || old.id !== runId || old.steps.some((s) => s.seq === step.seq)) return old;
         return { ...old, steps: [...old.steps, step], updated_at: step.created_at };
       });
-      // Results change the board: refresh it in the background, at most a few times a second.
-      if (step.kind !== "dispatch") throttled(refetch);
+      // Dispatches also change the server agent status. Refresh them as well as results.
+      refresh();
     };
     const onRun = () => refetch();
-    return api.subscribeRun(runId, lastSeq.current, onStep, onRun);
+    const unsubscribe=api.subscribeRun(runId,lastSeq.current,onStep,onRun);
+    return ()=>{unsubscribe();if(pending)clearTimeout(pending);};
   }, [runId, live, caseId, qc]);
 
   return { run, query };
-}
-
-let pending: ReturnType<typeof setTimeout> | null = null;
-function throttled(fn: () => void) {
-  if (pending) return;
-  pending = setTimeout(() => {
-    pending = null;
-    fn();
-  }, 350);
 }

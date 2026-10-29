@@ -104,18 +104,18 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
   return (
     <div className="grid gap-5 xl:grid-cols-[1.25fr_1fr]">
       <div className="space-y-5">
-        <Panel agent eyebrow="Recomandare" title={<span className="flex items-center gap-2"><Tag tone={REC_TONE[rec.decision]}>{REC_LABEL[rec.decision]}</Tag>{rec.superseded && <Tag tone="warning">înlocuită</Tag>}</span>}
-          actions={<Tag tone="human"><Scale className="h-3 w-3" />{rec.level} · {LEVEL_ROLE[rec.level].label}</Tag>}>
-          <div className="grid gap-6 md:grid-cols-[auto_1fr]">
+        <Panel className="recommendation-card" eyebrow="Recomandare" title={<span className="flex items-center gap-2"><Tag tone={REC_TONE[rec.decision]}>{REC_LABEL[rec.decision]}</Tag>{rec.superseded && <Tag tone="warning">înlocuită</Tag>}</span>}
+          actions={<Tag tone="neutral"><Scale className="h-3 w-3" />{LEVEL_ROLE[rec.level].label}</Tag>}>
+          <div className="recommendation-summary">
             {proposed ? <DscrGauge value={proposed.dscr} stressed={proposed.dscr_stressed} /> : (
               <div className="flex h-[118px] w-[160px] items-center justify-center rounded-lg bg-surface-2"><Scale className="h-8 w-8 text-muted-foreground" aria-hidden /></div>
             )}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+            <div className="financial-stats grid grid-cols-2 gap-4">
               <Stat label="Solicitat" value={fmtInt(rec.requested.amount)} sub={`RON · ${rec.requested.term_months} luni`} />
               {proposed ? <>
-                <Stat label={rec.decision === "COUNTER_OFFER" ? "Propus" : "Termeni"} value={fmtInt(proposed.amount)} tone="agent" sub={`RON · ${proposed.term_months} luni`} />
+                <Stat label={rec.decision === "COUNTER_OFFER" ? "Propus" : "Termeni"} value={fmtInt(proposed.amount)} sub={`RON · ${proposed.term_months} luni`} />
                 <Stat label="Dobândă" value={fmtPct(proposed.rate_pct, 2)} sub={`${proposed.index} ${fmtPct(proposed.index_value_pct, 2)} + ${fmtPct(proposed.margin_pct, 2)}`} />
-                <Stat label="Rată lunară" value={fmtInt(proposed.monthly_payment)} sub={`DSCR în stres ${fmtX(proposed.dscr_stressed)}`} />
+                <Stat label="Rată lunară" value={fmtInt(proposed.monthly_payment)} sub={`RON / lună · DSCR în stres ${fmtX(proposed.dscr_stressed)}`} />
               </> : <div className="col-span-2 rounded-lg bg-warning-soft p-3"><p className="flex items-center gap-2 font-medium text-warning"><AlertTriangle className="h-4 w-4" />Termenii nu sunt disponibili</p><p className="mt-1 text-sm text-muted-foreground">{rec.decision === "DECLINE" ? "Cererea nu respectă condițiile de creditare. Consultă motivele de mai jos." : "Datele trebuie completate și verificate înainte de calcularea unei oferte."}</p></div>}
 
             </div>
@@ -197,13 +197,13 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
             <p className="text-[15px] text-muted-foreground">Rolul tău ({roleLabel(user.role)}) poate vedea recomandarea, dar nu poate semna. Dosarul necesită {LEVEL_ROLE[requiredLevel].label} ({requiredLevel}).</p>
           </Panel>
         ) : (
-          <Panel eyebrow="Decizie umană" title="Decizia ta" className="border-human">
+          <Panel eyebrow="Decizie umană" title="Decizia ta">
             {demoAllowed && <details className="mb-4 rounded-lg border p-3 text-sm"><summary className="text-muted-foreground">Unelte administrative de test</summary><label className="mt-3 flex gap-2 rounded-lg border border-warning bg-warning-soft p-3"><input type="checkbox" checked={demoException} onChange={e=>setDemoException(e.target.checked)}/>Excepție explicită DEMO: pot semna propriul dosar și fără al doilea vot. Decizia va fi marcată demonstrativă și auditată.</label></details>}
 
-            <div className="grid grid-cols-3 gap-px border bg-border" role="radiogroup" aria-label="Acțiune">
+            <div className="decision-choices" role="radiogroup" aria-label="Acțiune">
               {(["APPROVE", "MODIFY", "REJECT"] as HumanAction[]).map((a) => (
-                <button key={a} role="radio" aria-checked={action === a} onClick={() => setAction(a)}
-                  className={cn("py-3 text-[16px] font-medium", action === a ? (a === "REJECT" ? "bg-destructive text-white" : a === "APPROVE" ? "bg-[#15803d] text-white" : "bg-human text-human-foreground") : "bg-card hover:bg-surface-2")}>
+                <button key={a} id={`decision-${a}`} role="radio" tabIndex={action === a ? 0 : -1} aria-checked={action === a} onClick={() => setAction(a)} onKeyDown={e=>{const actions:HumanAction[]=["APPROVE","MODIFY","REJECT"];const i=actions.indexOf(action);const next=e.key==="ArrowRight"?actions[(i+1)%3]:e.key==="ArrowLeft"?actions[(i+2)%3]:null;if(next){e.preventDefault();setAction(next);document.getElementById(`decision-${next}`)?.focus();}}}
+                  className={cn("py-3 text-[16px] font-medium", action === a ? (a === "REJECT" ? "bg-danger-soft text-danger" : a === "APPROVE" ? "bg-success-soft text-success" : "bg-agent-soft text-agent-text") : "bg-card hover:bg-surface-2")}>
                   {ACTION_LABEL[a]}
                 </button>
               ))}
@@ -214,8 +214,8 @@ export function DecisionCockpit({ run, caseId, user, humanSeconds }: { run: Agen
               {action === "REJECT" && (rec.decision === "DECLINE" ? "Confirmi respingerea recomandată de agenți." : "Respingi un dosar pe care agenții îl recomandă: motivul este obligatoriu.")}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-[14px]">
-              <Tag tone={rank && rank >= LEVEL_RANK[requiredLevel] ? "success" : "danger"}><Lock className="h-3 w-3" />Necesită {requiredLevel}</Tag>
-              <Tag tone={preparer ? "danger" : "success"}><Eye className="h-3 w-3" />Patru ochi{run.prepared_by ? ` · pregătit de ${run.prepared_by}` : ""}</Tag>
+              <Tag tone={rank && rank >= LEVEL_RANK[requiredLevel] ? "neutral" : "danger"}><Lock className="h-3 w-3" />Necesită {requiredLevel}</Tag>
+              <Tag tone={preparer ? "danger" : "neutral"}><Eye className="h-3 w-3" />Patru ochi{run.prepared_by ? ` · pregătit de ${run.prepared_by}` : ""}</Tag>
               {requiredLevel === "L3" && <Tag tone="violet"><Users className="h-3 w-3" />2 voturi</Tag>}
               {override && <Tag tone="warning">Abatere motivată</Tag>}
             </div>

@@ -10,8 +10,9 @@ import { RUN_STATUS_META } from "@/lib/labels";
 import { fmtRon } from "@/lib/format";
 import type { Evidence } from "@/lib/types";
 import { SourceDialog } from "@/components/casecheck/source-dialog";
-import type { ReviewFact } from "@/lib/agent-types";
+import type { AgentId, ReviewFact } from "@/lib/agent-types";
 import { useUser } from "@/routes/_authenticated";
+import { LiveAgentExecution } from "@/components/casecheck/live-agent-execution";
 import { AgentGraph } from "@/components/casecheck/agent-graph";
 import { IssuesList, RequestCard, RulesTable } from "@/components/casecheck/run-panels";
 import { RiskPlanner } from "@/components/casecheck/risk-planner";
@@ -57,6 +58,8 @@ function CreditCase() {
   const { run, query } = useLiveRun(id);
   const [tab, setTab] = useState<CaseTab>("agents");
   const [sourcePreview,setSourcePreview] = useState<{evidence:Evidence;label:string}|null>(null);
+  const [agentView,setAgentView] = useState<"activity"|"results">("activity");
+  const [selectedAgent,setSelectedAgent] = useState<AgentId|null>(null);
   const [focused, setFocused] = useState<ReviewFact | null>(null);
   useEffect(()=>{if(tab!=="review")return;const frame=requestAnimationFrame(()=>document.getElementById("case-tabpanel")?.scrollIntoView({block:"start"}));return()=>cancelAnimationFrame(frame);},[tab]);
   const seconds = useActiveSeconds(tab === "review" || tab === "decision");
@@ -115,7 +118,7 @@ function CreditCase() {
       <DocumentIntake caseId={id} revision={detail.data?.revision??0} documents={docs} canUpload={preparer && run?.status!=="RUNNING"} />
 
       {run && !run.is_current && <p role="alert" className="border border-warning bg-warning-soft px-4 py-3 text-[15px] text-warning"><ShieldAlert className="mr-2 inline h-4 w-4" aria-hidden />Documentele s-au modificat după această analiză. Rezultatul trebuie actualizat înainte de decizie.</p>}
-      {tab !== "review" && <div className={cn("flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4", next.mine ? "border-human bg-surface-1" : "border-border bg-card")}>
+      {tab !== "review" && <div className={cn("flex flex-wrap items-center justify-between gap-4 rounded-xl border px-5 py-4", "border-border bg-card")}>
         <div>
           <div className="text-sm font-medium text-muted-foreground">{next.mine ? "Ce ai de făcut acum" : "Unde e dosarul"}</div>
           <div className="mt-1 text-[19px] font-medium">{next.title}</div>
@@ -134,13 +137,15 @@ function CreditCase() {
         )}
       </div>}
 
+      {!run && <LiveAgentExecution run={null}/>}
+
       {run && (
         <>
           <nav className="case-tabs flex flex-wrap gap-1 border-b" role="tablist">
             {TABS.map((t) => (
               <button key={t.key} id={`tab-${t.key}`} role="tab" aria-controls="case-tabpanel" tabIndex={tab === t.key ? 0 : -1} aria-selected={tab === t.key} onKeyDown={e=>{const current=TABS.findIndex(x=>x.key===tab);const n=e.key==="ArrowRight"?(current+1)%TABS.length:e.key==="ArrowLeft"?(current+TABS.length-1)%TABS.length:e.key==="Home"?0:e.key==="End"?TABS.length-1:-1;if(n>=0){e.preventDefault();e.stopPropagation();setTab(TABS[n].key);document.getElementById(`tab-${TABS[n].key}`)?.focus();}}} onClick={() => setTab(t.key)}
-                className={cn("-mb-px border-b-2 px-4 py-3 text-[16px]",
-                  tab === t.key ? "border-agent font-medium text-foreground" : "border-transparent text-muted-foreground hover:text-foreground")}>
+                className={cn("case-tab px-4 py-3 text-[16px]",
+                  tab === t.key ? "is-selected font-medium text-foreground" : "text-muted-foreground hover:text-foreground")}>
                 {t.label}
               </button>
             ))}
@@ -149,7 +154,10 @@ function CreditCase() {
           <div id="case-tabpanel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="space-y-5">
           {tab === "agents" && (
             <div className="space-y-5">
-              <AgentGraph run={run} docNames={docNames} onEvidence={(evidence,label)=>setSourcePreview({evidence,label})} onRisk={()=>setTab("risk")} onSource={(factId) => {const fact=run.board.facts.find(f=>f.id===factId);if(fact){setFocused(fact);setTab("review");}}} />
+              <div className="agent-view-switch" aria-label="Afișarea analizei"><button aria-pressed={agentView==="activity"} onClick={()=>setAgentView("activity")}>Execuție în timp real</button><button aria-pressed={agentView==="results"} onClick={()=>{setSelectedAgent(null);setAgentView("results");}}>Rezultate și surse</button></div>
+              {agentView==="activity" ? <LiveAgentExecution run={run} onSelect={agent=>{setSelectedAgent(agent);setAgentView("results");}}/> : (
+              <AgentGraph key={selectedAgent??"overview"} initialAgent={selectedAgent} run={run} docNames={docNames} onEvidence={(evidence,label)=>setSourcePreview({evidence,label})} onRisk={()=>setTab("risk")} onSource={(factId) => {const fact=run.board.facts.find(f=>f.id===factId);if(fact){setFocused(fact);setTab("review");}}} />
+              )}
               {run.requests.length > 0 && <RequestCard run={run} />}
               {run.board.issues.some(i=>i.status!=="resolved") && <Panel title="Aspecte care necesită atenție"><IssuesList issues={run.board.issues.filter(i=>i.status!=="resolved")} /></Panel>}
               {user.role === "admin" && <details className="rounded-xl border bg-card p-4"><summary className="flex items-center gap-2 text-sm text-muted-foreground"><FlaskConical className="h-4 w-4" />Unelte administrative de test</summary><p className="my-3 text-sm text-muted-foreground">Acțiuni pentru verificarea mediului de demonstrație.</p><div className="flex flex-wrap gap-3"><button onClick={()=>redTeam.mutate()} disabled={redTeam.isPending} className="border border-danger px-3 py-2 text-sm text-danger">Test de siguranță</button>{run.status==="WAITING_CLIENT" && run.requests.at(-1)?.status==="SENT" && <button onClick={()=>client.mutate()} disabled={client.isPending} className="border px-3 py-2 text-sm">Încarcă răspunsul de test</button>}</div>{redTeam.error && <p role="alert" className="mt-2 text-danger">{redTeam.error.message}</p>}</details>}

@@ -80,3 +80,6 @@ Prospecting is deferred: a separate company source and an existing-client list k
 
 
 Frontend tooling requires Node.js 22.13+ (validated with 22.23.1). Run `npm run test:evidence --prefix frontend` for citation matching regressions (repeated amounts, ambiguous context, incorrect spans, Unicode and split PDF text). If a PDF citation cannot be uniquely positioned, the viewer displays an explicit warning instead of marking a different value.
+
+
+The case analysis screen includes **Execuție în timp real** (coordinator, active specialist, dispatches, critic rechecks and outcomes) and **Rezultate și surse**. The execution workspace is visible before a run starts; clicking **Analizează documentele** starts real processing. Click a specialist to inspect its result. Run `npm run test:agents --prefix frontend` for dispatch/rerun/current-state presentation regressions.
